@@ -59,7 +59,8 @@
                 <v-icon size="15">fas fa-share</v-icon>
               </v-btn>
             </template>
-            <span>Отправить</span>
+            <div>Отправить</div>
+            <div>(Ctrl+Enter)</div>
           </v-tooltip>
           <!--<v-btn small color="info" @click="sendMessage">
             Отправить
