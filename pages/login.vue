@@ -20,7 +20,7 @@
       </v-toolbar>
 
       <v-card-text class="py-1">
-        <v-form ref="form" lazy-validation>
+        <v-form ref="form" @submit.prevent="auth" lazy-validation>
           <v-text-field
             label="Логин"
             name="login"
@@ -45,21 +45,22 @@
             v-model="password"
             :rules="[rules.required]"
           />
+
+          <v-card-actions class="justify-center pt-0 pb-3">
+            <v-btn
+              type="submit"
+              :loading="loading"
+              :disabled="loading"
+              class="white--text"
+              color="purple lighten-1"
+            >
+              Войти
+              <v-icon right dark small>fas fa-door-open</v-icon>
+            </v-btn>
+          </v-card-actions>
         </v-form>
       </v-card-text>
 
-      <v-card-actions class="justify-center pt-0 pb-3">
-        <v-btn
-          :loading="loading"
-          :disabled="loading"
-          class="white--text"
-          color="purple lighten-1"
-          @click="auth"
-        >
-          Войти
-          <v-icon right dark small>fas fa-door-open</v-icon>
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </v-col>
 </template>
