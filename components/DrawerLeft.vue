@@ -5,7 +5,7 @@
     app
     clipped
     width="150"
-    mobile-break-point="800"
+    mobile-breakpoint="800"
     color="purple lighten-5"
   >
     <v-list dense>
