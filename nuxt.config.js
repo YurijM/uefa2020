@@ -1,11 +1,12 @@
 const pkg = require('./package');
+console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
 
 module.exports = {
   mode: 'universal',
 
   server: {
     //port: (process.env.NODE_ENV === 'production' ? 8080 : 3000),
-    //host: (process.env.NOD_ENV === 'production' ? '89.223.122.221' : 'localhost')
+    host: (process.env.NODE_ENV === 'production' ? '185.119.57.155' : 'localhost')
     //port: '5000',
     //host: '192.168.1.64'
   },
@@ -74,6 +75,9 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    baseURL: process.env.NODE_ENV === 'production'
+      ? 'http://185.119.57.155'
+      : 'http://localhost:3000'
   },
 
   /*

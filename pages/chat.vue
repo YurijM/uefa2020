@@ -5,7 +5,7 @@
     <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid purple'}">
       <v-col class="pa-1" cols="6">
         <h3 class="ml-5">
-          {{gamblers.length > 1 ? 'Сейчас в чате:' : 'Сейчас в чате никого нет'}}
+          {{gamblers.length > 1 ? 'Сейчас в чате:' : 'Сейчас в чате только Вы'}}
         </h3>
         <v-chip
           v-for="gambler in gamblers"

@@ -85,7 +85,8 @@
       ...mapGetters({
         getIsSign: 'gambler/isSign',
         getIsAuth: 'gambler/isAuth',
-        getGambler: 'gambler/getGambler'
+        getGambler: 'gambler/getGambler',
+        isMessage: 'common/isMessage'
       })
     },
     methods: {
@@ -108,7 +109,10 @@
           await this.$router.push('/profile')
         } else if (this.getIsAuth) {
           await this.$socket.emit('login', this.getGambler);
-          await this.$router.push('/chat')
+
+          if (! this.isMessage) {
+            await this.$router.push('/chat')
+          }
         }
       }
     }
