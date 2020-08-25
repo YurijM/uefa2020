@@ -30,7 +30,6 @@ io.on('connection', (socket) => {
 
   /****************************************************************************/
   socket.on('login', data => {
-    console.log('data', data);
     gamblerId = data.id;
     data.socket_id = socketId;
 

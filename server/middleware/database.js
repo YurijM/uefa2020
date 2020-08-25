@@ -1,6 +1,4 @@
 const mysql = require('mysql2');
-//const nuxtConfig = require('../../nuxt.config.js')
-console.log('database.process.env.NODE_ENV:', process.env.NODE_ENV);
 
 const pool = mysql.createPool({
   //connectionLimit: 10,

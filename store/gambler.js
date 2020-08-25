@@ -44,6 +44,9 @@ export const mutations = {
   SET_TOKEN(state, payload) {
     state.token = payload
   },
+  CLEAR_GAMBLER(state) {
+    state.gambler = null
+  },
   CLEAR_TOKEN(state) {
     state.token = null
   },
@@ -247,6 +250,7 @@ export const actions = {
           text: data.error
         }, {root: true});
       } else {
+        await commit('CLEAR_GAMBLER');
         await dispatch('clearToken');
         await commit('common/SET_MESSAGE', {
           status: 'primary',
