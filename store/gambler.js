@@ -15,7 +15,12 @@ export const getters = {
   getGamblers: state => state.gamblers,
   getGamblersOrderByNick: state => state.gamblers.slice().sort((a, b) => {
     // Используем toUpperCase() для преобразования регистра
-    const family1 = a.family.toUpperCase();
+    const nickname1 = a.nickname.toUpperCase();
+    const nickname2 = b.nickname.toUpperCase();
+
+    return nickname1 > nickname2 ? 1 : -1
+
+    /*const family1 = a.family.toUpperCase();
     const family2 = b.family.toUpperCase();
     const name1 = a.name.toUpperCase();
     const name2 = b.name.toUpperCase();
@@ -33,7 +38,7 @@ export const getters = {
         result = -1;
       }
     }
-    return result;
+    return result;*/
   })
 };
 

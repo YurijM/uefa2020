@@ -40,21 +40,40 @@
       return {
         menu: [
           {
+            title: 'Игроки',
+            to: '/admin/gamblers',
+            icon: 'fas fa-users'
+          },
+          {
+            title: 'Группы',
+            to: '/admin/group',
+            icon: 'fas fa-calendar'
+          },
+          {
+            title: 'Команды',
+            to: '/admin/team',
+            icon: 'fas fa-calendar-alt'
+          },
+          {
+            title: 'Расписание',
+            to: '/admin/schedule',
+            icon: 'fas fa-clock'
+          },
+          {
             title: 'Письмо для регистрации',
             to: '/admin/email',
             icon: 'fas fa-envelope'
           },
-          {
-            title: 'Участники',
-            to: '',
-            icon: 'fas fa-users'
-          }
+
         ]
       }
     }
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .v-list-item__title {
+    font-size: 1em !important;
+    white-space: normal !important
+  }
 </style>

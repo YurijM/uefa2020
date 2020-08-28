@@ -30,7 +30,6 @@
 
     <v-main>
       <v-container
-        class="fill-height"
         fluid
       >
         <nuxt/>

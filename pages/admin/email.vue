@@ -1,34 +1,46 @@
 <template>
-  <v-card
-    class="mx-auto align-self-start mt-12"
-  >
-    <v-card-title>
-      Отправить письмо для регистрации
-    </v-card-title>
+  <div>
+    <mu-title-page-admin title="Отправить письмо для регистрации" />
 
-    <v-card-actions class="flex-column">
-      <v-text-field ref="email" label="e-mail" v-model="email" :rules="rules">
-        <v-icon slot="prepend" small class="mt-1">fas fa-envelope</v-icon>
-      </v-text-field>
+    <v-card class="mx-auto mt-3" color="grey darken-3" max-width="275">
+      <v-card-actions class="flex-column">
+        <v-text-field
+          ref="email"
+          label="e-mail"
+          v-model="email"
+          :rules="rules"
+          color="yellow"
+          autofocus
+          :style="{width: '100%'}"
+        >
+          <!--<v-icon slot="prepend" small class="mt-1" color="yellow">fas fa-envelope</v-icon>-->
+        </v-text-field>
 
-      <v-btn
-        :loading="loading"
-        :disabled="loading"
-        @click="sendMail"
-      >
-        Отправить
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+        <v-btn
+          class="mt-2"
+          :loading="loading"
+          :disabled="loading"
+          @click="sendMail"
+        >
+          Отправить
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </div>
 </template>
 
 <script>
-	export default {
-		name: 'email',
+  import MuTitlePageAdmin from '~/components/TitlePageAdmin'
+
+  export default {
+    name: 'email',
     layout: 'admin',
+    components: {
+      MuTitlePageAdmin
+    },
     data() {
-		  return {
-		    email: '',
+      return {
+        email: '',
         rules: [
           value => !!value || 'Поле не может быть пустым.',
           value => {
@@ -40,7 +52,7 @@
       }
     },
     methods: {
-		  async sendMail() {
+      async sendMail() {
         if (!this.$refs['email'].validate()) return;
 
         this.loading = true;
@@ -50,7 +62,7 @@
         this.loading = false;
       }
     }
-	}
+  }
 </script>
 
 <style scoped>
