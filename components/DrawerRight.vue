@@ -66,6 +66,15 @@
         default: true
       }
     },
+    data() {
+      return {
+        placeColors: [
+          {place: 1, color: 'error'},
+          {place: 2, color: 'success'},
+          {place: 3, color: 'primary'}
+        ]
+      }
+    },
     computed: {
       gamblers() {
         return this.$store.getters['gambler/getGamblers']
@@ -110,23 +119,7 @@
         return color;
       },
       getColorWinner(place) {
-        let color = 'blue-grey darken-1';
-
-        if (place <= 3) {
-          switch (place) {
-            case 1:
-              color = 'error';
-              break;
-            case 2:
-              color = 'success';
-              break;
-            case 3:
-              color = 'primary';
-              break;
-          }
-        }
-
-        return color;
+        return (place > 3 ? 'blue-grey darken-1' : this.placeColors.find(c => c.place === place).color)
       }
     }
   }

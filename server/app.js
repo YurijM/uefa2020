@@ -82,6 +82,12 @@ io.on('connection', (socket) => {
   });
 
   /****************************************************************************/
+  socket.on('changePlaces', () => {
+    socket.broadcast.emit('loadGamblers');
+    socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
+  });
+
+  /****************************************************************************/
   socket.on('changeProfile', data => {
     gamblerId = data.gambler.id;
     data.gambler.socket_id = socketId;

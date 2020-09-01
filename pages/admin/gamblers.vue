@@ -165,7 +165,9 @@ export default {
   computed: {
     ...mapGetters({
       getGambler: 'gambler/getGambler',
-      getGamblersByName: 'gambler/getGamblersByName'
+      getGamblers: 'gambler/getGamblers',
+      getGamblersByName: 'gambler/getGamblersByName',
+      isMessage: 'common/isMessage'
     }),
     gambler() {
       return this.getGambler
@@ -213,15 +215,13 @@ export default {
 
       this.close()
 
-      /*//Если сохранение профиля прошло успешно
-      if (this.isAuth) {
-        this.$socket.emit('changeProfile', {
-          gambler: this.getGambler,
-          isSign: this.isSign // "состояние" игрока при ВХОДЕ в режим редактирования профиля: если isSign, то это первоначальная запись
-                              // данных, иначе - это редактирование уже имеющихся данных
-        });
-        await this.$router.push('/chat')
-      }*/
+      //Если сохранение профиля прошло успешно
+      if (!this.isMessage) {
+        const gamblers = this.getGamblers;
+        if (gamblers.some((e, i) => e.prev_place !== i + 1)) {
+          this.$socket.emit('changePlaces')
+        }
+      }
     }
   }
 }
