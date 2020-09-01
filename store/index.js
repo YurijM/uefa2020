@@ -61,5 +61,9 @@ export const actions = {
     await dispatch('gambler/disconnectGamblersBySocket', payload.sockets, {root: true});
     await commit('chat/DELETE_GAMBLER', payload.id, {root: true});
     await commit('chat/DELETE_GAMBLER_BY_SOCKET', payload.sockets, {root: true});
+  },
+
+  async socket_updatePlace({dispatch}, payload) {
+    await dispatch('gambler/updatePlace', payload, {root: true})
   }
 };

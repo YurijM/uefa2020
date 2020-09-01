@@ -12,6 +12,7 @@ router.get('/loadGamblers', gambler.loadGamblers);
 router.get('/loadGambler', gambler.loadGambler);
 router.get('/setSocketId', gambler.setSocketId);
 router.get('/saveFeatures', gambler.saveFeatures);
+router.get('/updatePlace', gambler.updatePlace);
 router.get('/disconnectGamblersBySocket', gambler.disconnectGamblersBySocket);
 /*router.post('/profile',
   upload.single('file'),

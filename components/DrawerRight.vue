@@ -33,6 +33,15 @@
           class="ml-2 my-0 flex-row align-center justify-between"
           :style="{minWidth: '85px'}"
         >
+          <v-chip
+            :color="getColorWinner(item.place)"
+            class="ml-0 mr-1 white--text"
+            label
+            small
+          >
+            {{item.points}}
+          </v-chip>
+
           <div v-if="item.prev_place > 0">
             <v-icon small :class="getColorStatistic(item.place, item.prev_place)">
               {{getIcon(item.place, item.prev_place)}}
@@ -42,15 +51,6 @@
               {{getStatistic(item.place, item.prev_place)}}
             </span>
           </div>
-
-          <v-chip
-            :color="getColorWinner(item.place)"
-            class="ml-0 mr-1 white--text"
-            label
-            small
-          >
-            {{item.points}}
-          </v-chip>
         </v-list-item-action>
       </v-list-item>
     </v-list>

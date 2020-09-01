@@ -82,8 +82,11 @@ io.on('connection', (socket) => {
   });
 
   /****************************************************************************/
-  socket.on('changePlaces', () => {
+  socket.on('changePlaces', data => {
+    socket.emit('updatePlace', data);
+
     socket.broadcast.emit('loadGamblers');
+
     socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
   });
 

@@ -88,6 +88,26 @@ module.exports.login = async (req, res) => {
   });
 };
 
+module.exports.updatePlace = async (req, res) => {
+  let query = 'UPDATE gamblers SET `prev_place` = ? WHERE `id` = ?';
+
+  await pool.promise().execute(query, [
+    req.query.place,
+    req.query.id
+  ])
+  .then(result => {
+    if (result) {
+      res.json(true)
+    } else {
+      res.json({error: req.query.nickname})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+};
+
+
 module.exports.saveFeatures = async (req, res) => {
   let query = 'UPDATE gamblers SET ' +
     '`points` = ?, ' +

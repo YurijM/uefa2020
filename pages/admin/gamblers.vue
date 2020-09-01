@@ -209,6 +209,7 @@ export default {
 
       this.editedItem.admin = this.editedItem.admin ? 1 : 0;
 
+      console.log('place:', this.editedItem.place)
       await this.saveFeatures(this.editedItem);
 
       this.loading = false;
@@ -218,8 +219,8 @@ export default {
       //Если сохранение профиля прошло успешно
       if (!this.isMessage) {
         const gamblers = this.getGamblers;
-        if (gamblers.some((e, i) => e.prev_place !== i + 1)) {
-          this.$socket.emit('changePlaces')
+        if (gamblers.some(e => e.prev_place !== e.place)) {
+          this.$socket.emit('changePlaces', gamblers)
         }
       }
     }
