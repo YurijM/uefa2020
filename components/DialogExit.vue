@@ -5,10 +5,8 @@
     persistent
     light
   >
-    <v-card border="left">
-      <v-card-title
-        class="dark blue-grey lighten-3 pa-2 caption"
-      >
+    <v-card>
+      <v-card-title class="dark blue-grey lighten-3 pa-2 caption">
         Выход из приложения
       </v-card-title>
 
@@ -20,9 +18,7 @@
         <div class="ml-3">Вы действительно хотите выйти?</div>
       </v-card-text>
 
-      <v-card-actions
-        class="dark blue-grey lighten-4 py-2 px-5"
-      >
+      <v-card-actions class="dark blue-grey lighten-4 py-2 px-5">
         <v-spacer></v-spacer>
 
         <v-btn

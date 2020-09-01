@@ -88,6 +88,31 @@ module.exports.login = async (req, res) => {
   });
 };
 
+module.exports.saveFeatures = async (req, res) => {
+  let query = 'UPDATE gamblers SET ' +
+    '`points` = ?, ' +
+    '`status` = ?, ' +
+    '`admin` = ? ' +
+    'WHERE `id` = ?';
+
+  await pool.promise().execute(query, [
+    req.query.points,
+    req.query.status,
+    req.query.admin,
+    req.query.id
+  ])
+  .then(result => {
+    if (result) {
+      res.json(true)
+    } else {
+      res.json({error: 'Ошибка при обновлении характеристик игрока'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+};
+
 module.exports.logout = async (req, res) => {
   //const query = 'UPDATE gamblers SET `connected` = 0 WHERE id = ?';
   const query = 'UPDATE gamblers SET `socket_id` = \'\' WHERE id = ?';
@@ -162,7 +187,7 @@ module.exports.disconnectGamblersBySocket = async (req, res) => {
 };
 
 module.exports.loadGamblers = async (req, res) => {
-  const query = 'SELECT * FROM gamblers ORDER BY points DESC, nickname';
+  const query = 'SELECT CONCAT(family, \' \', `name`, \' (\', nickname, \')\') AS fullName, gamblers.* FROM gamblers ORDER BY points DESC, nickname';
 
   await pool.promise().execute(query)
   .then(([rows, fields]) => {

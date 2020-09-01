@@ -1,4 +1,4 @@
-export default function ({store, route, redirect}) {
+export default async function ({store, route, redirect}) {
   if (route.path !== '/login' && !(/\/signup\/*/g.test(route.path))) {
     if (route.path === '/profile') {
       if (!store.getters['gambler/isSign'] && !store.getters['gambler/isAuth']) {
@@ -8,6 +8,10 @@ export default function ({store, route, redirect}) {
       redirect('/login')
     } else if (route.path === '/') {
       redirect('/chat')
+    } else if (/\/admin\/*/g.test(route.path)) {
+      if (!store.getters['gambler/isAdmin']) {
+        redirect('/notadmin');
+      }
     }
   }
 }

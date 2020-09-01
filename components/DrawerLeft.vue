@@ -42,7 +42,7 @@
         menu: [
           {
             title: 'Участники',
-            to: '/gambler',
+            to: '/gamblers',
             icon: 'fas fa-users'
           },
           {

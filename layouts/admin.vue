@@ -43,6 +43,8 @@
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
+
   import MuDrawerLeftAdmin from '~/components/DrawerLeftAdmin'
   import MuFooter from '~/components/Footer'
   import MuHeaderUserAdmin from '~/components/HeaderUserAdmin'
@@ -66,14 +68,19 @@
       this.$vuetify.theme.dark = true
     },
     computed: {
-      isMessage() {
-        return this.$store.getters['common/isMessage'];
+      ...mapGetters({
+        getMessage: 'common/getMessage',
+        isMessage: 'common/isMessage',
+        getGambler: 'gambler/getGambler'
+      }),
+      checkMessage() {
+        return this.isMessage;
       }
     },
     watch: {
-      isMessage(isMessage) {
+      checkMessage(isMessage) {
         if (isMessage) {
-          const message = this.$store.getters['common/getMessage'];
+          const message = this.getMessage;
           this.color = message.status;
           this.message = message.text;
           this.snackbar = true
@@ -81,6 +88,9 @@
       }
     },
     methods: {
+      ...mapActions({
+        logout: 'gambler/logout'
+      }),
       isOpenDialog(data) {
         this.dialog = data.dialog
       },
@@ -88,7 +98,12 @@
         this.dialog = false;
 
         if (data.close) {
-          await this.$store.dispatch('gambler/logout');
+          const gambler = this.getGambler;
+
+          this.logout(gambler.id);
+
+          this.$socket.emit('logout', gambler);
+
           this.$router.push('/login');
         }
       }

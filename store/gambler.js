@@ -12,15 +12,11 @@ export const getters = {
   getGambler: state => state.gambler,
   isSign: state => (!!state.gambler && (state.gambler.status === 0)),
   isAuth: state => (!!state.gambler && (state.gambler.status > 0)),
+  isAdmin: state => (!!state.gambler && (state.gambler.admin === 1)),
   getGamblers: state => state.gamblers,
-  getGamblersOrderByNick: state => state.gamblers.slice().sort((a, b) => {
+  getGamblersByName: state => state.gamblers.slice().sort((a, b) => {
     // Используем toUpperCase() для преобразования регистра
-    const nickname1 = a.nickname.toUpperCase();
-    const nickname2 = b.nickname.toUpperCase();
-
-    return nickname1 > nickname2 ? 1 : -1
-
-    /*const family1 = a.family.toUpperCase();
+    const family1 = a.family.toUpperCase();
     const family2 = b.family.toUpperCase();
     const name1 = a.name.toUpperCase();
     const name2 = b.name.toUpperCase();
@@ -38,7 +34,15 @@ export const getters = {
         result = -1;
       }
     }
-    return result;*/
+    return result;
+  }),
+
+  getGamblersByNick: state => state.gamblers.slice().sort((a, b) => {
+    // Используем toUpperCase() для преобразования регистра
+    const nickname1 = a.nickname.toUpperCase();
+    const nickname2 = b.nickname.toUpperCase();
+
+    return nickname1 > nickname2 ? 1 : -1
   })
 };
 
@@ -67,6 +71,9 @@ export const mutations = {
       }
 
       payload[i].place = obj.place;
+
+      /*obj.fullName = `${payload[i].family} ${payload[i].name} (${payload[i].nickname})`
+      payload[i].fullName = obj.fullName;*/
 
       return obj
     }, {place: 1, count: 1});
@@ -141,6 +148,38 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении checkGambler (см. в консоли ошибку "Error checkGambler")'
+      }, {root: true});
+    }
+  },
+
+  async saveFeatures({commit, dispatch}, gambler) {
+    await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+    let data = {};
+
+    try {
+      data = await this.$axios.$get('/api/gambler/saveFeatures', {
+        params: {
+          id: gambler.id,
+          points: gambler.points,
+          status: gambler.status,
+          admin: gambler.admin
+        }
+      });
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await dispatch('loadGamblers');
+      }
+    } catch (e) {
+      console.log('Error saveFeatures:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении saveFeatures (см. в консоли ошибку "Error saveFeatures")'
       }, {root: true});
     }
   },

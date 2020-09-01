@@ -5,7 +5,7 @@
     app
     clipped
     mobile-breakpoint="600"
-    width="215"
+    width="175"
   >
     <v-list dense>
       <v-list-item
@@ -16,11 +16,11 @@
         :to="item.to"
       >
         <v-list-item-action class="mr-1">
-          <v-icon small>{{item.icon}}</v-icon>
+          <v-icon small>{{ item.icon }}</v-icon>
         </v-list-item-action>
 
         <v-list-item-content>
-          <v-list-item-title>{{item.title}}</v-list-item-title>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -28,52 +28,52 @@
 </template>
 
 <script>
-  export default {
-    name: 'DrawerLeftAdmin',
-    props: {
-      value: {
-        type: Boolean,
-        default: true
-      }
-    },
-    data() {
-      return {
-        menu: [
-          {
-            title: 'Игроки',
-            to: '/admin/gamblers',
-            icon: 'fas fa-users'
-          },
-          {
-            title: 'Группы',
-            to: '/admin/group',
-            icon: 'fas fa-calendar'
-          },
-          {
-            title: 'Команды',
-            to: '/admin/team',
-            icon: 'fas fa-calendar-alt'
-          },
-          {
-            title: 'Расписание',
-            to: '/admin/schedule',
-            icon: 'fas fa-clock'
-          },
-          {
-            title: 'Письмо для регистрации',
-            to: '/admin/email',
-            icon: 'fas fa-envelope'
-          },
+export default {
+  name: 'DrawerLeftAdmin',
+  props: {
+    value: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data() {
+    return {
+      menu: [
+        {
+          title: 'Участники',
+          to: '/admin/gamblers',
+          icon: 'fas fa-users'
+        },
+        {
+          title: 'Группы',
+          to: '/admin/group',
+          icon: 'fas fa-calendar'
+        },
+        {
+          title: 'Команды',
+          to: '/admin/team',
+          icon: 'fas fa-calendar-alt'
+        },
+        {
+          title: 'Расписание',
+          to: '/admin/schedule',
+          icon: 'fas fa-clock'
+        },
+        {
+          title: 'Письмо для регистрации',
+          to: '/admin/email',
+          icon: 'fas fa-envelope'
+        },
 
-        ]
-      }
+      ]
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .v-list-item__title {
-    font-size: 1em !important;
-    white-space: normal !important
-  }
+.v-list-item__title {
+  font-size: 1em !important;
+  white-space: normal !important
+}
 </style>

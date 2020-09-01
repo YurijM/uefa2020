@@ -2,153 +2,250 @@
   <div>
     <mu-title-page-admin title="Игроки"/>
 
-    <v-dialog v-model="dialog" max-width="500px">
+    <v-dialog v-model="dialog" max-width="300px">
       <v-card>
-        <v-card-title>
-          <span class="headline">
-            {{`${editedItem.family} ${editedItem.name} (${editedItem.nickname})`}}
-          </span>
+        <v-card-title class="dark blue-grey darken-3 pa-3 text-body-1">
+          <!--<v-img :src="`/photo/${editedItem.photo}`"/>-->
+          <v-avatar width="40" height="40" class="mr-3">
+            <img
+              :src="`/photo/${editedItem.photo}`"
+              :alt="editedItem.nickname"
+            >
+          </v-avatar>
+          <!--<v-spacer></v-spacer>-->
+          {{ `${editedItem.fullName}` }}
         </v-card-title>
 
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="editedItem.nickname" label="Ник"/>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="editedItem.family" label="Фамилия"/>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field v-model="editedItem.name" label="Имя"/>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+          <v-card-text
+            class="grey darken-3 pt-2 pb-0"
+            :style="{borderTop: '1px #eee solid !important', borderBottom: '1px #eee solid !important'}"
+          >
+            <!--<v-container>
+              <v-row>
+                <v-col class="py-0" cols="12" sm="6">
+                  <v-text-field v-model="editedItem.points" label="Очки"/>
+                </v-col>
 
-        <v-card-actions>
+                <v-col class="py-0" cols="12" sm="6">
+                  <v-select
+                    v-model="editedItem.status"
+                    :items="statuses"
+                    label="Статус"
+                  ></v-select>
+                </v-col>
+
+                <v-col class="py-0" cols="12">
+                  <v-switch v-model="editedItem.admin" flat :label="`Администратор: ${editedItem.admin ? 'Да' : 'Нет'}`"></v-switch>
+                </v-col>
+              </v-row>
+            </v-container>-->
+            <v-text-field
+              v-model="editedItem.points"
+              label="Очки"
+              :rules="[rules.isNumber, rules.precision]"
+            />
+
+            <v-select
+              :disabled="editedItem.id === gambler.id"
+              v-model="editedItem.status"
+              :items="statuses"
+              label="Статус"
+            />
+
+            <v-switch
+              :disabled="editedItem.id === gambler.id"
+              v-model="editedItem.admin"
+              flat
+              :label="`Администратор: ${editedItem.admin ? 'Да' : 'Нет'}`"
+            />
+          </v-card-text>
+        </v-form>
+
+        <v-card-actions class="dark blue-grey darken-3 py-2 px-5">
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="close">Отмена</v-btn>
-          <v-btn color="blue darken-1" text @click="save">Сохранить</v-btn>
+          <v-btn color="error" text @click="close">Отмена</v-btn>
+          <v-btn
+            color="success"
+            text
+            :loading="loading"
+            @click="save"
+          >
+            Сохранить
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-data-table
       dense
+      class="mt-2 grey darken-3 mx-auto"
+      :style="{maxWidth: '700px'}"
       :headers="headers"
       :items="gamblers"
-      sort-by="calories"
-      class="mt-2 grey darken-3"
       :footer-props="{
-      itemsPerPageAllText: 'Все',
-      itemsPerPageOptions: [15, 25, -1],
-      itemsPerPageText: 'Количество строк на странице',
-      pageText: '{0}-{1} из {2}'
-    }"
+        itemsPerPageAllText: 'Все',
+        itemsPerPageOptions: [15, 25, -1],
+        itemsPerPageText: 'Количество строк на странице',
+        pageText: '{0}-{1} из {2}'
+      }"
     >
+      <template v-slot:item.status="{item}">
+        {{ statuses.find(s => s.value === item.status).text }}
+      </template>
+
+      <template v-slot:item.admin="{item}">
+        {{ item.admin === 1 ? 'Да' : 'Нет' }}
+      </template>
+
       <template v-slot:item.actions="{item}">
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
+        <v-icon small @click="editItem(item)">fas fa-pen</v-icon>
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-  import MuTitlePageAdmin from '~/components/TitlePageAdmin'
-  import {mapGetters} from 'vuex'
+import MuTitlePageAdmin from '~/components/TitlePageAdmin'
+import {mapActions, mapGetters} from 'vuex'
 
-  export default {
-    name: 'gamblers',
-    layout: 'admin',
-    components: {
-      MuTitlePageAdmin
+export default {
+  name: 'gamblers',
+  layout: 'admin',
+  components: {
+    MuTitlePageAdmin
+  },
+  data() {
+    return {
+      dialog: false,
+      valid: true,
+      headers: [
+        {text: 'Участник', value: 'fullName'},
+        {text: 'Очки', align: 'center', value: 'points', sortable: false},
+        {text: 'Пред.место', align: 'center', value: 'prev_place', sortable: false},
+        {text: 'Статус', align: 'center', value: 'status', sortable: false},
+        {text: 'Администратор', align: 'center', value: 'admin', sortable: false},
+        {text: '', align: 'center', value: 'actions', sortable: false, width: '1%'}
+      ],
+      editedIndex: -1,
+      editedItem: {
+        points: 0.0,
+        prev_place: 0,
+        status: 0,
+        admin: 0
+      },
+      defaultItem: {
+        points: 0.0,
+        prev_place: 0,
+        status: 0,
+        admin: 0
+      },
+      statuses: [
+        {text: 'Исключён', value: -1},
+        {text: 'Отправлено письмо', value: 0},
+        {text: 'Зарегистрирован', value: 1}
+      ],
+      rules: {
+        isNumber: value => (!isNaN(parseFloat(value)) && isFinite(value)) || 'Поле должно быть числом',
+        precision: value => (!value.includes('.')) || (value.includes('.') && (value.split('.').pop().length < 2)) ||
+          'Десятичных знаков не должно быть больше 2'
+      },
+      loading: false
+    }
+  },
+  watch: {
+    dialog(val) {
+      val || this.close()
     },
-    data() {
-      return {
-        dialog: false,
-        headers: [
-          {text: 'Ник', value: 'nickname'},
-          {text: 'Фамилия', value: 'family'},
-          {text: 'Имя', value: 'name'},
-          {text: '', value: 'actions', sortable: false }
-        ],
-        editedIndex: -1,
-        editedItem: {
-          nickname: '',
-          family: '',
-          name: ''
-        },
-        defaultItem: {
-          nickname: '',
-          family: '',
-          name: ''
-        },
+  },
+  computed: {
+    ...mapGetters({
+      getGambler: 'gambler/getGambler',
+      getGamblersByName: 'gambler/getGamblersByName'
+    }),
+    gambler() {
+      return this.getGambler
+    },
+    gamblers() {
+      return this.getGamblersByName
+    },
+  },
+  methods: {
+    ...mapActions({
+      saveFeatures: 'gambler/saveFeatures'
+    }),
+    editItem(item) {
+      this.editedIndex = this.gamblers.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+    },
+    close() {
+      this.dialog = false
+      /*this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })*/
+    },
+    /*save() {
+      if (this.editedIndex > -1) {
+        console.log('editedItem:', this.editedItem);
+        console.log('editedIndex:', this.editedIndex);
+        Object.assign(this.gamblers[this.editedIndex], this.editedItem)
+      } else {
+        this.gamblers.push(this.editedItem)
       }
-    },
-    watch: {
-      dialog (val) {
-        val || this.close()
-      },
-    },
-    computed: {
-      ...mapGetters({
-        getGamblersOrderByNick: 'gambler/getGamblersOrderByNick'
-      }),
-      gamblers() {
-        return this.getGamblersOrderByNick
-      }
-    },
-    methods: {
-      editItem (item) {
-        this.editedIndex = this.gamblers.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-      save () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.gamblers[this.editedIndex], this.editedItem)
-        } else {
-          this.gamblers.push(this.editedItem)
-        }
-        this.close()
-      },
+      this.close()
+    },*/
+    async save() {
+      if (!this.$refs.form.validate()) return;
+
+      this.loading = true;
+
+      this.editedItem.admin = this.editedItem.admin ? 1 : 0;
+
+      await this.saveFeatures(this.editedItem);
+
+      this.loading = false;
+
+      this.close()
+
+      /*//Если сохранение профиля прошло успешно
+      if (this.isAuth) {
+        this.$socket.emit('changeProfile', {
+          gambler: this.getGambler,
+          isSign: this.isSign // "состояние" игрока при ВХОДЕ в режим редактирования профиля: если isSign, то это первоначальная запись
+                              // данных, иначе - это редактирование уже имеющихся данных
+        });
+        await this.$router.push('/chat')
+      }*/
     }
   }
+}
 </script>
 
 <style lang="scss">
-  .v-application--is-ltr .v-data-footer__select .v-select {
-    margin: 10px 0 10px 10px !important;
-  }
+.v-application--is-ltr .v-data-footer__select .v-select {
+  margin: 10px 0 10px 10px !important;
+}
 
-  .v-application--is-ltr .v-data-footer__select {
-    margin-right: 0px;
-  }
+.v-application--is-ltr .v-data-footer__select {
+  margin-right: 0;
+}
 
-  .v-application--is-ltr .v-data-footer__pagination {
-    margin: 0 10px;
-  }
+.v-application--is-ltr .v-data-footer__pagination {
+  margin: 0 10px;
+}
 
-  .v-application--is-ltr .v-data-footer__icons-before .v-btn:last-child {
-    margin-right: 5px;
-  }
+.v-application--is-ltr .v-data-footer__icons-before .v-btn:last-child {
+  margin-right: 5px;
+}
 
-  .v-btn--icon.v-size--default {
-    height: 36px;
-    width: 10px;
-  }
+.v-btn--icon.v-size--default {
+  height: 36px;
+  width: 10px;
+}
 </style>
