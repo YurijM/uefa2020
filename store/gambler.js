@@ -13,8 +13,8 @@ export const getters = {
   isSign: state => (!!state.gambler && (state.gambler.status === 0)),
   isAuth: state => (!!state.gambler && (state.gambler.status > 0)),
   isAdmin: state => (!!state.gambler && (state.gambler.admin === 1)),
-  getGamblers: state => state.gamblers,
-  getGamblersByName: state => state.gamblers.slice().sort((a, b) => {
+  getGamblers: state => state.gamblers, // всегда отсортирован по points !!!
+  getGamblersByName: state => state.gamblers.slice().sort((a, b) => { // сортируется КОПИЯ state.gamblers !!!
     // Используем toUpperCase() для преобразования регистра
     const family1 = a.family.toUpperCase();
     const family2 = b.family.toUpperCase();
@@ -37,7 +37,7 @@ export const getters = {
     return result;
   }),
 
-  getGamblersByNick: state => state.gamblers.slice().sort((a, b) => {
+  getGamblersByNick: state => state.gamblers.slice().sort((a, b) => { // сортируется КОПИЯ state.gamblers !!!
     // Используем toUpperCase() для преобразования регистра
     const nickname1 = a.nickname.toUpperCase();
     const nickname2 = b.nickname.toUpperCase();
@@ -59,24 +59,29 @@ export const mutations = {
   CLEAR_TOKEN(state) {
     state.token = null
   },
-  LOAD_GAMBLERS(state, payload) {
-    payload.reduce(function (obj, item, i, payload) {
+  CALCULATE_PLACE(state, payload) {
+    let gamblers = state.gamblers
+
+    gamblers.find((e) => e.id === payload.id).points = payload.points
+    gamblers.sort((a, b) => a.points < b.points)
+
+    gamblers.reduce(function (obj, item, i, gamblers) {
       if (i === 0) {
         obj.count = 1
-      } else if (payload[i - 1].points === payload[i].points) {
+      } else if (gamblers[i - 1].points === gamblers[i].points) {
         obj.count++
       } else {
-        obj.place += obj.count;
+        obj.new_place += obj.count;
         obj.count = 1
       }
 
-      payload[i].place = obj.place;
-
-      /*obj.fullName = `${payload[i].family} ${payload[i].name} (${payload[i].nickname})`
-      payload[i].fullName = obj.fullName;*/
+      gamblers[i].prev_place = gamblers[i].place;
+      gamblers[i].place = obj.new_place;
 
       return obj
-    }, {place: 1, count: 1});
+    }, {new_place: 1, count: 1});
+  },
+  LOAD_GAMBLERS(state, payload) {
     state.gamblers = payload
   },
 };
@@ -162,7 +167,9 @@ export const actions = {
         try {
           data = await this.$axios.$get('/api/gambler/updatePlace', {
             params: {
+              points: gamblers[i].points,
               place: gamblers[i].place,
+              prev_place: gamblers[i].prev_place,
               nickname: gamblers[i].nickname,
               id: gamblers[i].id
             }
@@ -180,7 +187,7 @@ export const actions = {
         }
 
         if (errors.length > 0) {
-          let text = `Ошибка при обновлении поля prev_place у ${errors.length > 1 ? 'игроков' : 'игрока'} ${errors.join(', ')}`
+          let text = `Ошибка при обновлении поля place у ${errors.length > 1 ? 'игроков' : 'игрока'} ${errors.join(', ')}`
           await commit('common/SET_MESSAGE', {
             status: 'error',
             text: text
@@ -191,16 +198,22 @@ export const actions = {
       }
     },
 
-    async saveFeatures({commit, dispatch}, gambler) {
+    async saveFeatures({commit, dispatch, getters}, payload) {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
       let data = {};
+      const gambler = payload.gambler
+      const changedPoints = payload.changedPoints
+
+      if (changedPoints) {
+        await commit('CALCULATE_PLACE', gambler)
+        await dispatch('updatePlace', getters.getGamblers);
+      }
 
       try {
         data = await this.$axios.$get('/api/gambler/saveFeatures', {
           params: {
             id: gambler.id,
-            points: gambler.points,
             status: gambler.status,
             admin: gambler.admin
           }

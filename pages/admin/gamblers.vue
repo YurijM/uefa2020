@@ -126,7 +126,7 @@ export default {
       headers: [
         {text: 'Участник', value: 'fullName'},
         {text: 'Очки', align: 'center', value: 'points', sortable: false},
-        {text: 'Пред.место', align: 'center', value: 'prev_place', sortable: false},
+        {text: 'Место', align: 'center', value: 'place', sortable: false},
         {text: 'Статус', align: 'center', value: 'status', sortable: false},
         {text: 'Администратор', align: 'center', value: 'admin', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false, width: '1%'}
@@ -134,16 +134,16 @@ export default {
       editedIndex: -1,
       editedItem: {
         points: 0.0,
-        prev_place: 0,
+        place: 0,
         status: 0,
         admin: 0
       },
-      defaultItem: {
+      /*defaultItem: {
         points: 0.0,
-        prev_place: 0,
+        place: 0,
         status: 0,
         admin: 0
-      },
+      },*/
       statuses: [
         {text: 'Исключён', value: -1},
         {text: 'Отправлено письмо', value: 0},
@@ -183,6 +183,9 @@ export default {
     editItem(item) {
       this.editedIndex = this.gamblers.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      // Запоминаем текущее количество очков
+      this.editedItem.curPoints = this.editedItem.points
+
       this.dialog = true
     },
     close() {
@@ -205,24 +208,27 @@ export default {
     async save() {
       if (!this.$refs.form.validate()) return;
 
-      this.loading = true;
+      this.loading = true
+      const changedPoints = this.editedItem.points !== this.editedItem.curPoints
 
       this.editedItem.admin = this.editedItem.admin ? 1 : 0;
 
-      console.log('place:', this.editedItem.place)
-      await this.saveFeatures(this.editedItem);
+      await this.saveFeatures({
+        gambler: this.editedItem,
+        changedPoints: changedPoints
+      });
+
+      //Если сохранение параметров прошло успешно
+      if (!this.isMessage) {
+        this.$socket.emit('changeGambler', {
+          changedPoints: changedPoints,
+          nickname: this.editedItem.nickname
+        })
+      }
 
       this.loading = false;
 
       this.close()
-
-      //Если сохранение профиля прошло успешно
-      if (!this.isMessage) {
-        const gamblers = this.getGamblers;
-        if (gamblers.some(e => e.prev_place !== e.place)) {
-          this.$socket.emit('changePlaces', gamblers)
-        }
-      }
     }
   }
 }

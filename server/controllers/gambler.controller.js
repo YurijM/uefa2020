@@ -89,10 +89,16 @@ module.exports.login = async (req, res) => {
 };
 
 module.exports.updatePlace = async (req, res) => {
-  let query = 'UPDATE gamblers SET `prev_place` = ? WHERE `id` = ?';
+  let query = 'UPDATE gamblers SET ' +
+    '`points` = ?, ' +
+    '`place` = ?, ' +
+    '`prev_place` = ? ' +
+    'WHERE `id` = ?';
 
   await pool.promise().execute(query, [
+    req.query.points,
     req.query.place,
+    req.query.prev_place,
     req.query.id
   ])
   .then(result => {
@@ -110,13 +116,11 @@ module.exports.updatePlace = async (req, res) => {
 
 module.exports.saveFeatures = async (req, res) => {
   let query = 'UPDATE gamblers SET ' +
-    '`points` = ?, ' +
     '`status` = ?, ' +
     '`admin` = ? ' +
     'WHERE `id` = ?';
 
   await pool.promise().execute(query, [
-    req.query.points,
     req.query.status,
     req.query.admin,
     req.query.id

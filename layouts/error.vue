@@ -1,5 +1,5 @@
 <template>
-  <mu-page-error :text="error.statusCode == 404 ? 'Страница не найдена' : `Код ошибки: ${error.statusCode}`"/>
+  <mu-page-error :text="error.statusCode == 404 ? 'Страница не найдена' : `Ошибка: ${error.message}`"/>
   <!--<mu-page-error text="Страница не найдена"/>-->
 </template>
 

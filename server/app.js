@@ -82,12 +82,14 @@ io.on('connection', (socket) => {
   });
 
   /****************************************************************************/
-  socket.on('changePlaces', data => {
-    socket.emit('updatePlace', data);
-
+  socket.on('changeGambler', data => {
     socket.broadcast.emit('loadGamblers');
 
-    socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
+    if (data.changedPoints) {
+      socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
+    } else {
+      socket.broadcast.emit('setMessage', {status: 'primary', text: `Изменилась свойства игрока ${data.nickname}`});
+    }
   });
 
   /****************************************************************************/
