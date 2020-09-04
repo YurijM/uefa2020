@@ -46,12 +46,12 @@ export default {
         },
         {
           title: 'Группы',
-          to: '/admin/group',
+          to: '/admin/groups',
           icon: 'fas fa-calendar'
         },
         {
           title: 'Команды',
-          to: '/admin/team',
+          to: '/admin/teams',
           icon: 'fas fa-calendar-alt'
         },
         {

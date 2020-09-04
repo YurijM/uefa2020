@@ -219,9 +219,6 @@
         this.$refs['chat'].scrollTop = this.$refs['chat'].scrollHeight
       })
     },
-    /*mounted() {
-      this.$socket.emit('chat', this.getGambler);
-    },*/
     computed: {
       ...mapGetters({
         getGamblers: 'chat/getGamblers',

@@ -83,14 +83,14 @@
 
     <v-data-table
       dense
-      class="mt-2 grey darken-3 mx-auto"
+      class="mt-10 grey darken-3 mx-auto"
       :style="{maxWidth: '700px'}"
       :headers="headers"
       :items="gamblers"
       :footer-props="{
         itemsPerPageAllText: 'Все',
         itemsPerPageOptions: [15, 25, -1],
-        itemsPerPageText: 'Количество строк на странице',
+        itemsPerPageText: 'Строк на странице',
         pageText: '{0}-{1} из {2}'
       }"
     >

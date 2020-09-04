@@ -8,6 +8,7 @@ const authkeyRoutes = require('./routes/authkey.routes');
 const gamblerRoutes = require('./routes/gambler.routes');
 const emailRoutes = require('./routes/email.routes');
 const chatRoutes = require('./routes/chat.routes');
+const groupRoutes = require('./routes/group.routes');
 const imageRoutes = require('./routes/image.routes');
 
 app.use(cors());
@@ -16,6 +17,7 @@ app.use('/api/authkey', authkeyRoutes);
 app.use('/api/gambler', gamblerRoutes);
 app.use('/api/email', emailRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/group', groupRoutes);
 app.use('/api/image', imageRoutes);
 
 io.on('connection', (socket) => {

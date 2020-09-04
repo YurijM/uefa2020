@@ -106,7 +106,7 @@
 
           this.$router.push('/login');
         }
-      }
+      },
     }
   }
 </script>

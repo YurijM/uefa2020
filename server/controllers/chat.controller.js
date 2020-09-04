@@ -82,7 +82,6 @@ module.exports.updateMessage = async (req, res) => {
   })
 };
 
-
 module.exports.deleteMessage = async (req, res) => {
   const query = 'DELETE FROM messages WHERE `from` = ? AND `date` = ?';
 
@@ -94,7 +93,7 @@ module.exports.deleteMessage = async (req, res) => {
     if (result) {
       res.json(true)
     } else {
-      res.json({error: 'Ошибка при удалении сообщения в таблице messages'})
+      res.json({error: 'Ошибка при удалении сообщения из таблицы messages'})
     }
   })
   .catch((e) => {
