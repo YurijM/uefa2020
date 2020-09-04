@@ -9,7 +9,7 @@
       @deleteItem="deleteItem"
     />
 
-    <mu-title-page-admin title="Группы" whatAdd="Добавить группу" @add="isAdd"/>
+    <mu-title-page-admin title="Группы" whatAdd="Добавить группу" @add="dialog = true"/>
 
     <v-dialog v-model="dialog" max-width="300px">
       <v-card>
@@ -109,6 +109,7 @@ export default {
         {text: 'Порядок', align: 'center', value: 'order'},
         {text: '', align: 'center', value: 'actions', sortable: false}
       ],
+      editedIndex: -1,
       editedItem: {
         group: '',
         order: ''
@@ -136,13 +137,10 @@ export default {
   methods: {
     ...mapActions({
       loadGroups: 'group/loadGroups',
-      saveGroup: 'group/saveGroup',
-      updateGroup: 'group/saveGroup',
+      addGroup: 'group/addGroup',
+      updateGroup: 'group/updateGroup',
       deleteGroup: 'group/deleteGroup'
     }),
-    isAdd(data) {
-      this.dialog = data
-    },
     editItem(item) {
       this.editedIndex = this.groups.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -176,8 +174,8 @@ export default {
 
       this.loading = true
 
-      if (this.editedIndex > -1) {
-        await this.saveGroup(this.editedItem);
+      if (this.editedIndex === -1) {
+        await this.addGroup(this.editedItem);
       } else {
         await this.updateGroup(this.editedItem);
       }

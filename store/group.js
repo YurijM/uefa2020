@@ -36,11 +36,11 @@ export const actions = {
     }
   },
 
-  async saveGroup({commit}, payload) {
+  async addGroup({commit}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const data = await this.$axios.$get('/api/group/saveGroup', {
+      const data = await this.$axios.$get('/api/group/addGroup', {
         params: {
           group: payload.group,
           order: payload.order
@@ -54,10 +54,10 @@ export const actions = {
         }, {root: true});
       }
     } catch (e) {
-      console.log('Error saveGroup:', e);
+      console.log('Error addGroup:', e);
       await commit('common/SET_MESSAGE', {
         status: 'error',
-        text: 'Ошибка при выполнении saveGroup (см. в консоли ошибку "Error saveGroup")'
+        text: 'Ошибка при выполнении addGroup (см. в консоли ошибку "Error addGroup")'
       }, {root: true});
     }
   },

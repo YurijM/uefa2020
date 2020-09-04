@@ -5,7 +5,7 @@ const router = Router();
 
 // /api/group
 router.get('/loadGroups', group.loadGroups);
-router.get('/saveGroup', group.saveGroup);
+router.get('/addGroup', group.addGroup);
 router.get('/updateGroup', group.updateGroup);
 router.get('/deleteGroup', group.deleteGroup);
 

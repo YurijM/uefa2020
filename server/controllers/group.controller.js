@@ -12,7 +12,7 @@ module.exports.loadGroups = async (req, res) => {
   })
 };
 
-module.exports.saveGroup = async (req, res) => {
+module.exports.addGroup = async (req, res) => {
   const query = 'INSERT INTO `groups` (`group`, `order`) VALUES (?, ?)';
 
   await pool.promise().execute(query, [
