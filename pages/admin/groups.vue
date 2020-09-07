@@ -3,7 +3,7 @@
     <mu-dialog-delete-record
       v-model="dialogDelete"
       :record="{
-        title: 'группу',
+        title: 'группы',
         message: editedItem.group
       }"
       @deleteItem="deleteItem"
@@ -33,14 +33,15 @@
               :rules="[rules.required]"
             />
 
-            <v-label>Порядок отображения</v-label>
+            <!--<v-label>Порядок отображения</v-label>-->
+            <v-subheader class="px-0" :style="{height: 'auto'}">Порядок отображения</v-subheader>
             <v-card-text class="pt-2 pb-0 px-0">
               <v-slider
                 class="mt-7 mx-0"
                 hide-details="false"
                 v-model="editedItem.order"
                 min="1"
-                max="12"
+                max="10"
                 step="1"
                 dense
                 thumb-label="always"
@@ -69,7 +70,7 @@
     <v-data-table
       dense
       class="mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '300px'}"
+      :style="{maxWidth: '325px'}"
       :headers="headers"
       :items="groups"
       :hide-default-footer="true"
@@ -165,7 +166,7 @@ export default {
     },
     close() {
       this.editedIndex = -1
-      this.editedItem = this.defaultItem;
+      this.editedItem = Object.assign({}, this.defaultItem)
 
       this.dialog = false
     },
