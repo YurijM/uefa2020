@@ -33,7 +33,6 @@
               :rules="[rules.required]"
             />
 
-            <!--<v-label>Порядок отображения</v-label>-->
             <v-subheader class="px-0" :style="{height: 'auto'}">Порядок отображения</v-subheader>
             <v-card-text class="pt-2 pb-0 px-0">
               <v-slider
@@ -158,7 +157,7 @@ export default {
       if (data.delete) {
         this.loading = true
 
-        await  this.deleteGroup(this.editedItem.id)
+        await this.deleteGroup(this.editedItem.id)
         await this.loadGroups()
 
         this.loading = false;

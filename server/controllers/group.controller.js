@@ -43,7 +43,7 @@ module.exports.updateGroup = async (req, res) => {
     if (result) {
       res.json(true)
     } else {
-      res.json({error: 'Ошибка при обновлении группы в таблицу groups'})
+      res.json({error: 'Ошибка при обновлении группы в таблице groups'})
     }
   })
   .catch((e) => {

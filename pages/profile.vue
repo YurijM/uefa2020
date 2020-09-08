@@ -25,6 +25,7 @@
               <v-text-field
                 name="nickname"
                 type="text"
+                color="purple lighten-2"
                 v-model="gambler.nickname"
                 :rules="[rules.required]"
               >
