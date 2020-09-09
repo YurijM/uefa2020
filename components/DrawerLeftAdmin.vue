@@ -55,6 +55,11 @@ export default {
           icon: 'fas fa-calendar-alt'
         },
         {
+          title: 'Стадионы',
+          to: '/admin/stadiums',
+          icon: 'fas fa-ring'
+        },
+        {
           title: 'Расписание',
           to: '/admin/schedule',
           icon: 'fas fa-clock'

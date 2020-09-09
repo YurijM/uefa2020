@@ -74,7 +74,7 @@ module.exports.addTeam = async (req, res) => {
 
 module.exports.updateTeam = async (req, res) => {
   const query = 'UPDATE `teams` ' +
-    'SET `team` = ?, `flag` = ?, `group_id` = ?, `order` = ?, ' +'' +
+    'SET `team` = ?, `flag` = ?, `group_id` = ?, `order` = ?, ' +
     '`place` = ' + `${!req.query.place ? 'NULL' : req.query.place} ` +
     'WHERE `id` = ?';
 

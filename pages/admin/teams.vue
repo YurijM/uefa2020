@@ -239,6 +239,10 @@ export default {
       this.editedItem = Object.assign({}, item)
 
       this.dialog = true
+
+      this.$nextTick(() => {
+        this.$refs.form.reset()
+      })
     },
     promptDelete(item) {
       this.editedItem = Object.assign({}, item)

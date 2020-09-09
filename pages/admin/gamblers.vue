@@ -235,24 +235,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/*.v-application--is-ltr .v-data-footer__select .v-select {
-  margin: 10px 0 10px 10px !important;
-}
 
-.v-application--is-ltr .v-data-footer__select {
-  margin-right: 0;
-}
-
-.v-application--is-ltr .v-data-footer__pagination {
-  margin: 0 10px;
-}
-
-.v-application--is-ltr .v-data-footer__icons-before .v-btn:last-child {
-  margin-right: 5px;
-}
-
-.v-btn--icon.v-size--default {
-  height: 36px;
-  width: 10px;
-}*/
 </style>

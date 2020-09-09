@@ -4,7 +4,6 @@ const path = require('path');
 module.exports.resize = async (req, res) => {
   let dir = path.resolve(__dirname, '../..', 'static');
   const image = dir + '/' + req.query.image;
-  console.log('image:', image);
 
   sharp(image)
   .toBuffer()
