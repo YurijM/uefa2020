@@ -99,6 +99,12 @@ export const actions = {
         const fileName = `${team.id}-${Date.now()}${fileExt}`;
 
         await dispatch('updateFlag', {team, file, fileName})
+
+        await commit('common/SET_MESSAGE', {
+          status: 'success',
+          text: `Команда "${team.team}" добавлена`
+        }, {root: true});
+
         await dispatch('loadTeams')
       } else if (data.error) {
         await commit('common/SET_MESSAGE', {

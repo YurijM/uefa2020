@@ -55,24 +55,23 @@
 
               <v-col :cols="editedItem.flag ? 10 : 12" class="py-0">
                 <v-file-input
-                  :rules="[rules.image]"
                   accept="image/png, image/jpeg"
                   :label="!editedItem.flag ? 'Загрузить флаг' : 'Заменить флаг'"
                   show-size
-                  :style="{paddingTop: 0, marginTop: 0}"
+                  class="pt-0 mt-0"
                   v-model="file"
+                  :rules="[rules.image, rules.flag]"
                 />
               </v-col>
             </v-row>
 
             <v-row>
-              <v-col :cols="editedItem.id ? 6 : 12" class="pt-0">
-                <v-subheader v-if="editedItem.id" class="px-0" :style="{height: 'auto'}">Порядок отображения</v-subheader>
+              <v-col :cols="12" class="py-0">
                 <v-card-text class="pb-0 px-0">
                   <v-slider
                     class="mt-5 mx-0"
-                    :label="editedItem.id ? '' : 'Порядок отображения'"
                     hide-details="false"
+                    label="Порядок отображения"
                     v-model="editedItem.order"
                     min="1"
                     max="4"
@@ -85,22 +84,20 @@
                 </v-card-text>
               </v-col>
 
-              <v-col v-if="editedItem.id" cols="6" class="pt-0">
-                <v-subheader class="px-0" :style="{height: 'auto'}">Место</v-subheader>
-                <v-card-text class="pb-0 px-0">
-                  <v-slider
-                    class="mt-5 mx-0"
-                    hide-details="false"
-                    v-model="editedItem.place"
-                    min="1"
-                    max="4"
-                    step="1"
-                    dense
-                    thumb-label="always"
-                    ticks="always"
-                    tick-size="3"
-                  />
-                </v-card-text>
+              <v-col v-if="editedItem.id" cols="12" class="py-0">
+                <v-row>
+                  <v-col cols="6" class="d-flex py-0 pr-4 align-center justify-end grey--text text--lighten-2" :style="{fontSize: '1.125em'}">
+                    Место в группе
+                  </v-col>
+                  <v-col cols="2" class="pa-0">
+                    <v-select
+                      class="pt-0 mt-0"
+                      :items="places"
+                      v-model="editedItem.place"
+                      color="yellow"
+                    ></v-select>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-card-text>
@@ -124,14 +121,18 @@
     <v-data-table
       dense
       class="mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '600px'}"
+      :style="{maxWidth: '475px'}"
       :headers="headers"
       :items="teams"
-      :hide-default-footer="true"
       no-data-text="Команды ещё не введены"
+      :footer-props="{
+        itemsPerPageAllText: 'Все',
+        itemsPerPageOptions: [12, -1],
+        itemsPerPageText: 'Строк на странице',
+        pageText: '{0}-{1} из {2}'
+      }"
     >
       <template v-slot:item.flag="{item}">
-        <!--{{ statuses.find(s => s.value === item.status).text }}-->
         <v-img :src="`/flags/${item.flag}`" height="20" width="30"/>
       </template>
 
@@ -166,33 +167,35 @@ export default {
       valid: true,
       loading: false,
       groups: [],
+      places: ['', 1, 2, 3, 4],
       file: null,
       headers: [
-        {text: 'Флаг', value: 'flag', align: 'right', sortable: false, width: '3%'},
+        {text: 'Флаг', value: 'flag', align: 'center', sortable: false, width: '5%'},
         {text: 'Команда', value: 'team'},
-        {text: 'Группа', value: 'group_id'},
-        {text: 'Порядок', align: 'center', value: 'order'},
-        {text: 'Место', align: 'center', value: 'place'},
+        {text: 'Группа', value: 'group'},
+        {text: 'Порядок', align: 'center', value: 'order', sortable: false},
+        {text: 'Место', align: 'center', value: 'place', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false}
       ],
       editedIndex: -1,
       editedItem: {
         flag: '',
         team: '',
-        group_id: 0,
+        group: '',
         order: '',
         place: ''
       },
       defaultItem: {
         flag: '',
         team: '',
-        group_id: 0,
+        group: '',
         order: '',
         place: ''
       },
       rules: {
         required: value => !!value || 'Поле должно быть заполнено',
-        image: value => !value || value.size < 100000 || 'Размер файла не должен быть больше 100Кб'
+        image: value => !value || value.size < 100000 || 'Размер файла не должен быть больше 100Кб',
+        flag: value => !!value || !!this.editedItem.flag || 'Поле должно быть заполнено'
       },
     }
   },
@@ -253,6 +256,7 @@ export default {
       }
     },
     close() {
+      this.$refs.form.reset()
       this.dialog = false
 
       this.$nextTick(() => {
@@ -287,5 +291,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
