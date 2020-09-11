@@ -11,7 +11,11 @@
 
     <mu-title-page-admin title="Команды" whatAdd="Добавить команду" @add="addItem"/>
 
-    <v-dialog v-model="dialog" max-width="400px">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="400px"
+    >
       <v-card>
         <v-card-title class="dark blue-grey darken-3 pa-3 text-body-1">
           {{ formTitle }}
@@ -53,7 +57,7 @@
                 <v-img :src="`/flags/${editedItem.flag}`"/>
               </v-col>
 
-              <v-col :cols="editedItem.flag ? 10 : 12" class="py-0">
+              <v-col cols="editedItem.flag ? 10 : 12" class="py-0">
                 <v-file-input
                   accept="image/png, image/jpeg"
                   :label="!editedItem.flag ? 'Загрузить флаг' : 'Заменить флаг'"
@@ -66,7 +70,7 @@
             </v-row>
 
             <v-row>
-              <v-col :cols="12" class="py-0">
+              <v-col cols="12" class="py-0">
                 <v-card-text class="pb-0 px-0">
                   <v-slider
                     class="mt-5 mx-0"
@@ -194,7 +198,7 @@ export default {
       },
       rules: {
         required: value => !!value || 'Поле должно быть заполнено',
-        image: value => !value || value.size < 100000 || 'Размер файла не должен быть больше 100Кб',
+        image: value => !value || value.size < 150000 || 'Размер файла не должен быть больше 150Кб',
         flag: value => !!value || !!this.editedItem.flag || 'Поле должно быть заполнено'
       },
     }
@@ -235,13 +239,13 @@ export default {
       this.dialog = true
     },
     editItem(item) {
-      this.editedIndex = this.teams.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-
       this.dialog = true
 
       this.$nextTick(() => {
         this.$refs.form.reset()
+
+        this.editedIndex = this.teams.indexOf(item)
+        this.editedItem = Object.assign({}, item)
       })
     },
     promptDelete(item) {

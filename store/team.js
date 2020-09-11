@@ -109,7 +109,7 @@ export const actions = {
       } else if (data.error) {
         await commit('common/SET_MESSAGE', {
           status: 'error',
-          text: `updateFlag: ${data.error}`
+          text: `addTeam: ${data.error}`
         }, {root: true});
       }
     } catch (e) {

@@ -60,8 +60,8 @@ export default {
           icon: 'fas fa-ring'
         },
         {
-          title: 'Расписание',
-          to: '/admin/schedule',
+          title: 'Игры',
+          to: '/admin/games',
           icon: 'fas fa-clock'
         },
         {

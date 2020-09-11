@@ -89,7 +89,7 @@
       :items="gamblers"
       :footer-props="{
         itemsPerPageAllText: 'Все',
-        itemsPerPageOptions: [15, 25, -1],
+        itemsPerPageOptions: [20, -1],
         itemsPerPageText: 'Строк на странице',
         pageText: '{0}-{1} из {2}'
       }"

@@ -11,6 +11,7 @@ const chatRoutes = require('./routes/chat.routes');
 const groupRoutes = require('./routes/group.routes');
 const teamRoutes = require('./routes/team.routes');
 const stadiumRoutes = require('./routes/stadium.routes');
+const gameRoutes = require('./routes/game.routes');
 const imageRoutes = require('./routes/image.routes');
 
 app.use(cors());
@@ -22,6 +23,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/group', groupRoutes);
 app.use('/api/team', teamRoutes);
 app.use('/api/stadium', stadiumRoutes);
+app.use('/api/game', gameRoutes);
 app.use('/api/image', imageRoutes);
 
 io.on('connection', (socket) => {
