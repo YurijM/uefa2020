@@ -9,7 +9,7 @@ router.get('/updateGame', game.updateGame);
 router.get('/deleteGame', game.deleteGame);
 router.get('/addResultByAddTime', game.addResultByAddTime);
 router.get('/deleteResultByAddTime', game.deleteResultByAddTime);
-router.get('/addWinByPenalty', game.addWinByPenalty);
-router.get('/deleteWinByPenalty', game.deleteWinByPenalty);
+router.get('/addpenaltyTeam', game.addpenaltyTeam);
+router.get('/deletepenaltyTeam', game.deletepenaltyTeam);
 
 module.exports = router;

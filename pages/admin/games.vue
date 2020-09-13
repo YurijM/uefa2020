@@ -40,7 +40,7 @@
             />
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="6" class="pt-0">
                 <v-menu
                   ref="date"
                   v-model="dateOpen"
@@ -52,6 +52,7 @@
                     <v-text-field
                       v-model="editedItem.date"
                       label="Дата"
+                      hide-details
                       persistent-hint
                       v-bind="attrs"
                       v-on="on"
@@ -61,7 +62,7 @@
                 </v-menu>
               </v-col>
 
-              <v-col cols="6">
+              <v-col cols="6" class="pt-0">
                 <v-menu
                   ref="time"
                   v-model="timeOpen"
@@ -74,7 +75,7 @@
                     <v-text-field
                       v-model="editedItem.time"
                       label="Время"
-                      readonly
+                      hide-details
                       v-bind="attrs"
                       v-on="on"
                     />
@@ -90,36 +91,47 @@
             </v-row>
 
             <v-select
+              class="pb-2"
               :items="stadiums"
               v-model="editedItem.stadium_id"
               label="Стадион"
+              hide-details
+              no-data-text="Стадионы не заведены"
               color="yellow"
               :rules="[rules.required]"
             />
 
             <v-select
+              class="pb-2"
               :items="groups"
               v-model="editedItem.group_id"
               label="Группа"
+              hide-details
+              no-data-text="Группы не заведены"
               color="yellow"
               :rules="[rules.required]"
             />
 
             <v-row>
-              <v-col cols="9">
+              <v-col cols="9" class="pt-0">
                 <v-select
                   :items="teams"
                   v-model="editedItem.team1_id"
                   label="Команда"
+                  hide-details
+                  no-data-text="Команды не заведены"
                   color="yellow"
+                  @change="addToGameTeams"
                   :rules="[rules.required]"
                 />
               </v-col>
 
-              <v-col cols="3">
+              <v-col cols="3" class="pt-0">
                 <v-text-field
+                  :disabled="!editedItem.team1_id"
                   v-model="editedItem.goal1"
                   label="Голы"
+                  hide-details
                   color="yellow"
                   :rules="[rules.isNumber]"
                 />
@@ -127,22 +139,87 @@
             </v-row>
 
             <v-row>
-              <v-col cols="9">
+              <v-col cols="9" class="pt-0">
                 <v-select
                   :items="teams"
                   v-model="editedItem.team2_id"
                   label="Команда"
+                  hide-details
+                  no-data-text="Команды не заведены"
                   color="yellow"
+                  @change="addToGameTeams"
                   :rules="[rules.required]"
                 />
               </v-col>
 
-              <v-col cols="3">
+              <v-col cols="3" class="pt-0">
                 <v-text-field
+                  :disabled="!editedItem.team1_id"
                   v-model="editedItem.goal2"
                   label="Голы"
+                  hide-details
                   color="yellow"
                   :rules="[rules.isNumber]"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
+              justify="center"
+            >
+              <v-col cols="12" class="py-0">
+                <v-subheader
+                  class="mb-1 justify-center"
+                  :style="{height: 'auto'}"
+                >
+                  Дополнительное время
+                </v-subheader>
+              </v-col>
+
+              <v-col cols="4" class="pt-0">
+                <v-text-field
+                  class="text-field-center pt-1"
+                  v-model="editedItem.addGoal1"
+                  label="Голы"
+                  color="yellow"
+                  :rules="[rules.isNumber, rules.notLess1]"
+                />
+              </v-col>
+
+              <v-col cols="4" class="pt-0">
+                <v-text-field
+                  class="text-field-center pt-1"
+                  v-model="editedItem.addGoal2"
+                  label="Голы"
+                  color="yellow"
+                  :rules="[rules.isNumber, rules.notLess2]"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="editedItem.addGoal1 && editedItem.addGoal1 === editedItem.addGoal2 && editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
+              justify="center"
+            >
+              <v-col cols="12" class="py-0">
+                <v-subheader
+                  class="justify-center"
+                  :style="{height: 'auto'}"
+                >
+                  Победитель по пенальти
+                </v-subheader>
+              </v-col>
+
+              <v-col cols="8" class="pt-0">
+                <v-select
+                  class="pb-0"
+                  :items="gameTeams"
+                  v-model="editedItem.penaltyId"
+                  label="Команда"
+                  no-data-text="Команды не заведены"
+                  color="yellow"
+                  :rules="[rules.required]"
                 />
               </v-col>
             </v-row>
@@ -151,7 +228,13 @@
 
         <v-card-actions class="dark blue-grey darken-3 py-2 px-5">
           <v-spacer></v-spacer>
-          <v-btn color="error" text @click="close()">Отмена</v-btn>
+          <v-btn
+            color="error"
+            text
+            @click="close()"
+          >
+            Отмена
+          </v-btn>
           <v-btn
             color="success"
             text
@@ -167,7 +250,7 @@
     <v-data-table
       dense
       class="mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '750px'}"
+      :style="{maxWidth: '850px'}"
       :headers="headers"
       :items="games"
       no-data-text="Игры ещё не введены"
@@ -185,20 +268,26 @@
 
       <template v-slot:item.team1="{item}">
         <div class="d-flex flex-row justify-center">
+          <div class="flex-grow-1 mr-1 text-right">{{ item.team1 }}</div>
           <v-img class="flex-grow-0" :src="`/flags/${item.flag1}`" height="20" width="30"/>
-          <div class="flex-grow-1 ml-1 text-left">{{ item.team1 }}</div>
         </div>
       </template>
 
       <template v-slot:item.team2="{item}">
         <div class="d-flex flex-row justify-center">
-          <div class="flex-grow-1 mr-1 text-right">{{ item.team2 }}</div>
           <v-img class="flex-grow-0" :src="`/flags/${item.flag2}`" height="20" width="30"/>
+          <div class="flex-grow-1 ml-1 text-left">{{ item.team2 }}</div>
         </div>
       </template>
 
       <template v-slot:item.result="{item}">
         {{ item.goal1 }} - {{ item.goal2 }}
+      </template>
+
+      <template v-slot:item.addTime="{item}">
+        <div v-if="item.addGoal1">
+          {{ item.addGoal1 }} - {{ item.addGoal2 }}
+        </div>
       </template>
 
       <template v-slot:item.actions="{item}">
@@ -238,14 +327,17 @@ export default {
       stadiums: [],
       groups: [],
       teams: [],
+      gameTeams: [],
       headers: [
         {text: '№', value: 'game_no', align: 'center', width: '7%'},
         {text: 'Начало', value: 'start', align: 'center'},
-        {text: 'Стадион', value: 'stadium'},
+        {text: 'Стадион', value: 'city'},
         {text: 'Группа', value: 'group'},
         {text: 'Команда', value: 'team1', align: 'center'},
         {text: 'Счёт', value: 'result', align: 'center', sortable: false},
         {text: 'Команда', value: 'team2', align: 'center'},
+        {text: 'Доп.время', value: 'addTime', align: 'center', sortable: false},
+        {text: 'По пенальти', value: 'penaltyTeam', align: 'center', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false}
       ],
       startDate: new Date(2000, 0, 1),
@@ -260,8 +352,12 @@ export default {
         stadium: '',
         group: '',
         team1: '',
-        result: '',
         team2: '',
+        goal1: '',
+        goal2: '',
+        addGoal1: '',
+        addGoal2: '',
+        penaltyTeam: ''
       },
       defaultItem: {
         game_no: '',
@@ -270,13 +366,19 @@ export default {
         stadium: '',
         group: '',
         team1: '',
-        result: '',
         team2: '',
+        goal1: '',
+        goal2: '',
+        addGoal1: '',
+        addGoal2: '',
+        penaltyTeam: ''
       },
       rules: {
         required: value => !!value || 'Поле должно быть заполнено',
         rangeNo: value => value > 0 && value < 53 || 'Номер игры лежит в диапазоне от 1 до 52',
-        isNumber: value => value == null || !isNaN(value) || 'Значение должно быть числом'
+        isNumber: value => value == null || !isNaN(value) || 'Значение должно быть числом',
+        notLess1: value => value >= this.editedItem.goal1 || `Значение не должно быть меньше ${this.editedItem.goal1}`,
+        notLess2: value => value >= this.editedItem.goal2 || `Значение не должно быть меньше ${this.editedItem.goal2}`
       },
     }
   },
@@ -340,6 +442,28 @@ export default {
       const [year, month, day] = date.split('-')
       return `${day}.${month}.${year}`
     },
+    addToGameTeams() {
+      this.gameTeams = []
+
+      let team1 = null
+      if (this.editedItem.team1_id) {
+        team1 = this.teams.find(e => e.value === this.editedItem.team1_id)
+        this.gameTeams.push({value: team1.value, text: team1.text})
+      }
+
+      let team2 = null
+      if (this.editedItem.team2_id) {
+        team2 = this.teams.find(e => e.value === this.editedItem.team2_id)
+        this.gameTeams.push({value: team2.value, text: team2.text})
+      }
+
+
+      /*const team1 = this.teams.find(e => e.value === this.editedItem.team1_id)
+      const team2 = this.teams.find(e => e.value === this.editedItem.team2_id)
+
+      this.gameTeams.push({value: team1.value, text: team1.text})
+      this.gameTeams.push({value: team2.value, text: team2.text})*/
+    },
     addItem() {
       this.editedIndex = -1
       this.editedItem = Object.assign({}, this.defaultItem);
@@ -352,11 +476,19 @@ export default {
       this.$nextTick(() => {
         this.$refs.form.reset()
 
+        this.gameTeams = [
+          {
+            value: item.team1_id,
+            text: item.team1
+          },
+          {
+            value: item.team2_id,
+            text: item.team2
+          }
+        ]
+
         this.editedIndex = this.games.indexOf(item)
         this.editedItem = Object.assign({}, item)
-
-        /*const date = new Date(item.start)
-        this.dateCurrent = date.toISOString().substr(0, 10)*/
 
         if (this.editedIndex > -1) {
           const date = new Date(item.start)
@@ -422,6 +554,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.text-field-center input {
+    text-align: center;
+}
+</style>
 
 <style lang="scss" scoped>
 </style>

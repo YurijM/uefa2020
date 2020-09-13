@@ -115,7 +115,7 @@ export const actions = {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      await dispatch('deleteWinByPenalty', payload);
+      await dispatch('deletepenaltyTeam', payload);
       await dispatch('deleteResultByAddTime', payload);
 
       const data = await this.$axios.$get('/api/game/deleteGame', {
@@ -154,7 +154,7 @@ export const actions = {
 
       const data = await this.$axios.$get('/api/game/addResultByAddTime', {
         params: {
-          game_id: payload.id,
+          id: payload.id,
           goal1: payload.addGoal1,
           goal2: payload.addGoal2,
         }
@@ -202,14 +202,14 @@ export const actions = {
     }
   },
 
-  async addWinByPenalty({dispatch, commit}, payload) {
+  async addpenaltyTeam({dispatch, commit}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const data = await this.$axios.$get('/api/game/addWinByPenalty', {
+      const data = await this.$axios.$get('/api/game/addpenaltyTeam', {
         params: {
           game_id: payload.id,
-          team_id: payload.teamPenaltyId,
+          team_id: payload.penaltyId,
         }
       });
 
@@ -217,23 +217,23 @@ export const actions = {
         console.log('error:', data.error)
         await commit('common/SET_MESSAGE', {
           status: 'error',
-          text: `addWinByPenalty: ${data.error}`
+          text: `addpenaltyTeam: ${data.error}`
         }, {root: true});
       }
     } catch (e) {
-      console.log('Error addWinByPenalty:', e);
+      console.log('Error addpenaltyTeam:', e);
       await commit('common/SET_MESSAGE', {
         status: 'error',
-        text: 'Ошибка при выполнении addWinByPenalty (см. в консоли ошибку "Error addWinByPenalty")'
+        text: 'Ошибка при выполнении addpenaltyTeam (см. в консоли ошибку "Error addpenaltyTeam")'
       }, {root: true});
     }
   },
 
-  async deleteWinByPenalty({dispatch, commit}, payload) {
+  async deletepenaltyTeam({dispatch, commit}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const data = await this.$axios.$get('/api/game/deleteWinByPenalty', {
+      const data = await this.$axios.$get('/api/game/deletepenaltyTeam', {
         params: {
           id: payload.id
         }
@@ -243,26 +243,26 @@ export const actions = {
         console.log('error:', data.error)
         await commit('common/SET_MESSAGE', {
           status: 'error',
-          text: `deleteWinByPenalty: ${data.error}`
+          text: `deletepenaltyTeam: ${data.error}`
         }, {root: true});
       }
     } catch (e) {
-      console.log('Error deleteWinByPenalty:', e);
+      console.log('Error deletepenaltyTeam:', e);
       await commit('common/SET_MESSAGE', {
         status: 'error',
-        text: 'Ошибка при выполнении deleteWinByPenalty (см. в консоли ошибку "Error deleteWinByPenalty")'
+        text: 'Ошибка при выполнении deletepenaltyTeam (см. в консоли ошибку "Error deletepenaltyTeam")'
       }, {root: true});
     }
   },
   async updateAddParameters({dispatch}, payload) {
     await dispatch('deleteResultByAddTime', payload);
-    await dispatch('deleteWinByPenalty', payload);
+    await dispatch('deletepenaltyTeam', payload);
 
     if (payload.goal1 && payload.goal2 && payload.goal1 === payload.goal2) {
       await dispatch('addResultByAddTime', payload);
 
       if (payload.addGoal1 && payload.addGoal2 && payload.addGoal1 === payload.addGoal2) {
-        await dispatch('addWinByPenalty', payload);
+        await dispatch('addpenaltyTeam', payload);
       }
     }
   }

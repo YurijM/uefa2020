@@ -4,10 +4,9 @@ module.exports.loadGames = async (req, res) => {
   const query = 'SELECT g.id, g.stadium_id, g.group_id, g.team1_id, g.team2_id, ' +
     'g.`start`, g.game_no, s.city, s.stadium, s.image, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
-    '' +
     'IFNULL(g.goal1, \'\') goal1, IFNULL(g.goal2, \'\') goal2, ' +
     'IFNULL(a.goal1, \'\') addGoal1, IFNULL(a.goal2, \'\') addGoal2, ' +
-    'IFNULL(p.team, \'\') flagByPenalty, IFNULL(p.team, \'\') winByPenalty ' +
+    'IFNULL(p.team_id, 0) penaltyId, IFNULL(p.team, \'\') penaltyTeam ' +
     'FROM games g ' +
     'LEFT JOIN `groups` gr ON gr.id = g.group_id ' +
     'LEFT JOIN teams t1 ON t1.id = g.team1_id ' +
@@ -15,7 +14,7 @@ module.exports.loadGames = async (req, res) => {
     'LEFT JOIN stadiums s ON s.id = g.stadium_id ' +
     'LEFT JOIN addtime a ON a.game_id = g.id ' +
     'LEFT JOIN ' +
-    '(SELECT p.game_id, t.flag, t.team FROM penalty p LEFT JOIN teams t ON t.id = p.team_id) ' +
+    '(SELECT p.game_id, p.team_id, t.team FROM penalty p LEFT JOIN teams t ON t.id = p.team_id) ' +
     'p ON p.game_id = g.id ' +
     'ORDER BY g.game_no'
 
@@ -101,7 +100,7 @@ module.exports.deleteGame = async (req, res) => {
 
 module.exports.addResultByAddTime = async (req, res) => {
   const query = 'INSERT INTO `addtime` ' +
-    '(`game_id`, `goal1`, `goal2`)' +
+    '(`game_id`, `goal1`, `goal2`) ' +
     'VALUES (?, ?, ?)';
 
   await pool.promise().execute(query, [
@@ -139,9 +138,9 @@ module.exports.deleteResultByAddTime = async (req, res) => {
   })
 }
 
-module.exports.addWinByPenalty = async (req, res) => {
+module.exports.addpenaltyTeam = async (req, res) => {
   const query = 'INSERT INTO `penalty` ' +
-    '(`game_id`, `team_id`)' +
+    '(`game_id`, `team_id`) ' +
     'VALUES (?, ?)';
 
   await pool.promise().execute(query, [
@@ -160,7 +159,7 @@ module.exports.addWinByPenalty = async (req, res) => {
   })
 };
 
-module.exports.deleteWinByPenalty = async (req, res) => {
+module.exports.deletepenaltyTeam = async (req, res) => {
   const query = 'DELETE FROM `penalty` WHERE `game_id` = ?';
 
   await pool.promise().execute(query, [

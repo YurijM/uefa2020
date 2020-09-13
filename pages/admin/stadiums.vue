@@ -74,6 +74,7 @@
       :style="{maxWidth: '450px'}"
       :headers="headers"
       :items="stadiums"
+      :items-per-page="stadiums.length"
       no-data-text="Стадионы ещё не введены"
       hide-default-footer
     >

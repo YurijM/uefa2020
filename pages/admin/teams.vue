@@ -46,9 +46,10 @@
                   :items="groups"
                   v-model="editedItem.group_id"
                   label="Группа"
+                  no-data-text="Группы не заведены"
                   color="yellow"
                   :rules="[rules.required]"
-                ></v-select>
+                />
               </v-col>
             </v-row>
 
@@ -99,7 +100,7 @@
                       :items="places"
                       v-model="editedItem.place"
                       color="yellow"
-                    ></v-select>
+                    />
                   </v-col>
                 </v-row>
               </v-col>
