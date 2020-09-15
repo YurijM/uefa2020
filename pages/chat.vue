@@ -5,7 +5,7 @@
     <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid purple'}">
       <v-col class="pa-1" cols="6">
         <h3 class="ml-5">
-          {{gamblers.length > 1 ? 'Сейчас в чате:' : 'Сейчас в чате только Вы'}}
+          {{ gamblers.length > 1 ? 'Сейчас в чате:' : 'Сейчас в чате только Вы' }}
         </h3>
         <v-chip
           v-for="gambler in gamblers"
@@ -15,7 +15,7 @@
           dark
           :color="gambler.sex === 'м' ? 'blue lighten-2' : 'pink lighten-2'"
         >
-          {{gambler.nickname}}
+          {{ gambler.nickname }}
         </v-chip>
       </v-col>
 
@@ -32,14 +32,15 @@
           @keyup.ctrl.enter="sendMessage"
         />
 
-        <div v-if="emptyMessage" class="empty-message error--text ml-8 mb-1 caption" :style="{lineHeight: 'normal'}">
+        <div v-if="emptyMessage" class="empty-message error--text ml-8 mb-1 caption"
+             :style="{lineHeight: 'normal'}">
           Нельзя отправить пустое сообщение
         </div>
 
         <div class="d-flex justify-space-around">
           <v-tooltip v-if="message" bottom>
             <template v-slot:activator="{on}">
-              <v-btn  v-if="message" x-small color="error" v-on="on" @click="cancel">
+              <v-btn v-if="message" x-small color="error" v-on="on" @click="cancel">
                 <v-icon size="14">fas fa-ban</v-icon>
               </v-btn>
             </template>
@@ -81,7 +82,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              @change="range = item.value, changeParams()"
+              @change="range = item.value; changeParams()"
             />
           </v-radio-group>
 
@@ -135,15 +136,12 @@
               :class="message.layout.content.class"
             >
               <v-list-item-subtitle :style="{whiteSpace: 'normal !important'}">
-                <span class="mr-2">{{$moment(message.date).format('DD.MM.YYYY HH:mm:ss')}}</span>
-                <b>{{message.fromNick}}</b>
+                <span class="mr-2">{{ $moment(message.date).format('DD.MM.YYYY HH:mm:ss') }}</span>
+                <b>{{ message.fromNick }}</b>
               </v-list-item-subtitle>
 
-              <!--<v-list-item-subtitle>
-                {{message.fromNick}}
-              </v-list-item-subtitle>-->
-
-              <div v-if="message.fromId === getGambler.id" class="d-flex" :class="message.layout.editButtons.class">
+              <div v-if="message.fromId === getGambler.id" class="d-flex"
+                   :class="message.layout.editButtons.class">
                 <v-tooltip bottom>
                   <template v-slot:activator="{on}">
                     <v-btn icon x-small color="pink" v-on="on" @click="openDialog(message)">
@@ -173,221 +171,226 @@
 </template>
 
 <script>
-  import MuDialogDeleteMessage from '~/components/DialogDeleteMessage'
+import MuDialogDeleteMessage from '~/components/DialogDeleteMessage'
 
-  import {mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 
-  export default {
-    name: 'chat',
-    async asyncData({store}) {
-      await store.dispatch('chat/loadGamblers');
-      await store.dispatch('chat/loadMessages', {range: 1, system: false})
-    },
-    data() {
-      return {
-        dialog: false,
-        messageToDialog: null,
-        message: null,
-        text: '',
-        rangeMessages: [
-          {
-            label: 'Сегодня/Вчера',
-            value: 1
-          },
-          {
-            label: 'За неделю',
-            value: 7
-          },
-          {
-            label: 'Все',
-            value: 0
-          },
-        ],
-        emptyMessage: false,
-        systemMessages: this.getShowSystem,
-        range: 1,
-        maxHeight: 0
+export default {
+  name: 'chat',
+  async asyncData({store}) {
+    await store.dispatch('chat/loadGamblers');
+    const showSystemMessages = store.getters['chat/getShowSystem']
+    await store.dispatch('chat/loadMessages', {range: 1, system: showSystemMessages})
+  },
+  data() {
+    return {
+      dialog: false,
+      messageToDialog: null,
+      message: null,
+      text: '',
+      rangeMessages: [
+        {
+          label: 'Сегодня/Вчера',
+          value: 1
+        },
+        {
+          label: 'За неделю',
+          value: 7
+        },
+        {
+          label: 'Все',
+          value: 0
+        },
+      ],
+      emptyMessage: false,
+      range: 1,
+      maxHeight: 0
+    }
+  },
+  components: {
+    MuDialogDeleteMessage
+  },
+  mounted() {
+    setTimeout(() => {
+      this.$refs['chat'].scrollTop = this.$refs['chat'].scrollHeight
+    })
+  },
+  computed: {
+    ...mapGetters({
+      getGamblers: 'chat/getGamblers',
+      getMessages: 'chat/getMessages',
+      getGambler: 'gambler/getGambler',
+      getShowSystem: 'chat/getShowSystem',
+    }),
+    systemMessages: {
+      get: function() {
+        return this.getShowSystem
+      },
+      set: function (show) {
+        this.setShowSystem(show)
+        //return this.getShowSystem
       }
     },
-    components: {
-      MuDialogDeleteMessage
+    currentGambler() {
+      return this.getGambler
     },
-    mounted() {
-      /*this.loadMessages({range: this.range, system: this.systemMessages});*/
+    gamblers() {
+      return this.getGamblers
+    },
+    messages() {
+      return this.getMessages
+    },
+    rows() {
+      let rows = 1;
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xl':
+        case 'lg':
+          rows = 3;
+          break;
+        case 'md':
+          rows = 3;
+          break;
+        case 'sm':
+          rows = 4;
+          break;
+        default:
+          rows = 5
+      }
+
+      return rows
+    },
+    widthMessages() {
+      let width = '';
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xl':
+        case 'lg':
+          width = '65%';
+          break;
+        case 'md':
+          width = '85%';
+          break;
+        default:
+          width = '100%'
+      }
+
+      return width
+    },
+  },
+  watch: {
+    messages() {
+      this.maxHeight = this.$refs.top.clientHeight + this.$refs['params'].clientHeight + 125;
+      this.maxHeight += 'px'
+
+      console.log('this.$refs.top.clientHeight:', this.$refs.top.clientHeight)
+      console.log('this.$refs[\'params\'].clientHeight:', this.$refs['params'].clientHeight)
+      console.log('maxHeight:', this.maxHeight)
 
       setTimeout(() => {
-        this.$refs['chat'].scrollTop = this.$refs['chat'].scrollHeight
+        this.$refs['chat'].scrollTop = this.range === 1 ? this.$refs['chat'].scrollHeight : 0
       })
     },
-    computed: {
-      ...mapGetters({
-        getGamblers: 'chat/getGamblers',
-        getMessages: 'chat/getMessages',
-        getGambler: 'gambler/getGambler',
-        getShowSystem: 'chat/getShowSystem',
-      }),
-      currentGambler() {
-        return this.getGambler
-      },
-      gamblers() {
-        return this.getGamblers
-      },
-      messages() {
-        return this.getMessages
-      },
-      rows() {
-        let rows = 1;
-        switch (this.$vuetify.breakpoint.name) {
-          case 'xl':
-          case 'lg':
-            rows = 3;
-            break;
-          case 'md':
-            rows = 3;
-            break;
-          case 'sm':
-            rows = 4;
-            break;
-          default:
-            rows = 5
-        }
+  },
+  methods: {
+    ...mapMutations({
+      setShowSystem: 'chat/SET_SHOW_SYSTEM'
+    }),
+    ...mapActions({
+      loadMessages: 'chat/loadMessages'
+    }),
+    openDialog(message) {
+      this.emptyMessage = false;
 
-        return rows
-      },
-      widthMessages() {
-        let width = '';
-        switch (this.$vuetify.breakpoint.name) {
-          case 'xl':
-          case 'lg':
-            width = '65%';
-            break;
-          case 'md':
-            width = '85%';
-            break;
-          default:
-            width = '100%'
-        }
+      this.messageToDialog = message
 
-        return width
-      },
+      this.dialog = true;
     },
-    watch: {
-      messages() {
-        setTimeout(() => {
-          this.$refs['chat'].scrollTop = this.range === 1 ? this.$refs['chat'].scrollHeight : 0
-        })
-      },
-      systemMessages() {
-        this.maxHeight = this.$refs.top.clientHeight + this.$refs['params'].clientHeight + 125;
-        this.maxHeight += 'px'
-      }
-    },
-    methods: {
-      ...mapMutations({
-        setShowSystem: 'chat/SET_SHOW_SYSTEM'
-      }),
-      ...mapActions({
-        loadMessages: 'chat/loadMessages'
-      }),
-      openDialog(message) {
-        this.emptyMessage = false;
+    async deleteMessage(data) {
+      this.dialog = false;
 
-        this.messageToDialog = message
+      if (data.delete) {
+        this.messageToDialog = null;
 
-        this.dialog = true;
-      },
-      async deleteMessage(data) {
-        this.dialog = false;
+        const gambler = this.getGambler;
+        const message = {...data.message};
+        message.screenMessage =
+          `${gambler.nickname} ${gambler.sex === 'м' ? 'удалил' : 'удалила'} сообщение от ${this.$moment(message.date).format('DD.MM.YYYY HH:mm:ss')}`;
 
-        if (data.delete) {
-          this.messageToDialog = null;
-
-          const gambler = this.getGambler;
-          const message = {...data.message};
-          message.screenMessage =
-            `${gambler.nickname} ${gambler.sex === 'м' ? 'удалил' : 'удалила'} сообщение от ${this.$moment(message.date).format('DD.MM.YYYY HH:mm:ss')}`;
-
-          await this.$socket.emit('deleteMessage', message)
-        }
-      },
-      editMessage(message) {
-        this.emptyMessage = false;
-
-        this.message = {...message};
-        this.text = message.message.replace(/<br\/>/g, '\n')
-      },
-      /*async deleteMessage(message) {
         await this.$socket.emit('deleteMessage', message)
-      },*/
-      cancel() {
-        this.emptyMessage = false;
-        this.message = null;
-        this.text = ''
-      },
-      async changeParams() {
-        await this.setShowSystem(this.systemMessages);
-
-        await this.loadMessages({
-          range: this.range,
-          system: this.systemMessages
-        })
-      },
-      async sendMessage() {
-        if (!this.text.trim()) {
-          this.emptyMessage = true;
-          return
-        }
-
-        if (this.message) {
-          this.message.message = this.text.replace(/([^>])\n/g, '$1<br/>')
-          this.message.date = this.$moment(this.message.date).format('YYYY-MM-DD HH:mm:ss')
-
-          const gambler = this.getGambler;
-          this.message.screenMessage =
-            `${gambler.nickname} ${gambler.sex === 'м' ? 'обновил' : 'обновила'} сообщение от ${this.$moment(this.message.date).format('DD.MM.YYYY HH:mm:ss')}`;
-
-          await this.$socket.emit('editMessage', this.message);
-
-          this.message = null
-        } else {
-          const gambler = this.getGambler;
-          const message = {
-            fromId: gambler.id,
-            fromNick: gambler.nickname,
-            photo: gambler.photo,
-            to: 'uefa2020',
-            message: this.text.replace(/([^>])\n/g, '$1<br/>'),
-            screenMessage: `${gambler.nickname} ${gambler.sex === 'м' ? 'прислал' : 'прислала'} сообщение`
-          };
-
-          await this.$socket.emit('newMessage', message);
-        }
-
-        this.text = '';
-        this.emptyMessage = false;
-        //event.target.blur()
       }
+    },
+    editMessage(message) {
+      this.emptyMessage = false;
+
+      this.message = {...message};
+      this.text = message.message.replace(/<br\/>/g, '\n')
+    },
+    cancel() {
+      this.emptyMessage = false;
+      this.message = null;
+      this.text = ''
+    },
+    async changeParams() {
+      await this.loadMessages({
+        range: this.range,
+        system: this.getShowSystem
+      })
+    },
+    async sendMessage() {
+      if (!this.text.trim()) {
+        this.emptyMessage = true;
+        return
+      }
+
+      if (this.message) {
+        this.message.message = this.text.replace(/([^>])\n/g, '$1<br/>')
+        this.message.date = this.$moment(this.message.date).format('YYYY-MM-DD HH:mm:ss')
+
+        const gambler = this.getGambler;
+        this.message.screenMessage =
+          `${gambler.nickname} ${gambler.sex === 'м' ? 'обновил' : 'обновила'} сообщение от ${this.$moment(this.message.date).format('DD.MM.YYYY HH:mm:ss')}`;
+
+        await this.$socket.emit('editMessage', this.message);
+
+        this.message = null
+      } else {
+        const gambler = this.getGambler;
+        const message = {
+          fromId: gambler.id,
+          fromNick: gambler.nickname,
+          photo: gambler.photo,
+          to: 'uefa2020',
+          message: this.text.replace(/([^>])\n/g, '$1<br/>'),
+          screenMessage: `${gambler.nickname} ${gambler.sex === 'м' ? 'прислал' : 'прислала'} сообщение`
+        };
+
+        await this.$socket.emit('newMessage', message);
+      }
+
+      this.text = '';
+      this.emptyMessage = false;
+      //event.target.blur()
     }
   }
+}
 </script>
 
 <style lang="scss">
-  .message.v-textarea textarea {
-    line-height: normal !important;
-  }
+.message.v-textarea textarea {
+  line-height: normal !important;
+}
 
-  .message .v-icon.v-icon {
-    color: #1976d2 !important
-  }
+.message .v-icon.v-icon {
+  color: #1976d2 !important
+}
 
-  .range .v-label,
-  .systemMessages .v-label {
-    color: purple !important
-  }
+.range .v-label,
+.systemMessages .v-label {
+  color: purple !important
+}
 </style>
 
 <style lang="scss" scoped>
-  .v-list-item__title {
-    white-space: normal !important
-  }
+.v-list-item__title {
+  white-space: normal !important
+}
 </style>
