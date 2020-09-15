@@ -84,16 +84,26 @@
     <v-data-table
       dense
       class="mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '700px'}"
+      :style="{maxWidth: '700px', lineHeight: '45px'}"
       :headers="headers"
       :items="gamblers"
       :footer-props="{
         itemsPerPageAllText: 'Все',
-        itemsPerPageOptions: [20, -1],
+        itemsPerPageOptions: [10, -1],
         itemsPerPageText: 'Строк на странице',
         pageText: '{0}-{1} из {2}'
       }"
     >
+      <template v-slot:item.photo="{item}">
+        <!--<v-img height="40" width="40" :src="`/photo/${item.photo}`"/>-->
+        <v-avatar size="40" color="yellow">
+          <img
+            :src="`/photo/${item.photo}`"
+            :alt="item.nickname"
+          >
+        </v-avatar>
+      </template>
+
       <template v-slot:item.status="{item}">
         {{ statuses.find(s => s.value === item.status).text }}
       </template>
@@ -124,6 +134,7 @@ export default {
       dialog: false,
       valid: true,
       headers: [
+        {text: '', value: 'photo', width: '1%'},
         {text: 'Участник', value: 'fullName'},
         {text: 'Очки', align: 'center', value: 'points', sortable: false},
         {text: 'Место', align: 'center', value: 'place', sortable: false},
@@ -195,16 +206,6 @@ export default {
         this.editedIndex = -1
       })*/
     },
-    /*save() {
-      if (this.editedIndex > -1) {
-        console.log('editedItem:', this.editedItem);
-        console.log('editedIndex:', this.editedIndex);
-        Object.assign(this.gamblers[this.editedIndex], this.editedItem)
-      } else {
-        this.gamblers.push(this.editedItem)
-      }
-      this.close()
-    },*/
     async save() {
       if (!this.$refs.form.validate()) return;
 
