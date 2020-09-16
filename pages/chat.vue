@@ -281,10 +281,6 @@ export default {
       this.maxHeight = this.$refs.top.clientHeight + this.$refs['params'].clientHeight + 125;
       this.maxHeight += 'px'
 
-      console.log('this.$refs.top.clientHeight:', this.$refs.top.clientHeight)
-      console.log('this.$refs[\'params\'].clientHeight:', this.$refs['params'].clientHeight)
-      console.log('maxHeight:', this.maxHeight)
-
       setTimeout(() => {
         this.$refs['chat'].scrollTop = this.range === 1 ? this.$refs['chat'].scrollHeight : 0
       })

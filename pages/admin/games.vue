@@ -14,7 +14,7 @@
     <v-dialog
       v-model="dialog"
       persistent
-      max-width="300px"
+      max-width="350px"
     >
       <v-card>
         <v-card-title class="dark blue-grey darken-3 pa-3 text-body-1">
@@ -30,17 +30,19 @@
             class="grey darken-3 pt-2 pb-0"
             :style="{borderTop: '1px #eee solid !important', borderBottom: '1px #eee solid !important'}"
           >
-            <v-text-field
-              v-model="editedItem.game_no"
-              autofocus
-              type="number"
-              label="Номер игры"
-              color="yellow"
-              :rules="[rules.rangeNo]"
-            />
-
             <v-row>
-              <v-col cols="6" class="pt-0">
+              <v-col cols="5" class="pt-0 pb-1">
+                <v-text-field
+                  v-model="editedItem.game_no"
+                  autofocus
+                  type="number"
+                  label="Номер игры"
+                  color="yellow"
+                  :rules="[rules.rangeNo]"
+                />
+              </v-col>
+
+              <v-col cols="4" class="pt-0 pb-1">
                 <v-menu
                   ref="date"
                   v-model="dateOpen"
@@ -58,11 +60,12 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker locale="ru" v-model="dateCurrent" no-title @input="dateOpen = false"></v-date-picker>
+                  <v-date-picker locale="ru" v-model="dateCurrent" no-title
+                                 @input="dateOpen = false"></v-date-picker>
                 </v-menu>
               </v-col>
 
-              <v-col cols="6" class="pt-0">
+              <v-col cols="3" class="pt-0 pb-1">
                 <v-menu
                   ref="time"
                   v-model="timeOpen"
@@ -90,34 +93,40 @@
               </v-col>
             </v-row>
 
-            <v-select
-              class="pb-2"
-              :items="stadiums"
-              v-model="editedItem.stadium_id"
-              label="Стадион"
-              hide-details
-              no-data-text="Стадионы не заведены"
-              color="yellow"
-              :rules="[rules.required]"
-            />
+            <v-row>
+              <v-col cols="6" class="py-0">
+                <v-select
+                  class="pb-2"
+                  :items="stadiums"
+                  v-model="editedItem.stadium_id"
+                  label="Стадион"
+                  hide-details
+                  no-data-text="Стадионы не заведены"
+                  color="yellow"
+                  :rules="[rules.required]"
+                />
+              </v-col>
 
-            <v-select
-              class="pb-2"
-              :items="groups"
-              v-model="editedItem.group_id"
-              label="Группа"
-              hide-details
-              no-data-text="Группы не заведены"
-              color="yellow"
-              :rules="[rules.required]"
-            />
+              <v-col cols="6" class="py-0">
+                <v-select
+                  class="pb-2"
+                  :items="groups"
+                  v-model="editedItem.group_id"
+                  label="Группа"
+                  hide-details
+                  no-data-text="Группы не заведены"
+                  color="yellow"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+            </v-row>
 
             <v-row>
-              <v-col cols="9" class="pt-0">
+              <v-col cols="6" class="py-0">
                 <v-select
                   :items="teams"
                   v-model="editedItem.team1_id"
-                  label="Команда"
+                  label="Команда 1"
                   hide-details
                   no-data-text="Команды не заведены"
                   color="yellow"
@@ -126,8 +135,24 @@
                 />
               </v-col>
 
+              <v-col cols="6" class="py-0">
+                <v-select
+                  :items="teams"
+                  v-model="editedItem.team2_id"
+                  label="Команда 2"
+                  hide-details
+                  no-data-text="Команды не заведены"
+                  color="yellow"
+                  @change="addToGameTeams"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row justify="center">
               <v-col cols="3" class="pt-0">
                 <v-text-field
+                  class="text-field-center"
                   :disabled="!editedItem.team1_id"
                   v-model="editedItem.goal1"
                   label="Голы"
@@ -136,24 +161,10 @@
                   :rules="[rules.isNumber]"
                 />
               </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="9" class="pt-0">
-                <v-select
-                  :items="teams"
-                  v-model="editedItem.team2_id"
-                  label="Команда"
-                  hide-details
-                  no-data-text="Команды не заведены"
-                  color="yellow"
-                  @change="addToGameTeams"
-                  :rules="[rules.required]"
-                />
-              </v-col>
 
               <v-col cols="3" class="pt-0">
                 <v-text-field
+                  class="text-field-center"
                   :disabled="!editedItem.team1_id"
                   v-model="editedItem.goal2"
                   label="Голы"
@@ -169,15 +180,15 @@
               justify="center"
             >
               <v-col cols="12" class="py-0">
-                <v-subheader
-                  class="mb-1 justify-center"
+                <v-card-subtitle
+                  class="pa-0 mb-1 text-center yellow--text text--lighten-3"
                   :style="{height: 'auto'}"
                 >
                   Дополнительное время
-                </v-subheader>
+                </v-card-subtitle>
               </v-col>
 
-              <v-col cols="4" class="pt-0">
+              <v-col cols="4" class="py-0">
                 <v-text-field
                   class="text-field-center pt-1"
                   v-model="editedItem.addGoal1"
@@ -187,7 +198,7 @@
                 />
               </v-col>
 
-              <v-col cols="4" class="pt-0">
+              <v-col cols="4" class="py-0">
                 <v-text-field
                   class="text-field-center pt-1"
                   v-model="editedItem.addGoal2"
@@ -203,15 +214,15 @@
               justify="center"
             >
               <v-col cols="12" class="py-0">
-                <v-subheader
-                  class="justify-center"
+                <v-card-subtitle
+                  class="pa-0 text-center yellow--text text--lighten-3"
                   :style="{height: 'auto'}"
                 >
                   Победитель по пенальти
-                </v-subheader>
+                </v-card-subtitle>
               </v-col>
 
-              <v-col cols="8" class="pt-0">
+              <v-col cols="7" class="pt-0">
                 <v-select
                   class="pb-0"
                   :items="gameTeams"
@@ -375,7 +386,7 @@ export default {
       },
       rules: {
         required: value => !!value || 'Поле должно быть заполнено',
-        rangeNo: value => value > 0 && value < 53 || 'Номер игры лежит в диапазоне от 1 до 52',
+        rangeNo: value => value > 0 && value < 53 || 'Значение должно быть от 1 до 52',
         isNumber: value => value == null || !isNaN(value) || 'Значение должно быть числом',
         notLess1: value => value >= this.editedItem.goal1 || `Значение не должно быть меньше ${this.editedItem.goal1}`,
         notLess2: value => value >= this.editedItem.goal2 || `Значение не должно быть меньше ${this.editedItem.goal2}`
@@ -557,7 +568,7 @@ export default {
 
 <style lang="scss">
 .text-field-center input {
-    text-align: center;
+  text-align: center;
 }
 </style>
 
