@@ -93,20 +93,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
-              <v-col cols="6" class="py-0">
-                <v-select
-                  class="pb-2"
-                  :items="stadiums"
-                  v-model="editedItem.stadium_id"
-                  label="Стадион"
-                  hide-details
-                  no-data-text="Стадионы не заведены"
-                  color="yellow"
-                  :rules="[rules.required]"
-                />
-              </v-col>
-
+            <v-row justify="center">
               <v-col cols="6" class="py-0">
                 <v-select
                   class="pb-2"
@@ -116,38 +103,57 @@
                   hide-details
                   no-data-text="Группы не заведены"
                   color="yellow"
+                  @change="loadGroupTeams"
                   :rules="[rules.required]"
                 />
               </v-col>
             </v-row>
 
+            <v-select
+              class="pb-2"
+              :items="stadiums"
+              v-model="editedItem.stadium_id"
+              label="Стадион"
+              hide-details
+              no-data-text="Стадионы не заведены"
+              color="yellow"
+              :rules="[rules.required]"
+            />
+
             <v-row>
               <v-col cols="6" class="py-0">
                 <v-select
-                  :items="teams"
+                  :items="groupTeams"
                   v-model="editedItem.team1_id"
                   label="Команда 1"
                   hide-details
                   no-data-text="Команды не заведены"
                   color="yellow"
-                  @change="addToGameTeams"
+                  @change="loadGameTeams"
                   :rules="[rules.required]"
                 />
               </v-col>
 
               <v-col cols="6" class="py-0">
                 <v-select
-                  :items="teams"
+                  :items="groupTeams"
                   v-model="editedItem.team2_id"
                   label="Команда 2"
                   hide-details
                   no-data-text="Команды не заведены"
                   color="yellow"
-                  @change="addToGameTeams"
+                  @change="loadGameTeams"
                   :rules="[rules.required]"
                 />
               </v-col>
             </v-row>
+
+            <v-subheader
+              class="mt-2 justify-center"
+              :style="{height: 'auto'}"
+            >
+              Счёт
+            </v-subheader>
 
             <v-row justify="center">
               <v-col cols="3" class="pt-0">
@@ -155,7 +161,6 @@
                   class="text-field-center"
                   :disabled="!editedItem.team1_id"
                   v-model="editedItem.goal1"
-                  label="Голы"
                   hide-details
                   color="yellow"
                   :rules="[rules.isNumber]"
@@ -167,7 +172,6 @@
                   class="text-field-center"
                   :disabled="!editedItem.team1_id"
                   v-model="editedItem.goal2"
-                  label="Голы"
                   hide-details
                   color="yellow"
                   :rules="[rules.isNumber]"
@@ -175,39 +179,41 @@
               </v-col>
             </v-row>
 
-            <v-row
-              v-if="editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
-              justify="center"
-            >
-              <v-col cols="12" class="py-0">
-                <v-card-subtitle
-                  class="pa-0 mb-1 text-center yellow--text text--lighten-3"
-                  :style="{height: 'auto'}"
-                >
-                  Дополнительное время
-                </v-card-subtitle>
-              </v-col>
+            <div v-if="editedItem.goal1 && editedItem.goal1 === editedItem.goal2">
+              <v-card-subtitle
+                class="pa-0 mb-1 text-center yellow--text text--lighten-3"
+                :style="{height: 'auto'}"
+              >
+                Дополнительное время
+              </v-card-subtitle>
 
-              <v-col cols="4" class="py-0">
-                <v-text-field
-                  class="text-field-center pt-1"
-                  v-model="editedItem.addGoal1"
-                  label="Голы"
-                  color="yellow"
-                  :rules="[rules.isNumber, rules.notLess1]"
-                />
-              </v-col>
+              <v-subheader
+                class="justify-center"
+                :style="{height: 'auto'}"
+              >
+                Счёт
+              </v-subheader>
 
-              <v-col cols="4" class="py-0">
-                <v-text-field
-                  class="text-field-center pt-1"
-                  v-model="editedItem.addGoal2"
-                  label="Голы"
-                  color="yellow"
-                  :rules="[rules.isNumber, rules.notLess2]"
-                />
-              </v-col>
-            </v-row>
+              <v-row justify="center">
+                <v-col cols="4" class="py-0">
+                  <v-text-field
+                    class="text-field-center pt-1"
+                    v-model="editedItem.addGoal1"
+                    color="yellow"
+                    :rules="[rules.isNumber, rules.notLess1]"
+                  />
+                </v-col>
+
+                <v-col cols="4" class="py-0">
+                  <v-text-field
+                    class="text-field-center pt-1"
+                    v-model="editedItem.addGoal2"
+                    color="yellow"
+                    :rules="[rules.isNumber, rules.notLess2]"
+                  />
+                </v-col>
+              </v-row>
+            </div>
 
             <v-row
               v-if="editedItem.addGoal1 && editedItem.addGoal1 === editedItem.addGoal2 && editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
@@ -337,8 +343,8 @@ export default {
       timeOpen: false,
       stadiums: [],
       groups: [],
-      teams: [],
       gameTeams: [],
+      groupTeams: [],
       headers: [
         {text: '№', value: 'game_no', align: 'center', width: '7%'},
         {text: 'Начало', value: 'start', align: 'center'},
@@ -411,15 +417,6 @@ export default {
         value: items[i].id
       })
     }
-
-    items = this.getTeams
-
-    for (let i = 0; i < items.length; i++) {
-      this.teams.push({
-        text: items[i].team,
-        value: items[i].id
-      })
-    }
   },
   computed: {
     ...mapGetters({
@@ -453,27 +450,31 @@ export default {
       const [year, month, day] = date.split('-')
       return `${day}.${month}.${year}`
     },
-    addToGameTeams() {
+    loadGroupTeams() {
+      this.groupTeams = []
+
+      this.getTeams
+      .filter(e => e.group_id === this.editedItem.group_id)
+      .forEach(team => this.groupTeams.push({value: team.id, text: team.team}))
+
+      this.loadGameTeams()
+    },
+    loadGameTeams() {
       this.gameTeams = []
 
-      let team1 = null
-      if (this.editedItem.team1_id) {
-        team1 = this.teams.find(e => e.value === this.editedItem.team1_id)
-        this.gameTeams.push({value: team1.value, text: team1.text})
+      if (this.groupTeams.length > 0) {
+        let team1 = null
+        if (this.editedItem.team1_id) {
+          team1 = this.groupTeams.find(e => e.value === this.editedItem.team1_id)
+          this.gameTeams.push({value: team1.value, text: team1.text})
+        }
+
+        let team2 = null
+        if (this.editedItem.team2_id) {
+          team2 = this.groupTeams.find(e => e.value === this.editedItem.team2_id)
+          this.gameTeams.push({value: team2.value, text: team2.text})
+        }
       }
-
-      let team2 = null
-      if (this.editedItem.team2_id) {
-        team2 = this.teams.find(e => e.value === this.editedItem.team2_id)
-        this.gameTeams.push({value: team2.value, text: team2.text})
-      }
-
-
-      /*const team1 = this.teams.find(e => e.value === this.editedItem.team1_id)
-      const team2 = this.teams.find(e => e.value === this.editedItem.team2_id)
-
-      this.gameTeams.push({value: team1.value, text: team1.text})
-      this.gameTeams.push({value: team2.value, text: team2.text})*/
     },
     addItem() {
       this.editedIndex = -1
@@ -500,6 +501,8 @@ export default {
 
         this.editedIndex = this.games.indexOf(item)
         this.editedItem = Object.assign({}, item)
+
+        this.loadGroupTeams()
 
         if (this.editedIndex > -1) {
           const date = new Date(item.start)
@@ -567,8 +570,13 @@ export default {
 </script>
 
 <style lang="scss">
+.text-field-center {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 .text-field-center input {
-  text-align: center;
+  text-align: center !important;
 }
 </style>
 
