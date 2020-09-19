@@ -267,7 +267,7 @@
     <v-data-table
       dense
       class="mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '850px'}"
+      :style="{maxWidth: '875px'}"
       :headers="headers"
       :items="games"
       no-data-text="Игры ещё не введены"
@@ -346,7 +346,7 @@ export default {
       gameTeams: [],
       groupTeams: [],
       headers: [
-        {text: '№', value: 'game_no', align: 'center', width: '7%'},
+        {text: '№', value: 'game_no', align: 'center', width: '3%'},
         {text: 'Начало', value: 'start', align: 'center'},
         {text: 'Стадион', value: 'city'},
         {text: 'Группа', value: 'group'},
