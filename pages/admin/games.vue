@@ -433,7 +433,7 @@ export default {
     },
   },
   watch: {
-    dateCurrent(val) {
+    dateCurrent() {
       this.editedItem.date = this.formatDate(this.dateCurrent)
     },
   },
