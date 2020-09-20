@@ -2,7 +2,17 @@
 /************************************************/
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
-  padding: 0 5px !important
+  padding: 0 5px !important;
+}
+
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+.v-data-table .v-data-table-header th.sortable .v-data-table-header__icon {
+  color: #555 !important;
+  font-size: .85em !important
+}
+
+.v-data-table-header {
+  background-color: #ccc;
 }
 
 .v-data-footer {

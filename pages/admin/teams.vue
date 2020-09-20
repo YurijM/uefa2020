@@ -137,8 +137,15 @@
         pageText: '{0}-{1} из {2}'
       }"
     >
-      <template v-slot:item.flag="{item}">
+      <!--<template v-slot:item.flag="{item}">
         <v-img :src="`/flags/${item.flag}`" height="20" width="30"/>
+      </template>-->
+
+      <template v-slot:item.team="{item}">
+        <div class="d-flex flex-row justify-center">
+          <v-img class="flex-grow-0" :src="`/flags/${item.flag}`" height="20" width="30"/>
+          <div class="flex-grow-1 ml-1 text-left">{{ item.team }}</div>
+        </div>
       </template>
 
       <template v-slot:item.actions="{item}">
@@ -175,7 +182,7 @@ export default {
       places: ['', 1, 2, 3, 4],
       file: null,
       headers: [
-        {text: 'Флаг', value: 'flag', align: 'center', sortable: false, width: '5%'},
+        /*{text: 'Флаг', value: 'flag', align: 'center', sortable: false, width: '5%'},*/
         {text: 'Команда', value: 'team'},
         {text: 'Группа', value: 'group'},
         {text: 'Порядок', align: 'center', value: 'order', sortable: false},

@@ -266,7 +266,7 @@
 
     <v-data-table
       dense
-      class="mt-10 grey darken-3 mx-auto"
+      class="game mt-10 grey darken-3 mx-auto"
       :style="{maxWidth: '875px'}"
       :headers="headers"
       :items="games"
@@ -278,6 +278,16 @@
         pageText: '{0}-{1} из {2}'
       }"
     >
+      <!--<template v-slot:header="{ props: { headers } }">
+        <thead :style="{backgroundColor: '#eee'}">
+        <tr>
+          <th :colspan="headers.length">
+            This is a header
+          </th>
+        </tr>
+        </thead>
+      </template>-->
+
       <template v-slot:item.start="{item}">
         {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}
         {{ new Date(item.start).toLocaleTimeString().substr(0, 5) }}
@@ -346,13 +356,13 @@ export default {
       gameTeams: [],
       groupTeams: [],
       headers: [
-        {text: '№', value: 'game_no', align: 'center', width: '3%'},
+        {text: '№', value: 'game_no', align: 'center', width: '5%'},
         {text: 'Начало', value: 'start', align: 'center'},
-        {text: 'Стадион', value: 'city'},
+        {text: 'Город', value: 'city'},
         {text: 'Группа', value: 'group'},
-        {text: 'Команда', value: 'team1', align: 'center'},
-        {text: 'Счёт', value: 'result', align: 'center', sortable: false},
-        {text: 'Команда', value: 'team2', align: 'center'},
+        {text: '', value: 'team1', align: 'center'},
+        {text: 'Игра', value: 'result', align: 'center', sortable: false},
+        {text: '', value: 'team2', align: 'center'},
         {text: 'Доп.время', value: 'addTime', align: 'center', sortable: false},
         {text: 'По пенальти', value: 'penaltyTeam', align: 'center', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false}
@@ -581,4 +591,5 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+
 </style>
