@@ -10,6 +10,6 @@ router.get('/deleteGame', game.deleteGame);
 router.get('/addResultByAddTime', game.addResultByAddTime);
 router.get('/deleteResultByAddTime', game.deleteResultByAddTime);
 router.get('/addPenaltyTeam', game.addPenaltyTeam);
-router.get('/deletepenaltyTeam', game.deletepenaltyTeam);
+router.get('/deletePenaltyTeam', game.deletePenaltyTeam);
 
 module.exports = router;

@@ -179,7 +179,7 @@
               </v-col>
             </v-row>
 
-            <div v-if="editedItem.goal1 && editedItem.goal1 === editedItem.goal2">
+            <div v-if="order > countGroups && editedItem.goal1 && editedItem.goal1 === editedItem.goal2">
               <v-card-subtitle
                 class="pa-0 mb-1 text-center yellow--text text--lighten-3"
                 :style="{height: 'auto'}"
@@ -213,33 +213,33 @@
                   />
                 </v-col>
               </v-row>
+
+              <v-row
+                v-if="editedItem.addGoal1 && editedItem.addGoal1 === editedItem.addGoal2 && editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
+                justify="center"
+              >
+                <v-col cols="12" class="py-0">
+                  <v-card-subtitle
+                    class="pa-0 text-center yellow--text text--lighten-3"
+                    :style="{height: 'auto'}"
+                  >
+                    Победитель по пенальти
+                  </v-card-subtitle>
+                </v-col>
+
+                <v-col cols="7" class="pt-0">
+                  <v-select
+                    class="pb-0"
+                    :items="gameTeams"
+                    v-model="editedItem.penaltyId"
+                    label="Команда"
+                    no-data-text="Команды не заведены"
+                    color="yellow"
+                    :rules="[rules.required]"
+                  />
+                </v-col>
+              </v-row>
             </div>
-
-            <v-row
-              v-if="editedItem.addGoal1 && editedItem.addGoal1 === editedItem.addGoal2 && editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
-              justify="center"
-            >
-              <v-col cols="12" class="py-0">
-                <v-card-subtitle
-                  class="pa-0 text-center yellow--text text--lighten-3"
-                  :style="{height: 'auto'}"
-                >
-                  Победитель по пенальти
-                </v-card-subtitle>
-              </v-col>
-
-              <v-col cols="7" class="pt-0">
-                <v-select
-                  class="pb-0"
-                  :items="gameTeams"
-                  v-model="editedItem.penaltyId"
-                  label="Команда"
-                  no-data-text="Команды не заведены"
-                  color="yellow"
-                  :rules="[rules.required]"
-                />
-              </v-col>
-            </v-row>
           </v-card-text>
         </v-form>
 
@@ -355,6 +355,8 @@ export default {
       groups: [],
       gameTeams: [],
       groupTeams: [],
+      order: 0,
+      countGroups: 0,
       headers: [
         {text: '№', value: 'game_no', align: 'center', width: '5%'},
         {text: 'Начало', value: 'start', align: 'center'},
@@ -411,6 +413,8 @@ export default {
     }
   },
   created() {
+    this.countGroups = this.getCountGroups
+
     let items = this.getStadiums
 
     for (let i = 0; i < items.length; i++) {
@@ -434,6 +438,7 @@ export default {
       getGames: 'game/getGames',
       getStadiums: 'stadium/getStadiums',
       getGroups: 'group/getGroups',
+      getCountGroups: 'group/getCountGroups',
       getTeams: 'team/getTeams',
     }),
     widthTable() {
@@ -474,9 +479,15 @@ export default {
     loadGroupTeams() {
       this.groupTeams = []
 
-      this.getTeams
-      .filter(e => e.group_id === this.editedItem.group_id)
-      .forEach(team => this.groupTeams.push({value: team.id, text: team.team}))
+      this.order = this.getGroups.find((e) => e.id === this.editedItem.group_id).order
+
+      if (this.order > this.getCountGroups) {
+        this.getTeams.forEach(team => this.groupTeams.push({value: team.id, text: team.team}))
+      } else {
+        this.getTeams
+        .filter(e => e.group_id === this.editedItem.group_id)
+        .forEach(team => this.groupTeams.push({value: team.id, text: team.team}))
+      }
 
       this.loadGameTeams()
     },
@@ -487,13 +498,13 @@ export default {
         let team1 = null
         if (this.editedItem.team1_id) {
           team1 = this.groupTeams.find(e => e.value === this.editedItem.team1_id)
-          this.gameTeams.push({value: team1.value, text: team1.text})
+          if (!!team1) this.gameTeams.push({value: team1.value, text: team1.text})
         }
 
         let team2 = null
         if (this.editedItem.team2_id) {
           team2 = this.groupTeams.find(e => e.value === this.editedItem.team2_id)
-          this.gameTeams.push({value: team2.value, text: team2.text})
+          if (!!team2) this.gameTeams.push({value: team2.value, text: team2.text})
         }
       }
     },

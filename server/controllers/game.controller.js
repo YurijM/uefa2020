@@ -159,7 +159,7 @@ module.exports.addPenaltyTeam = async (req, res) => {
   })
 };
 
-module.exports.deletepenaltyTeam = async (req, res) => {
+module.exports.deletePenaltyTeam = async (req, res) => {
   const query = 'DELETE FROM `penalty` WHERE `game_id` = ?';
 
   await pool.promise().execute(query, [

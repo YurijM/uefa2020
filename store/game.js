@@ -115,7 +115,7 @@ export const actions = {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      await dispatch('deletepenaltyTeam', payload);
+      await dispatch('deletePenaltyTeam', payload);
       await dispatch('deleteResultByAddTime', payload);
 
       const data = await this.$axios.$get('/api/game/deleteGame', {
@@ -229,11 +229,11 @@ export const actions = {
     }
   },
 
-  async deletepenaltyTeam({dispatch, commit}, payload) {
+  async deletePenaltyTeam({dispatch, commit}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const data = await this.$axios.$get('/api/game/deletepenaltyTeam', {
+      const data = await this.$axios.$get('/api/game/deletePenaltyTeam', {
         params: {
           id: payload.id
         }
@@ -243,26 +243,32 @@ export const actions = {
         console.log('error:', data.error)
         await commit('common/SET_MESSAGE', {
           status: 'error',
-          text: `deletepenaltyTeam: ${data.error}`
+          text: `deletePenaltyTeam: ${data.error}`
         }, {root: true});
       }
     } catch (e) {
-      console.log('Error deletepenaltyTeam:', e);
+      console.log('Error deletePenaltyTeam:', e);
       await commit('common/SET_MESSAGE', {
         status: 'error',
-        text: 'Ошибка при выполнении deletepenaltyTeam (см. в консоли ошибку "Error deletepenaltyTeam")'
+        text: 'Ошибка при выполнении deletePenaltyTeam (см. в консоли ошибку "Error deletePenaltyTeam")'
       }, {root: true});
     }
   },
-  async updateAddParameters({dispatch}, payload) {
+  async updateAddParameters({dispatch, rootGetters}, payload) {
     await dispatch('deleteResultByAddTime', payload);
-    await dispatch('deletepenaltyTeam', payload);
+    await dispatch('deletePenaltyTeam', payload);
 
-    if (payload.goal1 && payload.goal2 && payload.goal1 === payload.goal2) {
-      await dispatch('addResultByAddTime', payload);
+    await dispatch('group/loadGroups', null, {root: true})
+    const order = rootGetters['group/getGroups'].find((e) => e.id === payload.group_id).order
 
-      if (payload.addGoal1 && payload.addGoal2 && payload.addGoal1 === payload.addGoal2) {
-        await dispatch('addPenaltyTeam', payload);
+    // Если это игра плей-офф, то проверяем результат в дополнительное время и по пенальти
+    if (order > rootGetters['group/getCountGroups']) {
+      if (payload.goal1 && payload.goal2 && payload.goal1 === payload.goal2) {
+        await dispatch('addResultByAddTime', payload);
+
+        if (payload.addGoal1 && payload.addGoal2 && payload.addGoal1 === payload.addGoal2) {
+          await dispatch('addPenaltyTeam', payload);
+        }
       }
     }
   }
