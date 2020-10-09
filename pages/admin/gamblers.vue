@@ -25,25 +25,13 @@
             class="grey darken-3 pt-2 pb-0"
             :style="{borderTop: '1px #eee solid !important', borderBottom: '1px #eee solid !important'}"
           >
-            <!--<v-container>
-              <v-row>
-                <v-col class="py-0" cols="12" sm="6">
-                  <v-text-field v-model="editedItem.points" label="Очки"/>
-                </v-col>
+            <v-text-field
+              v-model="editedItem.stake"
+              autofocus
+              label="Ставка"
+              :rules="[rules.isNumber]"
+            />
 
-                <v-col class="py-0" cols="12" sm="6">
-                  <v-select
-                    v-model="editedItem.status"
-                    :items="statuses"
-                    label="Статус"
-                  ></v-select>
-                </v-col>
-
-                <v-col class="py-0" cols="12">
-                  <v-switch v-model="editedItem.admin" flat :label="`Администратор: ${editedItem.admin ? 'Да' : 'Нет'}`"></v-switch>
-                </v-col>
-              </v-row>
-            </v-container>-->
             <v-text-field
               v-model="editedItem.points"
               label="Очки"
@@ -84,7 +72,7 @@
     <v-data-table
       dense
       class="mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '700px', lineHeight: '45px'}"
+      :style="{maxWidth: '750px', lineHeight: '45px'}"
       :headers="headers"
       :items="gamblers"
       :footer-props="{
@@ -136,6 +124,7 @@ export default {
       headers: [
         {text: '', value: 'photo', width: '1%'},
         {text: 'Участник', value: 'fullName'},
+        {text: 'Ставка', align: 'center', value: 'stake', sortable: false},
         {text: 'Очки', align: 'center', value: 'points', sortable: false},
         {text: 'Место', align: 'center', value: 'place', sortable: false},
         {text: 'Статус', align: 'center', value: 'status', sortable: false},
@@ -144,17 +133,12 @@ export default {
       ],
       editedIndex: -1,
       editedItem: {
+        stake: 0,
         points: 0.0,
         place: 0,
         status: 0,
         admin: 0
       },
-      /*defaultItem: {
-        points: 0.0,
-        place: 0,
-        status: 0,
-        admin: 0
-      },*/
       statuses: [
         {text: 'Исключён', value: -1},
         {text: 'Отправлено письмо', value: 0},

@@ -47,12 +47,12 @@
           },
           {
             title: 'Правила',
-            to: '/rule',
+            to: '/rules',
             icon: 'fas fa-file-alt'
           },
           {
             title: 'Ставки',
-            to: '/stake',
+            to: '/stakes',
             icon: 'fas fa-money-check'
           },
           {

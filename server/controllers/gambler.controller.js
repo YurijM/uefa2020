@@ -66,9 +66,6 @@ module.exports.login = async (req, res) => {
     if (gambler) {
       bcrypt.compare(req.query.password, gambler.password, async function (err, result) {
         if (result) {
-          /*const query = 'UPDATE gamblers SET `connected` = 1 WHERE id = ?';
-          await pool.promise().execute(query, [gambler.id])*/
-
           const token = jwt.sign({
               login: gambler.nickname,
               id: gambler.id
@@ -116,11 +113,13 @@ module.exports.updatePlace = async (req, res) => {
 
 module.exports.saveFeatures = async (req, res) => {
   let query = 'UPDATE gamblers SET ' +
+    '`stake` = ?, ' +
     '`status` = ?, ' +
     '`admin` = ? ' +
     'WHERE `id` = ?';
 
   await pool.promise().execute(query, [
+    req.query.stake,
     req.query.status,
     req.query.admin,
     req.query.id

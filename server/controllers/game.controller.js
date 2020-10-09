@@ -138,7 +138,7 @@ module.exports.deleteResultByAddTime = async (req, res) => {
   })
 }
 
-module.exports.addpenaltyTeam = async (req, res) => {
+module.exports.addPenaltyTeam = async (req, res) => {
   const query = 'INSERT INTO `penalty` ' +
     '(`game_id`, `team_id`) ' +
     'VALUES (?, ?)';

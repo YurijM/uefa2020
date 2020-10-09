@@ -267,7 +267,7 @@
     <v-data-table
       dense
       class="game mt-10 grey darken-3 mx-auto"
-      :style="{maxWidth: '875px'}"
+      :style="{maxWidth: widthTable}"
       :headers="headers"
       :items="games"
       no-data-text="Игры ещё не введены"
@@ -360,9 +360,9 @@ export default {
         {text: 'Начало', value: 'start', align: 'center'},
         {text: 'Город', value: 'city'},
         {text: 'Группа', value: 'group'},
-        {text: '', value: 'team1', align: 'center'},
+        {text: '', value: 'team1', align: 'center', sortable: false},
         {text: 'Игра', value: 'result', align: 'center', sortable: false},
-        {text: '', value: 'team2', align: 'center'},
+        {text: '', value: 'team2', align: 'center', sortable: false},
         {text: 'Доп.время', value: 'addTime', align: 'center', sortable: false},
         {text: 'По пенальти', value: 'penaltyTeam', align: 'center', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false}
@@ -371,6 +371,7 @@ export default {
       endDate: new Date(2000, 11, 31),
       // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
       dateCurrent: this.randomDate(new Date(2000, 0, 1), new Date(2000, 11, 31)).toISOString().substr(0, 10),
+      //dateCurrent: this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10),
       editedIndex: -1,
       editedItem: {
         game_no: '',
@@ -435,6 +436,16 @@ export default {
       getGroups: 'group/getGroups',
       getTeams: 'team/getTeams',
     }),
+    widthTable() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'lg':
+          return '75%'
+        case 'xl':
+          return '60%'
+        default:
+          return '95%'
+      }
+    },
     games() {
       return this.getGames
     },
@@ -591,5 +602,4 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-
 </style>

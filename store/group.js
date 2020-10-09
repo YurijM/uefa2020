@@ -4,6 +4,7 @@ export const state = () => ({
 
 export const getters = {
   getGroups: state => state.groups,
+  getCountGroups: state => state.groups.filter((e) => e.group.indexOf('Группа') !== -1).length
 }
 
 export const mutations = {

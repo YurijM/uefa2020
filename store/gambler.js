@@ -214,6 +214,7 @@ export const actions = {
       data = await this.$axios.$get('/api/gambler/saveFeatures', {
         params: {
           id: gambler.id,
+          stake: gambler.stake,
           status: gambler.status,
           admin: gambler.admin
         }
