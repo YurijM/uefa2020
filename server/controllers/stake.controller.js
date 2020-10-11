@@ -1,7 +1,7 @@
 const pool = require('../middleware/database');
 
 module.exports.loadStakesForPlayoff = async (req, res) => {
-  const query = 'SELECT g.id, ' +
+  const query = 'SELECT g.id, stakes.id AS stakeId, g.team1_id, g.team2_id, ' +
     'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
     'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2, ' +
@@ -30,10 +30,10 @@ module.exports.loadStakesForPlayoff = async (req, res) => {
   .catch((e) => {
     res.json({error: e.message})
   })
-};
+}
 
 module.exports.loadStakesForGroups = async (req, res) => {
-  const query = 'SELECT g.id, ' +
+  const query = 'SELECT g.id, stakes.id AS stakeId, ' +
     'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
     'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2 ' +

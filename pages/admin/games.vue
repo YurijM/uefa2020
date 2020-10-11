@@ -60,8 +60,12 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker locale="ru" v-model="dateCurrent" no-title
-                                 @input="dateOpen = false"></v-date-picker>
+                  <v-date-picker
+                    locale="ru"
+                    v-model="dateCurrent"
+                    no-title
+                    @input="dateOpen = false"
+                  />
                 </v-menu>
               </v-col>
 
@@ -372,8 +376,8 @@ export default {
       startDate: new Date(2000, 0, 1),
       endDate: new Date(2000, 11, 31),
       // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
-      dateCurrent: this.randomDate(new Date(2000, 0, 1), new Date(2000, 11, 31)).toISOString().substr(0, 10),
-      //dateCurrent: this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10),
+      //dateCurrent: this.randomDate(new Date(2000, 0, 1), new Date(2000, 11, 31)).toISOString().substr(0, 10),
+      dateCurrent: '',
       editedIndex: -1,
       editedItem: {
         game_no: '',
@@ -413,6 +417,9 @@ export default {
     }
   },
   created() {
+    // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
+    this. dateCurrent = this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10)
+
     this.countGroups = this.getCountGroups
 
     let items = this.getStadiums
@@ -600,17 +607,6 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.text-field-center {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-.text-field-center input {
-  text-align: center !important;
-}
-</style>
 
 <style lang="scss" scoped>
 </style>

@@ -4,11 +4,17 @@ export const state = () => ({
 
 export const getters = {
   getGames: state => state.games,
+  getGamesForTeam: (state) => (teamId) => {
+    
+  }
 }
 
 export const mutations = {
   LOAD_GAMES(state, payload) {
     state.games = payload
+  },
+  GAMES_FOR_TEAM(state, payload) {
+
   }
 }
 

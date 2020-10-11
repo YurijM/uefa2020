@@ -4,6 +4,7 @@ const router = Router();
 
 // /api/game
 router.get('/loadGames', game.loadGames);
+router.get('/loadGamesForTeam', game.loadGamesForTeam);
 router.get('/addGame', game.addGame);
 router.get('/updateGame', game.updateGame);
 router.get('/deleteGame', game.deleteGame);

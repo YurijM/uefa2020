@@ -25,7 +25,32 @@ module.exports.loadGames = async (req, res) => {
   .catch((e) => {
     res.json({error: e.message})
   })
-};
+}
+
+module.exports.loadGamesForTeam = async (req, res) => {
+  const query = 'SELECT team1_id, team2_id, t1.team team1, t2.team team2, g.goal1, g.goal2, ' +
+    'IFNULL(a.goal1, \'\') addGoal1, IFNULL(a.goal2, \'\') addGoal2, IFNULL(p.team, \'\') penaltyTeam ' +
+    'FROM games g ' +
+    'LEFT JOIN teams t1 ON t1.id = g.team1_id ' +
+    'LEFT JOIN teams t2 ON t2.id = g.team2_id ' +
+    'LEFT JOIN addtime a ON a.game_id = g.id ' +
+    'LEFT JOIN ' +
+    '(SELECT p.game_id, t.team FROM penalty p LEFT JOIN teams t ON t.id = p.team_id) ' +
+    'p ON p.game_id = g.id ' +
+    'WHERE `start` < NOW() AND (team1_id = ? OR team2_id = ?) ' +
+    'ORDER BY g.game_no'
+
+  await pool.promise().execute(query, [
+    req.query.team_id,
+    req.query.team_id
+  ])
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
 
 module.exports.addGame = async (req, res) => {
   const query = 'INSERT INTO `games` ' +
