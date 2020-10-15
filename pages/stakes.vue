@@ -197,7 +197,7 @@
         </template>
 
         <template v-slot:item.actions="{item}">
-          <v-icon class="mr-2" title="Редактировать" small @click="editItem(item)">fas fa-pen</v-icon>
+          <v-icon class="mr-2" title="Редактировать" x-small @click="editItem(item)">fas fa-pen</v-icon>
         </template>
       </v-data-table>
     </div>
@@ -250,7 +250,7 @@
         </template>
 
         <template v-slot:item.actions="{item}">
-          <v-icon class="mr-2" title="Редактировать" small @click="editItem(item)">fas fa-pen</v-icon>
+          <v-icon class="mr-2" title="Редактировать" x-small @click="editItem(item)">fas fa-pen</v-icon>
         </template>
       </v-data-table>
     </div>
@@ -258,7 +258,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: 'stakes',
@@ -347,6 +347,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      addStake: 'stake/addStake',
+      updateStake: 'stake/updateStake'
+    }),
     formatDate(date) {
       if (!date) return null
 
@@ -379,6 +383,19 @@ export default {
       })
     },
     async save() {
+      if (!this.$refs.form.validate()) return;
+
+      this.loading = true
+
+      if (this.editedIndex === -1) {
+        await this.addStake(this.editedItem);
+      } else {
+        await this.updateStake(this.editedItem);
+      }
+
+      this.loading = false;
+
+      this.close()
     },
     close() {
       this.$refs.form.reset()

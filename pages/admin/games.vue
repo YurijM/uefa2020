@@ -322,8 +322,8 @@
       </template>
 
       <template v-slot:item.actions="{item}">
-        <v-icon class="mr-2" title="Редактировать" small @click="editItem(item)">fas fa-pen</v-icon>
-        <v-icon title="Удалить" small @click="promptDelete(item)">fas fa-trash-alt</v-icon>
+        <v-icon class="mr-2" title="Редактировать"x-small @click="editItem(item)">fas fa-pen</v-icon>
+        <v-icon title="Удалить" x-small @click="promptDelete(item)">fas fa-trash-alt</v-icon>
       </template>
     </v-data-table>
   </div>
@@ -449,14 +449,30 @@ export default {
       getTeams: 'team/getTeams',
     }),
     widthTable() {
-      switch (this.$vuetify.breakpoint.name) {
+      /*switch (this.$vuetify.breakpoint.name) {
         case 'lg':
           return '75%'
         case 'xl':
           return '60%'
         default:
           return '95%'
+      }*/
+      let width = '98%'
+      if (this.$vuetify.breakpoint.width >= 1500) {
+        width = '70%'
+      } else if (this.$vuetify.breakpoint.width >= 1400) {
+        width = '75%'
+      } else if (this.$vuetify.breakpoint.width >= 1300) {
+        width = '80%'
+      } else if (this.$vuetify.breakpoint.width >= 1250) {
+        width = '85%'
+      } else if (this.$vuetify.breakpoint.width >= 1200) {
+        width = '90%'
+      } else if (this.$vuetify.breakpoint.width >= 1150) {
+        width = '95%'
       }
+
+      return width
     },
     games() {
       return this.getGames
