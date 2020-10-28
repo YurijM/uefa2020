@@ -1,7 +1,7 @@
-const pool = require('../middleware/database');
+const pool = require('../middleware/database')
 
 module.exports.loadStakesForPlayoff = async (req, res) => {
-  const query = 'SELECT g.id, stakes.id AS stakeId, g.team1_id, g.team2_id, ' +
+  const query = 'SELECT g.id AS gameId, stakes.id AS stakeId, g.team1_id, g.team2_id, ' +
     'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
     'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2, ' +
@@ -21,7 +21,7 @@ module.exports.loadStakesForPlayoff = async (req, res) => {
     'ORDER BY g.game_no'
 
   await pool.promise().execute(query, [
-    req.query.id,
+    req.query.gambler_id,
     req.query.order
   ])
   .then(async ([rows, fields]) => {
@@ -33,7 +33,7 @@ module.exports.loadStakesForPlayoff = async (req, res) => {
 }
 
 module.exports.loadStakesForGroups = async (req, res) => {
-  const query = 'SELECT g.id, stakes.id AS stakeId, ' +
+  const query = 'SELECT g.id AS gameId, stakes.id AS stakeId, ' +
     'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
     'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2 ' +
@@ -47,7 +47,7 @@ module.exports.loadStakesForGroups = async (req, res) => {
     'ORDER BY g.game_no'
 
   await pool.promise().execute(query, [
-    req.query.id,
+    req.query.gambler_id,
     req.query.order
   ])
   .then(([rows, fields]) => {
@@ -58,3 +58,107 @@ module.exports.loadStakesForGroups = async (req, res) => {
   })
 }
 
+module.exports.addStake = async (req, res) => {
+  const query = 'INSERT INTO `stakes` ' +
+    '(`game_id`, `gambler_id`, `goal1`, `goal2`) ' +
+    `VALUES (?, ?, ?, ?)`
+
+  await pool.promise().execute(query, [
+    req.query.game_id,
+    req.query.gambler_id,
+    req.query.goal1,
+    req.query.goal2
+  ])
+  .then((result) => {
+    if (result) {
+      res.json({id: result[0].insertId})
+    } else {
+      res.json({error: 'Ошибка при добавлении новой ставки в таблицу games'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.updateStake = async (req, res) => {
+}
+
+module.exports.addStakeAddTime = async (req, res) => {
+  const query = 'INSERT INTO `stakes-addtime` ' +
+    '(`stake_id`, `goal1`, `goal2`) ' +
+    'VALUES (?, ?, ?)'
+
+  await pool.promise().execute(query, [
+    req.query.stake_id,
+    req.query.goal1,
+    req.query.goal2
+  ])
+  .then((result) => {
+    if (result) {
+      res.json({id: result[0].insertId})
+    } else {
+      res.json({error: 'Ошибка при добавлении ставки в дополнительное время в таблицу stakes-addtime'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.addPenaltyTeam = async (req, res) => {
+  const query = 'INSERT INTO `stakes-penalty` ' +
+    '(`stake_id`, `team_id`) ' +
+    'VALUES (?, ?)'
+
+  await pool.promise().execute(query, [
+    req.query.stake_id,
+    req.query.team_id
+  ])
+  .then((result) => {
+    if (result) {
+      res.json({id: result[0].insertId})
+    } else {
+      res.json({error: 'Ошибка при добавлении ставки на победителя по пенальти в таблицу stakes-penalty'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.deleteStakeAddTime = async (req, res) => {
+  const query = 'DELETE FROM `stakes-addtime` WHERE `stake_id` = ?'
+
+  await pool.promise().execute(query, [
+    req.query.stake_id
+  ])
+  .then((result) => {
+    if (result) {
+      res.json(true)
+    } else {
+      res.json({error: 'Ошибка при удалении ставки в дополнительное время из таблицы stake-addtime'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.deletePenaltyTeam = async (req, res) => {
+  const query = 'DELETE FROM `stakes-penalty` WHERE `stake_id` = ?'
+
+  await pool.promise().execute(query, [
+    req.query.stake_id
+  ])
+  .then((result) => {
+    if (result) {
+      res.json(true)
+    } else {
+      res.json({error: 'Ошибка при удалении ставки победителя по пенальти из таблицы stake-penalty'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}

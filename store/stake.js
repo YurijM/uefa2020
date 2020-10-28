@@ -11,9 +11,6 @@ export const getters = {
 }
 
 export const mutations = {
-  LOAD_STAKES(state, payload) {
-    state.stakes = payload
-  },
   LOAD_STAKE_GROUPS(state, payload) {
     state.stakeGroups = payload
   },
@@ -32,7 +29,7 @@ export const actions = {
 
       const data = await this.$axios.$get(`/api/stake/${controller}`, {
         params: {
-          id: payload.id,
+          gambler_id: payload.gambler_id,
           order: payload.order
         }
       });
@@ -54,13 +51,13 @@ export const actions = {
     }
   },
 
-  async addStake({dispatch, commit}, payload) {
+  async addStake({dispatch, commit, rootGetters}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
       const data = await this.$axios.$get('/api/stake/addStake', {
         params: {
-          game_id: payload.game_id,
+          game_id: payload.gameId,
           gambler_id: payload.gambler_id,
           goal1: payload.goal1,
           goal2: payload.goal2,
@@ -68,10 +65,16 @@ export const actions = {
       });
 
       if (data.id) {
-        payload.id = data.id
+        payload.stakeId = data.id
         await dispatch('updatePlayoff', payload);
 
-        await dispatch('loadStakes')
+        const order = rootGetters['group/getCountGroups']
+
+        await dispatch('loadStakes', {
+          gambler_id: payload.gambler_id,
+          order,
+          source: payload.order <= order ? 'group' : 'playoff'
+        })
       } else if (data.error) {
         await commit('common/SET_MESSAGE', {
           status: 'error',
@@ -89,15 +92,69 @@ export const actions = {
   async updateStake({commit}, payload) {
 
   },
+
+  async addStakeAddTime({dispatch, commit}, payload) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/stake/addStakeAddTime', {
+        params: {
+          stake_id: payload.stakeId,
+          goal1: payload.addGoal1,
+          goal2: payload.addGoal2,
+        }
+      });
+
+      if (data.error) {
+        console.log('error:', data.error)
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: `addStakeAddTime: ${data.error}`
+        }, {root: true});
+      }
+    } catch (e) {
+      console.log('Error addStakeAddTime:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении addStakeAddTime (см. в консоли ошибку "Error addStakeAddTime")'
+      }, {root: true});
+    }
+  },
+
+  async addPenaltyTeam({dispatch, commit}, payload) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/stake/addPenaltyTeam', {
+        params: {
+          stake_id: payload.stakeId,
+          team_id: payload.penaltyId,
+        }
+      });
+
+      if (data.error) {
+        console.log('error:', data.error)
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: `addPenaltyTeam: ${data.error}`
+        }, {root: true});
+      }
+    } catch (e) {
+      console.log('Error addPenaltyTeam:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении addPenaltyTeam (см. в консоли ошибку "Error addPenaltyTeam")'
+      }, {root: true});
+    }
+  },
   async updatePlayoff({dispatch, rootGetters}, payload) {
     await dispatch('deleteStakeAddTime', payload);
     await dispatch('deletePenaltyTeam', payload);
 
     await dispatch('group/loadGroups', null, {root: true})
-    const order = rootGetters['group/getGroups'].find((e) => e.id === payload.group_id).order
 
     // Если это игра плей-офф, то проверяем результат в дополнительное время и по пенальти
-    if (order > rootGetters['group/getCountGroups']) {
+    if (payload.order > rootGetters['group/getCountGroups']) {
       if (payload.goal1 && payload.goal2 && payload.goal1 === payload.goal2) {
         await dispatch('addStakeAddTime', payload);
 
@@ -111,9 +168,9 @@ export const actions = {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const data = await this.$axios.$get('/api/game/deleteStakeAddTime', {
+      const data = await this.$axios.$get('/api/stake/deleteStakeAddTime', {
         params: {
-          id: payload.id
+          stake_id: payload.stakeId
         }
       });
 
@@ -129,6 +186,31 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении deleteStakeAddTime (см. в консоли ошибку "Error deleteStakeAddTime")'
+      }, {root: true});
+    }
+  },
+  async deletePenaltyTeam({dispatch, commit}, payload) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/stake/deletePenaltyTeam', {
+        params: {
+          stake_id: payload.stakeId
+        }
+      });
+
+      if (data.error) {
+        console.log('error:', data.error)
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: `deletePenaltyTeam: ${data.error}`
+        }, {root: true});
+      }
+    } catch (e) {
+      console.log('Error deletePenaltyTeam:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении deletePenaltyTeam (см. в консоли ошибку "Error deletePenaltyTeam")'
       }, {root: true});
     }
   },

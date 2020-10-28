@@ -54,6 +54,7 @@
             <v-row justify="center">
               <v-col cols="3" class="pt-0">
                 <v-text-field
+                  autofocus
                   class="text-field-center"
                   v-model="editedItem.goal1"
                   :rules="[rules.required, rules.isNumber]"
@@ -95,17 +96,17 @@
                 </v-col>
               </v-row>
 
-              <v-subheader
-                class="justify-center font-weight-bold"
-                :style="{height: 'auto'}"
-              >
-                Победитель по пенальти
-              </v-subheader>
-
               <v-row
                 v-if="editedItem.addGoal1 && editedItem.addGoal1 === editedItem.addGoal2 && editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
                 justify="center"
               >
+                <v-subheader
+                  class="justify-center font-weight-bold"
+                  :style="{height: 'auto'}"
+                >
+                  Победитель по пенальти
+                </v-subheader>
+
                 <v-col cols="7" class="pt-0">
                   <v-select
                     class="pb-0"
@@ -265,12 +266,12 @@ export default {
   async asyncData({store}) {
     await store.dispatch('group/loadGroups')
     await store.dispatch('stake/loadStakes', {
-      id: store.getters['gambler/getGambler'].id,
+      gambler_id: store.getters['gambler/getGambler'].id,
       order: store.getters['group/getCountGroups'],
       source: 'group'
     })
     await store.dispatch('stake/loadStakes', {
-      id: store.getters['gambler/getGambler'].id,
+      gambler_id: store.getters['gambler/getGambler'].id,
       order: store.getters['group/getCountGroups'],
       source: 'playoff'
     })
@@ -301,7 +302,6 @@ export default {
         {text: 'По пенальти', value: 'penaltyTeam', align: 'center', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false}
       ],
-      editedIndex: -1,
       editedItem: {
         goal1: '',
         goal2: '',
@@ -334,6 +334,7 @@ export default {
       stakeGroups: 'stake/getStakeGroups',
       stakePlayoff: 'stake/getStakePlayoff',
       getCountGroups: 'group/getCountGroups',
+      getGambler: 'gambler/getGambler'
     }),
     widthTable() {
       switch (this.$vuetify.breakpoint.name) {
@@ -374,7 +375,6 @@ export default {
           }
         ]
 
-        this.editedIndex = (item.order > this.countGroups ? this.stakePlayoff.indexOf(item) : this.stakeGroups.indexOf(item))
         this.editedItem = Object.assign({}, item)
 
         const start = new Date(item.start)
@@ -387,10 +387,14 @@ export default {
 
       this.loading = true
 
-      if (this.editedIndex === -1) {
-        await this.addStake(this.editedItem);
-      } else {
+      console.log('stakeId:', !!this.editedItem.stakeId)
+
+      if (!!this.editedItem.stakeId) {
         await this.updateStake(this.editedItem);
+      } else {
+        console.log('id:', this.getGambler.id)
+        this.editedItem.gambler_id = this.getGambler.id
+        await this.addStake(this.editedItem);
       }
 
       this.loading = false;
