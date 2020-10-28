@@ -95,17 +95,17 @@
                 </v-col>
               </v-row>
 
-              <v-subheader
-                class="justify-center font-weight-bold"
-                :style="{height: 'auto'}"
-              >
-                Победитель по пенальти
-              </v-subheader>
-
               <v-row
                 v-if="editedItem.addGoal1 && editedItem.addGoal1 === editedItem.addGoal2 && editedItem.goal1 && editedItem.goal1 === editedItem.goal2"
                 justify="center"
               >
+                <v-subheader
+                  class="justify-center font-weight-bold"
+                  :style="{height: 'auto'}"
+                >
+                  Победитель по пенальти
+                </v-subheader>
+
                 <v-col cols="7" class="pt-0">
                   <v-select
                     class="pb-0"
