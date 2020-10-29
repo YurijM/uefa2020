@@ -20,9 +20,6 @@
       max-width="350px"
     >
       <v-card>
-        <v-card-title class="dark blue-grey darken-3 pa-3 text-body-1">
-        </v-card-title>
-
         <v-form
           ref="form"
           v-model="valid"
