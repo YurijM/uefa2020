@@ -89,13 +89,51 @@ export const actions = {
       }, {root: true});
     }
   },
-  async updateStake({commit}, payload) {
+  async updateStake({dispatch, commit, rootGetters}, payload) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true})
 
+      const data = await this.$axios.$get('/api/stake/updateStake', {
+        params: {
+          id: payload.stakeId,
+          goal1: payload.goal1,
+          goal2: payload.goal2,
+        }
+      });
+
+      console.log('rows:', data.rows)
+
+      if (data.rows) {
+        await dispatch('updatePlayoff', payload);
+
+        const order = rootGetters['group/getCountGroups']
+
+        await dispatch('loadStakes', {
+          gambler_id: payload.gambler_id,
+          order,
+          source: payload.order <= order ? 'group' : 'playoff'
+        })
+      } else if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: `addStake: ${data.error}`
+        }, {root: true});
+      }
+    } catch (e) {
+      console.log('Error updateStake:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении updateStake (см. в консоли ошибку "Error updateStake")'
+      }, {root: true});
+    }
   },
 
   async addStakeAddTime({dispatch, commit}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      console.log('stake_id:', payload.stakeId)
+      console.log('addGoal1, addGoal2:', payload.addGoal1, payload.addGoal2)
 
       const data = await this.$axios.$get('/api/stake/addStakeAddTime', {
         params: {
@@ -155,7 +193,7 @@ export const actions = {
 
     // Если это игра плей-офф, то проверяем результат в дополнительное время и по пенальти
     if (payload.order > rootGetters['group/getCountGroups']) {
-      if (payload.goal1 && payload.goal2 && payload.goal1 === payload.goal2) {
+      if (payload.goal1 === payload.goal2) {
         await dispatch('addStakeAddTime', payload);
 
         if (payload.addGoal1 && payload.addGoal2 && payload.addGoal1 === payload.addGoal2) {

@@ -82,6 +82,25 @@ module.exports.addStake = async (req, res) => {
 }
 
 module.exports.updateStake = async (req, res) => {
+  const query = 'UPDATE `stakes` SET\n' +
+    'goal1 = ?, goal2 = ?\n' +
+    'WHERE id = ?'
+
+  await pool.promise().execute(query, [
+    req.query.goal1,
+    req.query.goal2,
+    req.query.id
+  ])
+  .then((result) => {
+    if (result) {
+      res.json({rows: !!result[0]})
+    } else {
+      res.json({error: 'Ошибка при добавлении новой ставки в таблицу games'})
+    }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
 }
 
 module.exports.addStakeAddTime = async (req, res) => {
