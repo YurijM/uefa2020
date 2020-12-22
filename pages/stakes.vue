@@ -2,20 +2,29 @@
   <div class="mx-auto" :style="{ width: '100%' }">
     <h2 class="text-center mt-1 purple--text">Ставки</h2>
 
-    <v-alert
+<!--    <v-alert
       dense
       type="info"
       class="mb-1 mx-auto"
       :style="{ fontSize: '.9em', maxWidth: '98%' }"
+    >-->
+    <v-alert
+      dense
+      border="top"
+      colored-border
+      type="info"
+      elevation="2"
+      class="mb-1 mx-auto"
+      :style="{ fontSize: '.9em', maxWidth: widthTable }"
     >
       На данной странице отображаются
-      <span class="yellow--text"><strong>только</strong></span> игры, которые
-      <span class="yellow--text"><strong>ещё не начались</strong></span
+      <span class="error--text"><strong>только</strong></span> игры, которые
+      <span class="error--text"><strong>ещё не начались</strong></span
       >.<br />
       На игры, которые
-      <span class="yellow--text"
+      <span class="error--text"
         ><strong>уже начались или закончились</strong></span
-      >, ставки сделать <span class="yellow--text"><strong>нельзя</strong></span
+      >, ставки сделать <span class="error--text"><strong>нельзя</strong></span
       >.
     </v-alert>
 
@@ -140,7 +149,7 @@
       </v-card>
     </v-dialog>
 
-    <div v-if="stakePlayoff.length > 0">
+    <div v-if="stakesPlayoff.length > 0">
       <h3 class="text-center mb-1">Плей-офф</h3>
 
       <v-data-table
@@ -148,12 +157,12 @@
         class="mb-2 mx-auto purple lighten-5"
         :style="{ maxWidth: widthTable }"
         :headers="headerPlayoff"
-        :items="stakePlayoff"
+        :items="stakesPlayoff"
         item-key="game-no"
         group-by="group"
         no-data-text="Игры ещё не введены"
         hide-default-footer
-        :items-per-page="stakePlayoff.length"
+        :items-per-page="stakesPlayoff.length"
         mobile-breakpoint="350"
       >
         <template v-slot:group.header="{ items, isOpen, toggle }">
@@ -218,7 +227,7 @@
       </v-data-table>
     </div>
 
-    <div v-if="stakeGroups.length > 0">
+    <div v-if="stakesGroups.length > 0">
       <h3 class="text-center mb-1">Групповой турнир</h3>
 
       <v-data-table
@@ -226,24 +235,13 @@
         class="mb-5 mx-auto purple lighten-5"
         :style="{ maxWidth: widthTable }"
         :headers="headerGroups"
-        :items="stakeGroups"
+        :items="stakesGroups"
         item-key="game-no"
         no-data-text="Игры ещё не введены"
         hide-default-footer
-        :items-per-page="stakeGroups.length"
+        :items-per-page="stakesGroups.length"
         mobile-breakpoint="350"
       >
-        <template v-slot:group.header="{ items, isOpen, toggle }">
-          <th :colspan="Object.keys(items[0]).length">
-            <v-icon small @click="toggle">
-              {{ isOpen ? "fas fa-minus" : "fas fa-plus" }}
-            </v-icon>
-            <span class="ml-2" :style="{ fontSize: '1.35em' }">{{
-              items[0].group
-            }}</span>
-          </th>
-        </template>
-
         <template v-slot:item.start="{ item }">
           {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}
           {{ new Date(item.start).toLocaleTimeString().substr(0, 5) }}
@@ -298,14 +296,17 @@ export default {
   name: "stakes",
   async asyncData({ store }) {
     await store.dispatch("group/loadGroups");
+
+    const gamblerId = store.getters["gambler/getGambler"].id
+    const order = store.getters["group/getCountGroups"]
     await store.dispatch("stake/loadStakes", {
-      gambler_id: store.getters["gambler/getGambler"].id,
-      order: store.getters["group/getCountGroups"],
+      gambler_id: gamblerId,
+      order,
       source: "group",
     });
     await store.dispatch("stake/loadStakes", {
-      gambler_id: store.getters["gambler/getGambler"].id,
-      order: store.getters["group/getCountGroups"],
+      gambler_id: gamblerId,
+      order,
       source: "playoff",
     });
   },
@@ -385,8 +386,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      stakeGroups: "stake/getStakeGroups",
-      stakePlayoff: "stake/getStakePlayoff",
+      stakesGroups: "stake/getStakesGroups",
+      stakesPlayoff: "stake/getStakesPlayoff",
       getCountGroups: "group/getCountGroups",
       getGambler: "gambler/getGambler",
     }),
@@ -455,7 +456,7 @@ export default {
           },
           { root: true }
         )
-        
+
         return
       }
 

@@ -1,6 +1,6 @@
 const pool = require('../middleware/database')
 
-module.exports.loadStakesForPlayoff = async (req, res) => {
+module.exports.loadStakesPlayoff = async (req, res) => {
   const query = 'SELECT g.id AS gameId, stakes.id AS stakeId, g.team1_id, g.team2_id, ' +
     'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
@@ -32,7 +32,7 @@ module.exports.loadStakesForPlayoff = async (req, res) => {
   })
 }
 
-module.exports.loadStakesForGroups = async (req, res) => {
+module.exports.loadStakesGroups = async (req, res) => {
   const query = 'SELECT g.id AS gameId, stakes.id AS stakeId, ' +
     'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
@@ -49,6 +49,27 @@ module.exports.loadStakesForGroups = async (req, res) => {
   await pool.promise().execute(query, [
     req.query.gambler_id,
     req.query.order
+  ])
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.loadStakesGame = async (req, res) => {
+  const query = 'SELECT gambler_id, ' +
+      'IFNULL(s.goal1, \'\') goal1, IFNULL(s.goal2, \'\') goal2, ' +
+      'IFNULL(sa.goal1, \'\') addGoal1, IFNULL(sa.goal2, \'\') addGoal2, ' +
+      'IFNULL(sp.team_id, 0) penaltyId ' +
+      'FROM stakes s ' +
+      'LEFT JOIN `stakes-addtime` sa ON sa.stake_id = s.id ' +
+      'LEFT JOIN `stakes-penalty` sp ON sp.stake_id = s.id ' +
+      'WHERE game_id = ?'
+
+  await pool.promise().execute(query, [
+    req.query.gameId
   ])
   .then(([rows, fields]) => {
     res.json(rows)

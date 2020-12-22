@@ -1,22 +1,73 @@
 export const state = () => ({
   stakes: [],
-  stakeGroups: [],
-  stakePlayoff: []
+  stakesGroups: [],
+  stakesPlayoff: [],
+  stakesGame: [],
+  gamePoints: {
+    winPoints: 0,
+    drawPoints: 0,
+    defeatPoints: 0
+  }
 })
 
 export const getters = {
   getStakes: state => state.stakes,
-  getStakeGroups: state => state.stakeGroups,
-  getStakePlayoff: state => state.stakePlayoff,
+  getStakesGroups: state => state.stakesGroups,
+  getStakesPlayoff: state => state.stakesPlayoff,
+  getStakesGame: state => state.stakesGame,
+  getGamePoints: state => state.gamePoints
 }
 
 export const mutations = {
-  LOAD_STAKE_GROUPS(state, payload) {
-    state.stakeGroups = payload
+  LOAD_STAKES(state, payload) {
+    state.stakes = payload
   },
-  LOAD_STAKE_PLAYOFF(state, payload) {
-    state.stakePlayoff = payload
-  }
+  CLEAR_STAKES(state) {
+    state.stakes = []
+  },
+  LOAD_STAKES_GROUPS(state, payload) {
+    state.stakesGroups = payload
+  },
+  CLEAR_STAKES_GROUPS(state) {
+    state.stakesGroups = []
+  },
+  LOAD_STAKES_PLAYOFF(state, payload) {
+    state.stakesPlayoff = payload
+  },
+  CLEAR_STAKES_PLAYOFF(state) {
+    state.stakesPlayoff = []
+  },
+  LOAD_STAKES_GAME(state, payload) {
+    //Сохраняем загруженные стаыки на игру
+    state.stakesGame = payload
+
+    //Считаем количество ставок на победу, ничью и поражение
+    let winCount = 0
+    let drawCount = 0
+    let defeatCount = 0
+
+    payload.forEach(stake => {
+      if (parseInt(stake.goal1) > parseInt(stake.goal2)) winCount++
+      if (parseInt(stake.goal1) === parseInt(stake.goal2)) drawCount++
+      if (parseInt(stake.goal1) < parseInt(stake.goal2)) defeatCount++
+    })
+
+    //Вычисляем количество очков, присуждаемых за ставку на победу, ничью и поражение
+    const len = payload.length
+
+    state.gamePoints.winPoints = winCount > 0 ? len / winCount : 0
+    state.gamePoints.drawPoints = drawCount > 0 ? len / drawCount : 0
+    state.gamePoints.defeatPoints = defeatCount > 0 ? len / defeatCount : 0
+  },
+  CLEAR_STAKES_GAME(state) {
+    state.stakesGame = []
+
+    state.gamePoints = {
+      winPoints: 0,
+      drawPoints: 0,
+      defeatPoints: 0
+    }
+  },
 }
 
 export const actions = {
@@ -24,8 +75,8 @@ export const actions = {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const controller = payload.source === 'group' ? 'loadStakesForGroups' : 'loadStakesForPlayoff'
-      const commitName = payload.source === 'group' ? 'LOAD_STAKE_GROUPS' : 'LOAD_STAKE_PLAYOFF'
+      const controller = payload.source === 'group' ? 'loadStakesGroups' : 'loadStakesPlayoff'
+      const commitName = payload.source === 'group' ? 'LOAD_STAKES_GROUPS' : 'LOAD_STAKES_PLAYOFF'
 
       const data = await this.$axios.$get(`/api/stake/${controller}`, {
         params: {
@@ -47,6 +98,33 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении loadStakes (см. в консоли ошибку "Error loadStakes")'
+      }, {root: true});
+    }
+  },
+
+  async loadStakesGame({commit, getters}, gameId) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/stake/loadStakesGame', {
+        params: {
+          gameId
+        }
+      });
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('LOAD_STAKES_GAME', data)
+      }
+    } catch (e) {
+      console.log('Error loadStakesGame:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении loadStakesGame (см. в консоли ошибку "Error loadStakesGame")'
       }, {root: true});
     }
   },

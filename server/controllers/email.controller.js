@@ -43,14 +43,22 @@ module.exports.sendMail = async (req, res) => {
   try {
     smtpTransport = await nodemailer.createTransport({
       //service: 'mail',
-      host: 'smtp.gmail.com',
+      /*host: 'smtp.gmail.com',
       port: 587,
       secure: false, // true for 465, false for other ports 587
       auth: {
         user: 'myagkovhyurij@gmail.com',
         pass: 'Gtnhjdrf38'
+      }*/
+      host: 'smtp.mail.ru',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'y-myagkov@mail.ru',
+        pass: 'Rcdjhf,f{',
       }
-    });
+      //encryption: 'ssl',
+  });
   } catch (e) {
     res.json({'error': e.name + ':' + e.message});
   }
@@ -66,10 +74,15 @@ module.exports.sendMail = async (req, res) => {
   if (authkey === '') res.json({'error': 'Ключ регистрации не найден'});
 
   /*let msg = 'Для регистрации перейдите по ссылке: http://localhost:3000/registration/' + authkey;*/
-  let msg = 'Для регистрации перейдите по ссылке <a href="http://localhost:3000/signup/' + authkey + '"><i>Регистрация</i></a>';
+  //let msg = 'Для регистрации перейдите по ссылке <a href="http://185.119.57.155/signup/' + authkey +
+  // '"><i>Регистрация</i></a>';
+
+  const host = `http://185.119.57.155/signup/${authkey}`
+  let msg = `Для регистрации перейдите по ссылке <a href="${host}"><i>Регистрация</i></a>`;
 
   let mailOptions = {
-    from: 'myagkovhyurij@gmail.com', // sender address
+    //from: 'myagkovhyurij@gmail.com', // sender address
+    from: 'y-myagkov@mail.ru', // sender address
     to: req.query.email, // list of receivers
     subject: 'Регистрация в клубе', // Subject line
     /*text: msg, // plain text body*/
@@ -78,7 +91,7 @@ module.exports.sendMail = async (req, res) => {
 
   await smtpTransport.sendMail(mailOptions, (error, info) => {
     if (error) {
-      res.json(error)
+      res.json({error: error.response})
     } else {
       const query = 'UPDATE `authkeys` SET `status` = -1 WHERE `status` = 0 AND `key` = ?';
       pool.promise().execute(query, [authkey], function (err, results) {

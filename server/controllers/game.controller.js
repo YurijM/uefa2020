@@ -52,6 +52,26 @@ module.exports.loadGamesForTeam = async (req, res) => {
   })
 }
 
+module.exports.loadGame = async (req, res) => {
+  const query = 'SELECT IFNULL(g.goal1, \'\') goal1, IFNULL(g.goal2, \'\') goal2, ' +
+    'IFNULL(ad.goal1, \'\') addGoal1, IFNULL(ad.goal2, \'\') addGoal2, ' +
+    'IFNULL(p.team_id, 0) penaltyId ' +
+    'FROM games g ' +
+    'LEFT JOIN addtime ad ON ad.game_id = g.id ' +
+    'LEFT JOIN penalty p ON p.game_id = g.id ' +
+    'WHERE id = ?'
+
+  await pool.promise().execute(query, [
+    req.query.game_id
+  ])
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
 module.exports.addGame = async (req, res) => {
   const query = 'INSERT INTO `games` ' +
     '(`start`, `game_no`, `stadium_id`, `group_id`, `team1_id`, `team2_id`, `goal1`, `goal2`) ' +

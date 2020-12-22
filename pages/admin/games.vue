@@ -270,7 +270,7 @@
 
     <v-data-table
       dense
-      class="game mt-10 grey darken-3 mx-auto"
+      class="game mt-5 grey darken-3 mx-auto"
       :style="{maxWidth: widthTable}"
       :headers="headers"
       :items="games"
@@ -491,7 +491,8 @@ export default {
       loadGames: 'game/loadGames',
       addGame: 'game/addGame',
       updateGame: 'game/updateGame',
-      deleteGame: 'game/deleteGame'
+      deleteGame: 'game/deleteGame',
+      changeResult: 'game/changeResult'
     }),
     formatDate(date) {
       if (!date) return null
@@ -557,6 +558,21 @@ export default {
         this.editedIndex = this.games.indexOf(item)
         this.editedItem = Object.assign({}, item)
 
+        // Запоминаем текущий счёт
+        this.editedItem.curResult = {
+          goal1: this.editedItem.goal1,
+          goal2: this.editedItem.goal2,
+          addGoal1: this.editedItem.addGoal1,
+          addGoal2: this.editedItem.addGoal2,
+          penaltyTeam: this.editedItem.penaltyTeam
+        }
+
+        /*this.editedItem.curGoal1 = this.editedItem.goal1
+        this.editedItem.curGoal2 = this.editedItem.goal2
+        this.editedItem.curAddGoal1 = this.editedItem.addGoal1
+        this.editedItem.curAddGoal2 = this.editedItem.addGoal2
+        this.editedItem.curPenaltyTeam = this.editedItem.penaltyTeam*/
+
         this.loadGroupTeams()
 
         if (this.editedIndex > -1) {
@@ -610,6 +626,13 @@ export default {
         await this.addGame(this.editedItem);
       } else {
         await this.updateGame(this.editedItem);
+
+        if (this.editedItem.curResult.goal1 !== this.editedItem.goal1 ||
+          this.editedItem.curResult.goal2 !== this.editedItem.goal2 ||
+          this.editedItem.curResult.addGoal1 !== this.editedItem.addGoal1 ||
+          this.editedItem.curResult.addGoal2 !== this.editedItem.addGoal2 ||
+          this.editedItem.curResult.penaltyTeam !== this.editedItem.penaltyTeam
+        ) await this.changeResult(this.editedItem)
       }
 
       this.loading = false;

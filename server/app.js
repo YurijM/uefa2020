@@ -13,6 +13,7 @@ const teamRoutes = require('./routes/team.routes');
 const stadiumRoutes = require('./routes/stadium.routes');
 const gameRoutes = require('./routes/game.routes');
 const stakeRoutes = require('./routes/stake.routes');
+const pointRoutes = require('./routes/point.routes');
 const imageRoutes = require('./routes/image.routes');
 
 app.use(cors());
@@ -26,6 +27,7 @@ app.use('/api/team', teamRoutes);
 app.use('/api/stadium', stadiumRoutes);
 app.use('/api/game', gameRoutes);
 app.use('/api/stake', stakeRoutes);
+app.use('/api/point', pointRoutes);
 app.use('/api/image', imageRoutes);
 
 io.on('connection', (socket) => {
@@ -98,7 +100,7 @@ io.on('connection', (socket) => {
     if (data.changedPoints) {
       socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
     } else {
-      socket.broadcast.emit('setMessage', {status: 'primary', text: `Изменилась свойства игрока ${data.nickname}`});
+      socket.broadcast.emit('setMessage', {status: 'primary', text: `Изменились свойства игрока ${data.nickname}`});
     }
   });
 

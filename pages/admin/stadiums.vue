@@ -70,7 +70,7 @@
 
     <v-data-table
       dense
-      class="mt-10 grey darken-3 mx-auto"
+      class="mt-5 grey darken-3 mx-auto"
       :style="{maxWidth: '450px'}"
       :headers="headers"
       :items="stadiums"

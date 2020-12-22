@@ -1,17 +1,28 @@
 export const state = () => ({
   games: [],
+  game: null
 })
 
 export const getters = {
   getGames: state => state.games,
+  getGame: state => state.game,
   getGamesForTeam: (state) => (teamId) => {
-    
-  }
+
+  },
 }
 
 export const mutations = {
   LOAD_GAMES(state, payload) {
     state.games = payload
+  },
+  CLEAR_GAMES(state) {
+    state.games = []
+  },
+  LOAD_GAME(state, payload) {
+    state.game = payload
+  },
+  CLEAR_GAME(state) {
+    state.game = []
   },
   GAMES_FOR_TEAM(state, payload) {
 
@@ -38,6 +49,33 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении loadGames (см. в консоли ошибку "Error loadGames")'
+      }, {root: true});
+    }
+  },
+
+  async loadGame({commit}, game_id) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/game/loadGame', {
+        params: {
+          game_id
+        }
+      });
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('LOAD_GAME', data)
+      }
+    } catch (e) {
+      console.log('Error loadGame:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении loadGame (см. в консоли ошибку "Error loadGame")'
       }, {root: true});
     }
   },
@@ -277,5 +315,53 @@ export const actions = {
         }
       }
     }
-  }
+  },
+  async changeResult({commit, dispatch, getters, rootGetters}, payload) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true})
+
+      await dispatch('point/loadPoints', null, {root: true})
+
+      await dispatch('stake/loadStakesGame', payload.id, {root: true})
+
+      await commit('point/CLEAR_POINTS_GAME', null, {root: true})
+
+      const game = getters.getGames.find((e) => e.id === payload.id)
+      const stakes = rootGetters['stake/getStakesGame']
+      const gamePoints = rootGetters['stake/getGamePoints']
+
+      await commit('point/CALC_POINTS_GAME', {game, stakes, gamePoints}, {root: true})
+
+      await commit('point/CALC_PLACES_GAME', payload.game_no, {root: true})
+
+      await dispatch('point/savePoints', payload.id, {root: true})
+
+      const points = rootGetters['point/getPoints'].filter(item => item.game_no > payload.game_no)
+      let gameId = 0
+      for (let item of points) {
+        if (gameId !== item.game_id) {
+          await commit('point/CLEAR_POINTS_GAME', null, {root: true})
+
+          let gamblers = rootGetters['point/getPoints'].filter(e => e.game_id === item.game_id)
+          for (let gambler of gamblers) {
+            await commit('point/ADD_POINTS_GAME', {
+              game_id: gambler.game_id,
+              gambler_id: gambler.gambler_id,
+              points: parseFloat(gambler.points)
+            }, {root: true})
+          }
+          await commit('point/CALC_PLACES_GAME', item.game_no, {root: true})
+          await dispatch('point/savePoints', item.game_id, {root: true})
+
+          gameId = item.game_id
+        }
+      }
+    } catch (e) {
+      console.log('Error changeResult:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении changeResult (см. в консоли ошибку "Error changeResult")'
+      }, {root: true})
+    }
+  },
 }
