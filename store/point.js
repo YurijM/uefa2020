@@ -36,7 +36,6 @@ export const mutations = {
     } else {
       state.lastGameIds = [0, 0]
     }
-    console.log('lastGameIds:', state.lastGameIds)
   },
   SET_LAST_PLACES(state, payload) {
     state.lastPlaces = payload
