@@ -100,8 +100,20 @@ io.on('connection', (socket) => {
     if (data.changedPoints) {
       socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
     } else {
-      socket.broadcast.emit('setMessage', {status: 'primary', text: `Изменились свойства игрока ${data.nickname}`});
+      socket.broadcast.emit('setMessage', {
+        status: 'primary',
+        text: `Изменились свойства игрока ${data.nickname}`
+      });
     }
+  });
+
+  /****************************************************************************/
+  socket.on('changeResult', data => {
+    socket.broadcast.emit('changeResult', data);
+
+    socket.broadcast.emit('setMessage', {
+      status: 'primary', text: `Игра ${data.team1}-${data.team2} - счёт ${data.goal1}:${data.goal2}`
+    });
   });
 
   /****************************************************************************/

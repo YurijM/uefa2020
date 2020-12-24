@@ -320,6 +320,8 @@ export const actions = {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true})
 
+      await dispatch('game/loadGames', null, {root: true})
+
       await dispatch('point/loadPoints', null, {root: true})
 
       await dispatch('stake/loadStakesGame', payload.id, {root: true})
@@ -356,6 +358,8 @@ export const actions = {
           gameId = item.game_id
         }
       }
+
+      await dispatch('point/loadResult', null, {root: true})
     } catch (e) {
       console.log('Error changeResult:', e);
       await commit('common/SET_MESSAGE', {

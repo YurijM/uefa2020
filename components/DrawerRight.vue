@@ -11,8 +11,8 @@
   >
     <v-list dense>
       <v-list-item
-        v-for="item in gamblers"
-        :key="item.id"
+        v-for="item in result"
+        :key="item.gambler_id"
         class="px-2"
       >
         <v-list-item-avatar size="35" class="mr-2 my-0 mt-1">
@@ -34,7 +34,7 @@
           :style="{minWidth: '85px'}"
         >
           <v-chip
-            :color="getColorWinner(item.place)"
+            :color="getColorWinner(item.lastPlace)"
             class="ml-0 mr-1 white--text"
             label
             small
@@ -42,13 +42,13 @@
             {{item.points}}
           </v-chip>
 
-          <div v-if="item.prev_place > 0">
-            <v-icon small :class="getColorStatistic(item.place, item.prev_place)">
-              {{getIcon(item.place, item.prev_place)}}
+          <div v-if="item.prevPlace > 0">
+            <v-icon small :class="getColorStatistic(item.lastPlace, item.prevPlace)">
+              {{getIcon(item.lastPlace, item.prevPlace)}}
             </v-icon>
 
-            <span class="caption" :class="getColorStatistic(item.place, item.prev_place)">
-              {{getStatistic(item.place, item.prev_place)}}
+            <span class="caption" :class="getColorStatistic(item.lastPlace, item.prevPlace)">
+              {{getStatistic(item.lastPlace, item.prevPlace)}}
             </span>
           </div>
         </v-list-item-action>
@@ -58,7 +58,9 @@
 </template>
 
 <script>
-  export default {
+import {mapGetters} from 'vuex'
+
+export default {
     name: 'DrawerRight',
     props: {
       value: {
@@ -76,12 +78,15 @@
       }
     },
     computed: {
-      gamblers() {
-        return this.$store.getters['gambler/getGamblers']
+      ...mapGetters({
+        getResult: 'point/getResult',
+        getPlaces: 'point/getLastPlaces'
+      }),
+      result() {
+        return this.getResult
       },
       isStarted() {
-        const gambler = this.$store.getters['gambler/getGamblers'][0];
-        return gambler.points > 0
+        return this.getPlaces.length > 0
       }
     },
     methods: {
@@ -119,7 +124,8 @@
         return color;
       },
       getColorWinner(place) {
-        return (place > 3 ? 'blue-grey darken-1' : this.placeColors.find(c => c.place === place).color)
+        const item = this.placeColors.find(c => c.place === parseInt(place))
+        return (place > 3 || item == undefined ? 'blue-grey darken-1' : item.color)
       }
     }
   }

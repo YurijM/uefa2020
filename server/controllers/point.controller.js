@@ -1,10 +1,75 @@
 const pool = require('../middleware/database');
 
 module.exports.loadPoints = async (req, res) => {
-  const query = 'SELECT gambler_id, game_id, points, place, g.game_no ' +
-    'FROM points p ' +
-    'INNER JOIN games g ON g.id = p.game_id ' +
+  const query = 'SELECT gambler_id, game_id, nickname, p.points, p.place, g.game_no\n' +
+    'FROM points p\n' +
+    'INNER JOIN games g ON g.id = p.game_id\n' +
+    'INNER JOIN gamblers gm ON gm.id = p.gambler_id\n' +
     'ORDER BY game_no'
+
+  await pool.promise().execute(query)
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.lastPlaces = async (req, res) => {
+  const query = 'SELECT gambler_id, SUM(lastPlace) lastPlace, SUM(prevPlace) prevPlace FROM (\n' +
+    'SELECT p.gambler_id, l.place lastPlace, 0 prevPlace\n' +
+    'FROM points p\n' +
+    'INNER JOIN games g ON g.id = p.game_id\n' +
+    'INNER JOIN (\n' +
+    'SELECT game_id, gambler_id, place FROM points WHERE game_id = ?\n' +
+    ') l ON (l.game_id = p.game_id AND l.gambler_id = p.gambler_id)\n' +
+    'UNION ALL\n' +
+    'SELECT p.gambler_id, 0 lastPlace, pr.place prevPlace\n' +
+    'FROM points p\n' +
+    'INNER JOIN games g ON g.id = p.game_id\n' +
+    'INNER JOIN (\n' +
+    'SELECT game_id, gambler_id, place FROM points WHERE game_id = ?\n' +
+    ') pr ON (pr.game_id = p.game_id AND pr.gambler_id = p.gambler_id)\n' +
+    ') t\n' +
+    'GROUP BY gambler_id'
+
+  await pool.promise().execute(query, [
+    req.query.lastGameId,
+    req.query.prevGameId
+  ])
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.lastGameIds = async (req, res) => {
+  const query = 'SELECT game_id FROM points p\n' +
+  'INNER JOIN games g ON g.id = p.game_id\n' +
+  'GROUP BY game_id\n' +
+  'ORDER BY game_no DESC\n' +
+  'LIMIT 2'
+
+  await pool.promise().execute(query)
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
+module.exports.loadResult = async (req, res) => {
+  const query = 'SELECT gambler_id, nickname, photo, SUM(p.points) points\n' +
+    'FROM gamblers g\n' +
+    'LEFT JOIN points p ON p.gambler_id = g.id\n' +
+    /*'FROM points p\n' +
+    'INNER JOIN gamblers g ON g.id = p.gambler_id\n' +*/
+    'GROUP BY gambler_id, nickname\n' +
+    'ORDER BY points DESC, nickname'
 
   await pool.promise().execute(query)
   .then(([rows, fields]) => {

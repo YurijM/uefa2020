@@ -2,6 +2,8 @@ export const actions = {
   async nuxtServerInit({dispatch}) {
     await dispatch('gambler/autoLogin');
     await dispatch('gambler/loadGamblers');
+    await dispatch('game/loadGames');
+    await dispatch('point/loadResult');
   },
 
   async socket_sendMessage({commit}, payload) {
@@ -42,6 +44,10 @@ export const actions = {
 
   async socket_loadGamblers({dispatch}) {
     await dispatch('gambler/loadGamblers', null, {root: true});
+  },
+
+  async socket_changeResult({dispatch}, payload) {
+    await dispatch('game/changeResult', payload, {root: true});
   },
 
   async socket_loadMessages({dispatch}, payload) {

@@ -632,7 +632,14 @@ export default {
           this.editedItem.curResult.addGoal1 !== this.editedItem.addGoal1 ||
           this.editedItem.curResult.addGoal2 !== this.editedItem.addGoal2 ||
           this.editedItem.curResult.penaltyTeam !== this.editedItem.penaltyTeam
-        ) await this.changeResult(this.editedItem)
+        ) this.$socket.emit('changeResult', this.editedItem)
+          /*team1: this.editedItem.team1,
+          team2: this.editedItem.team2,
+          goal1: this.editedItem.goal1,
+          goal2: this.editedItem.goal2*/
+        //})
+
+        //await this.changeResult(this.editedItem)
       }
 
       this.loading = false;

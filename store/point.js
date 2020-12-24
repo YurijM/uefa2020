@@ -1,13 +1,19 @@
 export const state = () => ({
   points: [],
   pointsGame: [],
-  pointsGamblers: []
+  pointsGamblers: [],
+  lastGameIds: [],
+  lastPlaces: [],
+  result: []
 })
 
 export const getters = {
   getPoints: state => state.points,
   getPointsGame: state => state.pointsGame,
   getPointsGamblers: state => state.pointsGamblers,
+  getLastGameIds: state => state.lastGameIds,
+  getLastPlaces: state => state.lastPlaces,
+  getResult: state => state.result
 }
 
 export const mutations = {
@@ -16,6 +22,39 @@ export const mutations = {
   },
   CLEAR_POINTS(state) {
     state.points = []
+  },
+  SET_LAST_GAME_IDS(state, payload) {
+    state.lastGameIds = []
+
+    if (payload.length > 0) {
+      state.lastGameIds.push(payload[0].game_id)
+      if (payload.length > 1) {
+        state.lastGameIds.push(payload[1].game_id)
+      } else {
+        state.lastGameIds.push(0)
+      }
+    } else {
+      state.lastGameIds = [0, 0]
+    }
+    console.log('lastGameIds:', state.lastGameIds)
+  },
+  SET_LAST_PLACES(state, payload) {
+    state.lastPlaces = payload
+  },
+  LOAD_RESULT(state, payload) {
+    state.result = payload.map(item => {
+      let places = state.lastPlaces.find(e => e.gambler_id === item.gambler_id)
+
+      if (places) {
+        item.lastPlace = places.lastPlace
+        item.prevPlace = places.prevPlace
+      } else {
+        item.lastPlace = 0
+        item.prevPlace = 0
+      }
+
+      return item
+    })
   },
   LOAD_POINTS_GAME(state, payload) {
     state.pointsGame = payload
@@ -83,7 +122,7 @@ export const mutations = {
       })
     })
 
-    state.pointsGamblers.sort((a, b) => a.points < b.points)
+    state.pointsGamblers.sort((a, b) => b.points - a.points)
 
     let place = 0
     let count = 0
@@ -107,7 +146,7 @@ export const mutations = {
       //let item = state.pointsGame.find(el => el.game_id === e.game_id && el.gambler_id === e.gambler_id)
       let item = state.pointsGame.find(el => el.gambler_id === e.gambler_id)
       //item.points = e.points
-      item.place =  e.place
+      item.place = e.place
     })
   },
   UPDATE_PLACE_GAME(state, payload) {
@@ -137,6 +176,82 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении loadPoints (см. в консоли ошибку "Error loadPoints")'
+      }, {root: true});
+    }
+  },
+  async lastGameIds({commit}) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/point/lastGameIds');
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('SET_LAST_GAME_IDS', data)
+      }
+    } catch (e) {
+      console.log('Error lastGameIds:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении lastGameIds (см. в консоли ошибку "Error lastGameIds")'
+      }, {root: true});
+    }
+  },
+  async lastPlaces({commit, getters}) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const lastGameIds = getters.getLastGameIds
+
+      const data = await this.$axios.$get('/api/point/lastPlaces', {
+        params: {
+          lastGameId: lastGameIds[0],
+          prevGameId: lastGameIds[1]
+        }
+      });
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('SET_LAST_PLACES', data)
+      }
+    } catch (e) {
+      console.log('Error lastPlaces:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении lastPlaces (см. в консоли ошибку "Error lastPlaces")'
+      }, {root: true});
+    }
+  },
+  async loadResult({commit, dispatch, getters}) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      await dispatch('lastGameIds')
+      await dispatch('lastPlaces')
+
+      const data = await this.$axios.$get('/api/point/loadResult')
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('LOAD_RESULT', data)
+      }
+    } catch (e) {
+      console.log('Error loadResult:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении loadResult (см. в консоли ошибку "Error loadResult")'
       }, {root: true});
     }
   },
