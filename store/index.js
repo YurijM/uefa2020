@@ -46,8 +46,8 @@ export const actions = {
     await dispatch('gambler/loadGamblers', null, {root: true});
   },
 
-  async socket_changeResult({dispatch}, payload) {
-    await dispatch('game/changeResult', payload, {root: true});
+  async socket_changeResult({dispatch}) {
+    await dispatch('point/loadResult', null, {root: true});
   },
 
   async socket_loadMessages({dispatch}, payload) {

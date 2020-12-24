@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
 
   /****************************************************************************/
   socket.on('changeResult', data => {
-    socket.broadcast.emit('changeResult', data);
+    socket.broadcast.emit('changeResult');
 
     socket.broadcast.emit('setMessage', {
       status: 'primary', text: `Игра ${data.team1}-${data.team2} - счёт ${data.goal1}:${data.goal2}`

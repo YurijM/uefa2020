@@ -322,7 +322,7 @@
       </template>
 
       <template v-slot:item.actions="{item}">
-        <v-icon class="mr-2" title="Редактировать"x-small @click="editItem(item)">fas fa-pen</v-icon>
+        <v-icon class="mr-2" title="Редактировать" x-small @click="editItem(item)">fas fa-pen</v-icon>
         <v-icon title="Удалить" x-small @click="promptDelete(item)">fas fa-trash-alt</v-icon>
       </template>
     </v-data-table>
@@ -418,7 +418,7 @@ export default {
   },
   created() {
     // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
-    this. dateCurrent = this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10)
+    this.dateCurrent = this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10)
 
     this.countGroups = this.getCountGroups
 
@@ -632,14 +632,15 @@ export default {
           this.editedItem.curResult.addGoal1 !== this.editedItem.addGoal1 ||
           this.editedItem.curResult.addGoal2 !== this.editedItem.addGoal2 ||
           this.editedItem.curResult.penaltyTeam !== this.editedItem.penaltyTeam
-        ) this.$socket.emit('changeResult', this.editedItem)
-          /*team1: this.editedItem.team1,
-          team2: this.editedItem.team2,
-          goal1: this.editedItem.goal1,
-          goal2: this.editedItem.goal2*/
-        //})
-
-        //await this.changeResult(this.editedItem)
+        ) {
+          await this.changeResult(this.editedItem)
+          this.$socket.emit('changeResult', {
+            team1: this.editedItem.team1,
+            team2: this.editedItem.team2,
+            goal1: this.editedItem.goal1,
+            goal2: this.editedItem.goal2
+          })
+        }
       }
 
       this.loading = false;
