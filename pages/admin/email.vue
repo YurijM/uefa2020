@@ -12,9 +12,7 @@
           color="yellow"
           autofocus
           :style="{width: '100%'}"
-        >
-          <!--<v-icon slot="prepend" small class="mt-1" color="yellow">fas fa-envelope</v-icon>-->
-        </v-text-field>
+        />
 
         <v-btn
           class="mt-2"
