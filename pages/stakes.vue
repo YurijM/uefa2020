@@ -2,12 +2,6 @@
   <div class="mx-auto" :style="{ width: '100%' }">
     <h2 class="text-center mt-1 purple--text">Ставки</h2>
 
-<!--    <v-alert
-      dense
-      type="info"
-      class="mb-1 mx-auto"
-      :style="{ fontSize: '.9em', maxWidth: '98%' }"
-    >-->
     <v-alert
       dense
       border="top"
@@ -19,25 +13,16 @@
     >
       На данной странице отображаются
       <span class="error--text"><strong>только</strong></span> игры, которые
-      <span class="error--text"><strong>ещё не начались</strong></span
-      >.<br />
+      <span class="error--text"><strong>ещё не начались</strong></span>.<br/>
       На игры, которые
-      <span class="error--text"
-        ><strong>уже начались или закончились</strong></span
-      >, ставки сделать <span class="error--text"><strong>нельзя</strong></span
-      >.
+      <span class="error--text"><strong>уже начались или закончились</strong></span>,
+      ставки сделать <span class="error--text"><strong>нельзя</strong></span>.
     </v-alert>
 
     <v-dialog v-model="dialog" persistent max-width="350px">
       <v-card>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-card-text
-            class="pt-2 pb-0"
-            :style="{
-              borderTop: '1px #eee solid !important',
-              borderBottom: '1px #eee solid !important',
-            }"
-          >
+          <v-card-title class="blue-grey lighten-3 text-subtitle-2 py-2">
             <v-row>
               <v-col cols="6" class="py-0">
                 {{ editedItem.group }}
@@ -46,7 +31,16 @@
                 {{ dateGame }} {{ timeGame }}
               </v-col>
             </v-row>
-            <v-card-title class="justify-center pa-0">
+          </v-card-title>
+
+          <v-card-text
+            class="pt-2 pb-0 blue-grey lighten-4"
+            :style="{
+              borderTop: '1px #eee solid !important',
+              borderBottom: '1px #eee solid !important',
+            }"
+          >
+            <v-card-title class="justify-center pa-0 primary--text">
               {{ editedItem.team1 }} - {{ editedItem.team2 }}
             </v-card-title>
 
@@ -141,7 +135,7 @@
 
         <v-card-actions class="dark blue-grey darken-3 py-2 px-5">
           <v-spacer></v-spacer>
-          <v-btn color="error" text @click="close"> Отмена </v-btn>
+          <v-btn color="error" text @click="close"> Отмена</v-btn>
           <v-btn color="success" text :loading="loading" @click="save">
             Сохранить
           </v-btn>
@@ -171,8 +165,8 @@
               {{ isOpen ? "fas fa-minus" : "fas fa-plus" }}
             </v-icon>
             <span class="ml-2" :style="{ fontSize: '1.35em' }">{{
-              items[0].group
-            }}</span>
+                items[0].group
+              }}</span>
           </th>
         </template>
 
@@ -221,8 +215,8 @@
             title="Редактировать"
             x-small
             @click="editItem(item)"
-            >fas fa-pen</v-icon
-          >
+          >fas fa-pen
+          </v-icon>
         </template>
       </v-data-table>
     </div>
@@ -281,7 +275,8 @@
             title="Редактировать"
             x-small
             @click="editItem(item)"
-            >fas fa-pen</v-icon
+          >fas fa-pen
+          </v-icon
           >
         </template>
       </v-data-table>
@@ -290,11 +285,11 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from "vuex";
+import {mapActions, mapMutations, mapGetters} from "vuex";
 
 export default {
   name: "stakes",
-  async asyncData({ store }) {
+  async asyncData({store}) {
     await store.dispatch("group/loadGroups");
 
     const gamblerId = store.getters["gambler/getGambler"].id
@@ -318,12 +313,12 @@ export default {
       gameTeams: [],
       countGroups: 0,
       headerGroups: [
-        { text: "Начало", value: "start" },
-        { text: "Город", value: "city" },
-        { text: "Группа", value: "group" },
-        { text: "", value: "team1", align: "center", sortable: false },
-        { text: "Игра", value: "result", align: "center", sortable: false },
-        { text: "", value: "team2", align: "center", sortable: false },
+        {text: "Начало", value: "start"},
+        {text: "Город", value: "city"},
+        {text: "Группа", value: "group"},
+        {text: "", value: "team1", align: "center", sortable: false},
+        {text: "Игра", value: "result", align: "center", sortable: false},
+        {text: "", value: "team2", align: "center", sortable: false},
         {
           text: "",
           align: "center",
@@ -333,11 +328,11 @@ export default {
         },
       ],
       headerPlayoff: [
-        { text: "Начало", value: "start", align: "center" },
-        { text: "Город", value: "city" },
-        { text: "", value: "team1", align: "center", sortable: false },
-        { text: "Игра", value: "result", align: "center", sortable: false },
-        { text: "", value: "team2", align: "center", sortable: false },
+        {text: "Начало", value: "start", align: "center"},
+        {text: "Город", value: "city"},
+        {text: "", value: "team1", align: "center", sortable: false},
+        {text: "Игра", value: "result", align: "center", sortable: false},
+        {text: "", value: "team2", align: "center", sortable: false},
         {
           text: "Доп.время",
           value: "addTime",
@@ -350,7 +345,7 @@ export default {
           align: "center",
           sortable: false,
         },
-        { text: "", align: "center", value: "actions", sortable: false },
+        {text: "", align: "center", value: "actions", sortable: false},
       ],
       editedItem: {
         goal1: "",
@@ -369,15 +364,15 @@ export default {
       dateGame: "",
       timeGame: "",
       rules: {
-        required: (value) => !!value || "Поле должно быть заполнено",
+        required: (value) => !!value || "Не может быть пустым",
         isNumber: (value) =>
-          value == null || !isNaN(value) || "Значение должно быть числом",
+          value == null || !isNaN(value) || "Должно быть число",
         notLess1: (value) =>
           value >= this.editedItem.goal1 ||
-          `Значение не должно быть меньше ${this.editedItem.goal1}`,
+          `Не может быть меньше ${this.editedItem.goal1}`,
         notLess2: (value) =>
           value >= this.editedItem.goal2 ||
-          `Значение не должно быть меньше ${this.editedItem.goal2}`,
+          `Не может быть меньше ${this.editedItem.goal2}`,
       },
     };
   },
@@ -448,13 +443,13 @@ export default {
       const start = new Date(this.editedItem.start);
 
       if (now > start) {
-        await this.clearMessage(null, { root: true })
+        await this.clearMessage(null, {root: true})
         await this.setMessage(
           {
             status: "error",
             text: "К сожалению, Вы не можете изменить ставку, так как игра уже началась",
           },
-          { root: true }
+          {root: true}
         )
 
         return

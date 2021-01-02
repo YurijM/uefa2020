@@ -2,8 +2,48 @@
   <div class="d-flex flex-column" :style="{width: '100%', height: '100%'}">
     <mu-dialog-delete-message v-model="dialog" :message="messageToDialog" @deleteMessage="deleteMessage"/>
 
+    <v-dialog
+      v-model="isMessage"
+      persistent
+      max-width="400"
+    >
+      <v-card>
+        <v-card-title class="blue-grey lighten-3 subtitle-1 py-1">
+          Сообщение
+        </v-card-title>
+
+        <v-card-text
+          class="pb-0 blue-grey lighten-4"
+          :style="{
+              borderTop: '1px #eee solid !important',
+              borderBottom: '1px #eee solid !important',
+            }"
+        >
+          <v-textarea
+            class="message mb-3"
+            v-model="text"
+            hide-details
+            :rows="rows"
+            @keyup.ctrl.enter="sendMessage"
+          />
+        </v-card-text>
+
+        <v-card-actions class="dark blue-grey darken-3 py-1 px-5">
+          <v-spacer></v-spacer>
+
+          <v-btn color="error" text @click="cancel">
+            Отмена
+          </v-btn>
+
+          <v-btn color="success" text :loading="loading" @click="sendMessage">
+            Отправить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid purple'}">
-      <v-col class="pa-1" cols="6">
+      <v-col class="pa-1" cols="10">
         <h3 class="ml-5">
           {{ gamblers.length > 1 ? 'Сейчас в чате:' : 'Сейчас в чате только Вы' }}
         </h3>
@@ -19,7 +59,19 @@
         </v-chip>
       </v-col>
 
-      <v-col cols="6" class="pa-1 d-flex flex-column">
+      <v-col class="pa-1 text-center" cols="2">
+        <v-tooltip bottom>
+          <template v-slot:activator="{on}">
+            <v-btn small color="info" v-on="on" @click.stop="isMessage = true">
+              <v-icon>far fa-comment-dots</v-icon>
+              <!--              <v-icon :style="{width: '50px'}" @click.stop="isMessage = true">far fa-comment-dots</v-icon>-->
+            </v-btn>
+          </template>
+          <span>Написать сообщение</span>
+        </v-tooltip>
+      </v-col>
+
+<!--      <v-col cols="6" class="pa-1 d-flex flex-column">
         <v-textarea
           class="message mb-1"
           v-model="text"
@@ -32,7 +84,7 @@
           @keyup.ctrl.enter="sendMessage"
         />
 
-        <div v-if="emptyMessage" class="empty-message error--text ml-8 mb-1 caption"
+        <div v-if="emptyMessage" class="empty-message error&#45;&#45;text ml-8 mb-1 caption"
              :style="{lineHeight: 'normal'}">
           Нельзя отправить пустое сообщение
         </div>
@@ -47,13 +99,6 @@
             <span>Отмена</span>
           </v-tooltip>
 
-          <!--<v-btn v-if="message" class="ml-8" small color="error" @click="cancel">
-            Отмена
-            <v-icon right>fas fa-times</v-icon>
-          </v-btn>-->
-
-          <!--<v-spacer/>-->
-
           <v-tooltip bottom>
             <template v-slot:activator="{on}">
               <v-btn x-small color="info" v-on="on" @click="sendMessage">
@@ -63,39 +108,45 @@
             <div>Отправить</div>
             <div>(Ctrl+Enter)</div>
           </v-tooltip>
-          <!--<v-btn small color="info" @click="sendMessage">
-            Отправить
-            <v-icon right>far fa-share-square</v-icon>
-          </v-btn>-->
         </div>
-      </v-col>
+      </v-col>-->
     </div>
 
     <div ref="params" :style="{borderBottom: '2px solid purple !important'}">
       <v-card flat color="purple lighten-5">
         <v-card-actions class="pt-0">
-          <v-radio-group class="mt-0" row hide-details v-model="range">
+          <v-radio-group dense class="mt-0" row hide-details v-model="range">
             <v-radio
-              class="range"
               color="purple"
               v-for="item in rangeMessages"
               :key="item.value"
-              :label="item.label"
               :value="item.value"
               @change="range = item.value; changeParams()"
-            />
+            >
+              <template v-slot:label>
+                <div class="purple--text text-body-2">
+                  {{ item.label }}
+                </div>
+              </template>
+            </v-radio>
           </v-radio-group>
 
           <v-spacer/>
 
           <v-checkbox
-            class="systemMessages mt-0"
+            dense
+            class="mt-0"
             color="purple"
             hide-details
             v-model="systemMessages"
-            label="Показывать системные сообщения"
             @change="changeParams()"
-          />
+          >
+            <template v-slot:label>
+              <div class="purple--text text-body-2">
+                Показывать системные сообщения
+              </div>
+            </template>
+          </v-checkbox>
         </v-card-actions>
       </v-card>
     </div>
@@ -132,10 +183,13 @@
             </v-list-item-avatar>
 
             <v-list-item-content
-              class="py-1"
+              class="py"
               :class="message.layout.content.class"
             >
-              <v-list-item-subtitle :style="{whiteSpace: 'normal !important'}">
+              <v-list-item-subtitle
+                class="text-caption text-md-body-2"
+                :style="{whiteSpace: 'normal !important'}"
+              >
                 <span class="mr-2">{{ $moment(message.date).format('DD.MM.YYYY HH:mm:ss') }}</span>
                 <b>{{ message.fromNick }}</b>
               </v-list-item-subtitle>
@@ -144,7 +198,13 @@
                    :class="message.layout.editButtons.class">
                 <v-tooltip bottom>
                   <template v-slot:activator="{on}">
-                    <v-btn icon x-small color="pink" v-on="on" @click="openDialog(message)">
+                    <v-btn
+                      icon
+                      x-small
+                      color="pink"
+                      v-on="on"
+                      @click="openDialog(message)"
+                    >
                       <v-icon size="15">fas fa-trash-alt</v-icon>
                     </v-btn>
                   </template>
@@ -153,7 +213,14 @@
 
                 <v-tooltip bottom>
                   <template v-slot:activator="{on}">
-                    <v-btn class="ml-1" icon x-small color="indigo" v-on="on" @click="editMessage(message)">
+                    <v-btn
+                      class="ml-1"
+                      icon
+                      x-small
+                      color="indigo"
+                      v-on="on"
+                      @click="editMessage(message)"
+                    >
                       <v-icon size="15">fas fa-pencil-alt</v-icon>
                     </v-btn>
                   </template>
@@ -161,7 +228,10 @@
                 </v-tooltip>
               </div>
 
-              <v-list-item-title class="deep-purple--text text--darken-4" v-html="message.message"/>
+              <v-list-item-title
+                class="deep-purple--text text--darken-4 text-caption text-md-body-2"
+                v-html="message.message"
+              />
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -184,6 +254,8 @@ export default {
   },
   data() {
     return {
+      isMessage: false,
+      loading: false,
       dialog: false,
       messageToDialog: null,
       message: null,
@@ -223,7 +295,7 @@ export default {
       getShowSystem: 'chat/getShowSystem',
     }),
     systemMessages: {
-      get: function() {
+      get: function () {
         return this.getShowSystem
       },
       set: function (show) {
@@ -245,8 +317,6 @@ export default {
       switch (this.$vuetify.breakpoint.name) {
         case 'xl':
         case 'lg':
-          rows = 3;
-          break;
         case 'md':
           rows = 3;
           break;
@@ -319,11 +389,14 @@ export default {
 
       this.message = {...message};
       this.text = message.message.replace(/<br\/>/g, '\n')
+
+      this.isMessage = true
     },
     cancel() {
       this.emptyMessage = false;
       this.message = null;
       this.text = ''
+      this.isMessage = false
     },
     async changeParams() {
       await this.loadMessages({
@@ -336,6 +409,8 @@ export default {
         this.emptyMessage = true;
         return
       }
+
+      this.loading = true
 
       if (this.message) {
         this.message.message = this.text.replace(/([^>])\n/g, '$1<br/>')
@@ -364,6 +439,9 @@ export default {
 
       this.text = '';
       this.emptyMessage = false;
+
+      this.loading = false
+      this.isMessage = false
       //event.target.blur()
     }
   }
@@ -379,10 +457,13 @@ export default {
   color: #1976d2 !important
 }
 
-.range .v-label,
+.v-icon.v-icon--dense {
+  font-size: 18px;
+}
+/*.range .v-label,
 .systemMessages .v-label {
   color: purple !important
-}
+}*/
 </style>
 
 <style lang="scss" scoped>

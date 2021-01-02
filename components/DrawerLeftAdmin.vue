@@ -69,7 +69,6 @@ export default {
           to: '/admin/email',
           icon: 'fas fa-envelope'
         },
-
       ]
     }
   }

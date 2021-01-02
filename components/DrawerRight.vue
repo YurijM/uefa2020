@@ -9,6 +9,45 @@
     mobile-breakpoint="700"
     color="purple lighten-5"
   >
+    <v-dialog v-model="dialog" max-width="650">
+      <v-card
+        class="mx-auto text-center"
+        color="primary"
+        dark
+      >
+        <v-card-text class="py-1">
+          <div class="yellow--text accent-4 text-body-2 text-sm-h6">
+            Динамика занимаемых мест
+          </div>
+        </v-card-text>
+
+        <v-card-text class="pa-2">
+          <v-sheet color="rgba(0, 0, 0, .12)">
+            <v-sparkline
+              :value="values"
+              :labels="labels"
+              color="rgba(255, 255, 255, .7)"
+              height="100"
+              padding="10"
+              stroke-linecap="round"
+              smooth
+              line-width="1"
+            >
+              <template v-slot:label="item">
+                {{ item.value }}
+              </template>
+            </v-sparkline>
+          </v-sheet>
+        </v-card-text>
+
+        <v-card-text class="pb-2">
+          <div class="yellow--text text-body-1 text-sm-h5">
+            {{ gambler }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <v-list dense>
       <v-list-item
         v-for="item in result"
@@ -22,9 +61,23 @@
         <v-list-item-content>
           <v-list-item-title
             class="purple--text text--darken-4"
-            :style="{whiteSpace: 'normal'}"
+            :style="{whiteSpace: 'normal', cursor: (!isFirstGame ? 'pointer' : 'default')}"
+            @click="loadChart(item.gambler_id)"
           >
-            {{item.nickname}}
+            <v-tooltip
+              v-if="!isFirstGame"
+              content-class="text-caption"
+              bottom
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <span v-bind="attrs" v-on="on">{{ item.nickname }}</span>
+              </template>
+              <span>Посмотреть динамику результатов</span>
+            </v-tooltip>
+            <div v-else>
+              {{ item.nickname }}
+            </div>
+
           </v-list-item-title>
         </v-list-item-content>
 
@@ -39,16 +92,16 @@
             label
             small
           >
-            {{item.points}}
+            {{ item.points }}
           </v-chip>
 
           <div v-if="item.prevPlace > 0">
             <v-icon small :class="getColorStatistic(item.lastPlace, item.prevPlace)">
-              {{getIcon(item.lastPlace, item.prevPlace)}}
+              {{ getIcon(item.lastPlace, item.prevPlace) }}
             </v-icon>
 
             <span class="caption" :class="getColorStatistic(item.lastPlace, item.prevPlace)">
-              {{getStatistic(item.lastPlace, item.prevPlace)}}
+              {{ getStatistic(item.lastPlace, item.prevPlace) }}
             </span>
           </div>
         </v-list-item-action>
@@ -58,77 +111,107 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 export default {
-    name: 'DrawerRight',
-    props: {
-      value: {
-        type: Boolean,
-        default: true
-      }
+  name: 'DrawerRight',
+  props: {
+    value: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data() {
+    return {
+      dialog: false,
+      values: [],
+      labels: [],
+      gambler: '',
+      placeColors: [
+        {place: 1, color: 'error'},
+        {place: 2, color: 'success'},
+        {place: 3, color: 'primary'}
+      ]
+    }
+  },
+  computed: {
+    ...mapGetters({
+      getResult: 'point/getResult',
+      getPlaces: 'point/getLastPlaces',
+      getPoints: 'point/getPoints',
+      getGamblers: 'gambler/getGamblers'
+    }),
+    result() {
+      return this.getResult
     },
-    data() {
-      return {
-        placeColors: [
-          {place: 1, color: 'error'},
-          {place: 2, color: 'success'},
-          {place: 3, color: 'primary'}
-        ]
-      }
+    isStarted() {
+      return this.getPlaces.length > 0
     },
-    computed: {
-      ...mapGetters({
-        getResult: 'point/getResult',
-        getPlaces: 'point/getLastPlaces'
-      }),
-      result() {
-        return this.getResult
-      },
-      isStarted() {
-        return this.getPlaces.length > 0
+    isFirstGame() {
+      return this.getPlaces.length > 0 && this.getPlaces[0].placePrev === 0
+    }
+  },
+  methods: {
+    ...mapActions({
+      loadPoints: 'point/loadPoints'
+    }),
+    getIcon(place, prev) {
+      let icon = 'fas fa-arrows-alt-h';
+
+      if (place < prev) {
+        icon = 'fas fa-arrow-up';
+      } else if (place > prev) {
+        icon = 'fas fa-arrow-down';
       }
+
+      return icon;
     },
-    methods: {
-      getIcon(place, prev) {
-        let icon = 'fas fa-arrows-alt-h';
+    getStatistic(place, prev) {
+      let statistic = '';
 
-        if (place < prev) {
-          icon = 'fas fa-arrow-up';
-        } else if (place > prev) {
-          icon = 'fas fa-arrow-down';
-        }
-
-        return icon;
-      },
-      getStatistic(place, prev) {
-        let statistic = '';
-
-        if (place < prev) {
-          statistic = '+' + (prev - place);
-        } else if (place > prev) {
-          statistic = '-' + (place - prev);
-        }
-
-        return statistic;
-      },
-      getColorStatistic(place, prev) {
-        let color = 'green--text text--darken-2';
-
-        if (place < prev) {
-          color = 'red--text';
-        } else if (place > prev) {
-          color = 'blue-grey--text text--darken-3';
-        }
-
-        return color;
-      },
-      getColorWinner(place) {
-        const item = this.placeColors.find(c => c.place === parseInt(place))
-        return (place > 3 || item == undefined ? 'blue-grey darken-1' : item.color)
+      if (place < prev) {
+        statistic = '+' + (prev - place);
+      } else if (place > prev) {
+        statistic = '-' + (place - prev);
       }
+
+      return statistic;
+    },
+    getColorStatistic(place, prev) {
+      let color = 'green--text text--darken-2';
+
+      if (place < prev) {
+        color = 'red--text';
+      } else if (place > prev) {
+        color = 'blue-grey--text text--darken-3';
+      }
+
+      return color;
+    },
+    getColorWinner(place) {
+      const item = this.placeColors.find(c => c.place === parseInt(place))
+      return (place > 3 || item == undefined ? 'blue-grey darken-1' : item.color)
+    },
+    async loadChart(id) {
+      this.dialog = true
+
+      this.values = []
+      this.labels = []
+
+      const item = this.getGamblers.find(e => e.id === id)
+      this.gambler = `${item.family} ${item.name} (${item.nickname})`
+
+      const count = this.getGamblers.length
+
+      await this.loadPoints()
+
+      this.getPoints.filter(e => e.gambler_id == id).forEach(e => {
+        this.values.push(count - e.place)
+        this.labels.push(e.place)
+      })
     }
   }
+}
 </script>
 
 <style scoped>
