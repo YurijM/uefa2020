@@ -102,6 +102,7 @@ export const actions = {
   async signup({commit, dispatch}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
+      console.log('signup')
       const data = await this.$axios.$get('/api/gambler/signup', {
         params: {
           nickname: payload.nickname,
@@ -298,6 +299,7 @@ export const actions = {
         } else {
           await commit('SET_GAMBLER', data);
           await dispatch('loadGamblers');
+          await dispatch('point/loadResult', null, {root: true});
 
           if (!!file) {
             try {

@@ -210,7 +210,11 @@ module.exports.disconnectGamblersBySocket = async (req, res) => {
 };
 
 module.exports.loadGamblers = async (req, res) => {
-  const query = 'SELECT CONCAT(family, \' \', `name`, \' (\', nickname, \')\') AS fullName, gamblers.* FROM gamblers ORDER BY points DESC, nickname';
+  const query = 'SELECT CONCAT(family, \' \', `name`, \' (\', nickname, \')\') AS fullName,\n' +
+    'gamblers.*\n' +
+    'FROM gamblers\n' +
+    'WHERE status = 1\n' +
+    'ORDER BY nickname';
 
   await pool.promise().execute(query)
   .then(([rows, fields]) => {

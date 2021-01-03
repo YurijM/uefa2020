@@ -96,15 +96,12 @@ io.on('connection', (socket) => {
   /****************************************************************************/
   socket.on('changeGambler', data => {
     socket.broadcast.emit('loadGamblers');
+    socket.broadcast.emit('changeResult');
 
-    if (data.changedPoints) {
-      socket.broadcast.emit('setMessage', {status: 'primary', text: 'Изменилась таблица результатов'});
-    } else {
-      socket.broadcast.emit('setMessage', {
-        status: 'primary',
-        text: `Изменились свойства игрока ${data.nickname}`
-      });
-    }
+    socket.broadcast.emit('setMessage', {
+      status: 'primary',
+      text: `Изменились свойства игрока ${data.nickname}`
+    });
   });
 
   /****************************************************************************/
@@ -124,6 +121,7 @@ io.on('connection', (socket) => {
     socket.emit('setSocketId', data.gambler);
 
     socket.broadcast.emit('loadGamblers');
+    socket.broadcast.emit('changeResult');
     socket.broadcast.emit('addToChat', data.gambler);
     socket.broadcast.emit('loadMessages', {range: 1});
 

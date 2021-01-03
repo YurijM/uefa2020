@@ -121,6 +121,7 @@
 
         this.loading = false;
 
+        console.log('isSign:', this.$store.getters['gambler/isSign'])
         if (await this.$store.getters['gambler/isSign']) {
           await this.$store.dispatch('authkey/resetKey', this.key);
           if (!await this.$store.getters['common/isMessage']) {

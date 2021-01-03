@@ -68,6 +68,7 @@ module.exports.loadResult = async (req, res) => {
     'LEFT JOIN points p ON p.gambler_id = g.id\n' +
     /*'FROM points p\n' +
     'INNER JOIN gamblers g ON g.id = p.gambler_id\n' +*/
+    'WHERE g.status = 1\n' +
     'GROUP BY gambler_id, nickname\n' +
     'ORDER BY points DESC, nickname'
 

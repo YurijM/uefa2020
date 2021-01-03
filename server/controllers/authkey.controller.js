@@ -8,6 +8,7 @@ module.exports.loadAuthkey = async (req, res) => {
     await bcrypt.genSalt(10, async function (err, salt) {
       let str = Math.random().toString().substr(3, 11);
       await bcrypt.hash(str, salt, function (err, hash) {
+        hash = hash.replace(/\//g, '0')
         pool.promise().execute(query, [hash], function (err, results) {
           if (err) console.log(err);
         });

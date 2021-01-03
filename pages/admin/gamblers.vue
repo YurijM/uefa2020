@@ -32,12 +32,6 @@
               :rules="[rules.isNumber]"
             />
 
-            <v-text-field
-              v-model="editedItem.points"
-              label="Очки"
-              :rules="[rules.isNumber, rules.precision]"
-            />
-
             <v-select
               :disabled="editedItem.id === gambler.id"
               v-model="editedItem.status"
@@ -125,8 +119,6 @@ export default {
         {text: '', value: 'photo', width: '1%'},
         {text: 'Участник', value: 'fullName'},
         {text: 'Ставка', align: 'center', value: 'stake', sortable: false},
-        {text: 'Очки', align: 'center', value: 'points', sortable: false},
-        {text: 'Место', align: 'center', value: 'place', sortable: false},
         {text: 'Статус', align: 'center', value: 'status', sortable: false},
         {text: 'Администратор', align: 'center', value: 'admin', sortable: false},
         {text: '', align: 'center', value: 'actions', sortable: false, width: '1%'}
@@ -134,8 +126,6 @@ export default {
       editedIndex: -1,
       editedItem: {
         stake: 0,
-        points: 0.0,
-        place: 0,
         status: 0,
         admin: 0
       },
@@ -178,8 +168,6 @@ export default {
     editItem(item) {
       this.editedIndex = this.gamblers.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      // Запоминаем текущее количество очков
-      this.editedItem.curPoints = this.editedItem.points
 
       this.dialog = true
     },
@@ -194,19 +182,16 @@ export default {
       if (!this.$refs.form.validate()) return;
 
       this.loading = true
-      const changedPoints = this.editedItem.points !== this.editedItem.curPoints
 
       this.editedItem.admin = this.editedItem.admin ? 1 : 0;
 
       await this.saveFeatures({
-        gambler: this.editedItem,
-        changedPoints: changedPoints
+        gambler: this.editedItem
       });
 
       //Если сохранение параметров прошло успешно
       if (!this.isMessage) {
         this.$socket.emit('changeGambler', {
-          changedPoints: changedPoints,
           nickname: this.editedItem.nickname
         })
       }
