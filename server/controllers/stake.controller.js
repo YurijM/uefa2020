@@ -59,14 +59,22 @@ module.exports.loadStakesGroups = async (req, res) => {
 }
 
 module.exports.loadStakesGame = async (req, res) => {
-  const query = 'SELECT gambler_id, ' +
+ /* const query = 'SELECT gambler_id, ' +
       'IFNULL(s.goal1, \'\') goal1, IFNULL(s.goal2, \'\') goal2, ' +
       'IFNULL(sa.goal1, \'\') addGoal1, IFNULL(sa.goal2, \'\') addGoal2, ' +
       'IFNULL(sp.team_id, 0) penaltyId ' +
       'FROM stakes s ' +
       'LEFT JOIN `stakes-addtime` sa ON sa.stake_id = s.id ' +
       'LEFT JOIN `stakes-penalty` sp ON sp.stake_id = s.id ' +
-      'WHERE game_id = ?'
+      'WHERE game_id = ?'*/
+  const query = 'SELECT g.id AS gambler_id,\n' +
+    'IFNULL(s.goal1, \'\') goal1, IFNULL(s.goal2, \'\') goal2,\n' +
+    'IFNULL(sa.goal1, \'\') addGoal1, IFNULL(sa.goal2, \'\') addGoal2,\n' +
+    'IFNULL(sp.team_id, 0) penaltyId\n' +
+    'FROM gamblers g\n' +
+    'LEFT JOIN stakes s ON s.gambler_id = g.id AND s.game_id = ?\n' +
+    'LEFT JOIN `stakes-addtime` sa ON sa.stake_id = s.id\n' +
+    'LEFT JOIN `stakes-penalty` sp ON sp.stake_id = s.id'
 
   await pool.promise().execute(query, [
     req.query.gameId

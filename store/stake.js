@@ -58,6 +58,7 @@ export const mutations = {
     state.gamePoints.winPoints = winCount > 0 ? len / winCount : 0
     state.gamePoints.drawPoints = drawCount > 0 ? len / drawCount : 0
     state.gamePoints.defeatPoints = defeatCount > 0 ? len / defeatCount : 0
+    state.gamePoints.avgPoints = (state.gamePoints.winPoints + state.gamePoints.drawPoints + state.gamePoints.defeatPoints) / 3
   },
   CLEAR_STAKES_GAME(state) {
     state.stakesGame = []

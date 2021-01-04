@@ -24,9 +24,6 @@ export const mutations = {
   CLEAR_GAME(state) {
     state.game = []
   },
-  GAMES_FOR_TEAM(state, payload) {
-
-  }
 }
 
 export const actions = {

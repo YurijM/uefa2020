@@ -63,12 +63,19 @@ export const mutations = {
       ? payload.gamePoints.winPoints
       : payload.game.goal1 === payload.game.goal2
         ? payload.gamePoints.drawPoints
-        : payload.gamePoints.defeatPoints
+        : payload.game.goal1 < payload.game.goal2
+          ? payload.gamePoints.defeatPoints
+          : payload.gamePoints.avgPoints
 
     payload.stakes.forEach(stake => {
       let points = 0
-      //Если угадан счёт
-      if (stake.goal1 === payload.game.goal1 && stake.goal2 === payload.game.goal2) {
+
+      //Если ставка не сделана
+      if (stake.goal1 === '') {
+        points = -payload.gamePoints.avgPoints
+        console.log(points)
+        //Если угадан счёт
+      } else if (stake.goal1 === payload.game.goal1 && stake.goal2 === payload.game.goal2) {
         points = parseFloat((payload.game.points * 2).toFixed(2))
         //Если не ничья и угадана разница мячей
       } else if (payload.game.goal1 !== payload.game.goal2

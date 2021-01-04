@@ -62,7 +62,7 @@
           <v-list-item-title
             class="purple--text text--darken-4"
             :style="{whiteSpace: 'normal', cursor: (!isFirstGame ? 'pointer' : 'default')}"
-            @click="loadChart(item.gambler_id)"
+            @click="!isFirstGame ? loadChart(item.gambler_id) : ''"
           >
             <v-tooltip
               v-if="!isFirstGame"
@@ -74,6 +74,7 @@
               </template>
               <span>Посмотреть динамику результатов</span>
             </v-tooltip>
+
             <div v-else>
               {{ item.nickname }}
             </div>
@@ -148,7 +149,7 @@ export default {
       return this.getPlaces.length > 0
     },
     isFirstGame() {
-      return this.getPlaces.length > 0 && this.getPlaces[0].placePrev === 0
+      return this.getPlaces.length === 0 || this.getPlaces[0].prevPlace == '0'
     }
   },
   methods: {

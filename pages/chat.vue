@@ -43,7 +43,7 @@
     </v-dialog>
 
     <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid purple'}">
-      <v-col class="pa-1" cols="10">
+      <v-col class="pa-1" cols="9" sm="10">
         <h3 class="ml-5">
           {{ gamblers.length > 1 ? 'Сейчас в чате:' : 'Сейчас в чате только Вы' }}
         </h3>
@@ -59,57 +59,16 @@
         </v-chip>
       </v-col>
 
-      <v-col class="pa-1 text-center" cols="2">
+      <v-col class="pa-1 text-center" cols="3" sm="2">
         <v-tooltip bottom>
           <template v-slot:activator="{on}">
-            <v-btn small color="info" v-on="on" @click.stop="isMessage = true">
+            <v-btn dark color="purple" v-on="on" @click.stop="isMessage = true">
               <v-icon>far fa-comment-dots</v-icon>
-              <!--              <v-icon :style="{width: '50px'}" @click.stop="isMessage = true">far fa-comment-dots</v-icon>-->
             </v-btn>
           </template>
           <span>Написать сообщение</span>
         </v-tooltip>
       </v-col>
-
-<!--      <v-col cols="6" class="pa-1 d-flex flex-column">
-        <v-textarea
-          class="message mb-1"
-          v-model="text"
-          label="Текст сообщения"
-          placeholder="Комбинация клавиш для отправки сообщения - Ctrl+Enter"
-          hide-details
-          outlined
-          :rows="rows"
-          prepend-icon="far fa-comment-dots"
-          @keyup.ctrl.enter="sendMessage"
-        />
-
-        <div v-if="emptyMessage" class="empty-message error&#45;&#45;text ml-8 mb-1 caption"
-             :style="{lineHeight: 'normal'}">
-          Нельзя отправить пустое сообщение
-        </div>
-
-        <div class="d-flex justify-space-around">
-          <v-tooltip v-if="message" bottom>
-            <template v-slot:activator="{on}">
-              <v-btn v-if="message" x-small color="error" v-on="on" @click="cancel">
-                <v-icon size="14">fas fa-ban</v-icon>
-              </v-btn>
-            </template>
-            <span>Отмена</span>
-          </v-tooltip>
-
-          <v-tooltip bottom>
-            <template v-slot:activator="{on}">
-              <v-btn x-small color="info" v-on="on" @click="sendMessage">
-                <v-icon size="15">fas fa-share</v-icon>
-              </v-btn>
-            </template>
-            <div>Отправить</div>
-            <div>(Ctrl+Enter)</div>
-          </v-tooltip>
-        </div>
-      </v-col>-->
     </div>
 
     <div ref="params" :style="{borderBottom: '2px solid purple !important'}">

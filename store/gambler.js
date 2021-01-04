@@ -238,7 +238,7 @@ export const actions = {
     }
   },
 
-  async profile({commit, dispatch}, {gambler, file}) {
+  async profile({commit, dispatch}, {gambler, file, breakpoint}) {
     await commit('common/CLEAR_MESSAGE', null, {root: true});
 
     let fileName = gambler.photo;
@@ -301,11 +301,13 @@ export const actions = {
           await dispatch('loadGamblers');
           await dispatch('point/loadResult', null, {root: true});
 
+          console.log('breakpoint:', breakpoint)
           if (!!file) {
             try {
               data = await this.$axios.$get('/api/gambler/resizePhoto', {
                 params: {
-                  fileName
+                  fileName,
+                  breakpoint
                 }
               });
 

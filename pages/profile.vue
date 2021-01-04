@@ -159,7 +159,7 @@
         file: null,
         rules: {
           required: value => !!value || 'Поле должно быть заполнено',
-          image: value => !value || value.size < 2000000 || 'Размер файла не должен быть больше 2Мб',
+          image: value => !value || value.size < 5000000 || 'Размер файла не должен быть больше 5Мб',
         },
         loading: false
       }
@@ -217,7 +217,8 @@
 
         await this.profile({
           gambler: this.gambler,
-          file: this.file
+          file: this.file,
+          breakpoint: this.$vuetify.breakpoint.name
         });
 
         this.loading = false;

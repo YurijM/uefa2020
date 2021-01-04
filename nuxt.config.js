@@ -3,6 +3,8 @@ const pkg = require('./package');
 module.exports = {
   mode: 'universal',
 
+  telemetry: false,
+
   server: {
     //port: (process.env.NODE_ENV === 'production' ? 8080 : 3000),
     host: (process.env.NODE_ENV === 'production' ? '185.119.57.155' : 'localhost')

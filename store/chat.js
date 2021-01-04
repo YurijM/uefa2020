@@ -1,6 +1,6 @@
 const layoutAdmin = {
   list: {
-    width: '50%',
+    width: '70%',
     class: 'mx-auto'
   },
   content: {
