@@ -251,7 +251,7 @@ module.exports.resizePhoto = async (req, res) => {
   .then(data => {
     sharp(data)
     .rotate(req.query.breakpoint === 'xs' ? -90 : 0)
-    .resize(150)
+    .resize(150, 200)
     .toFile(image, (err, info) => {
       if (err) res.json({error: err});
       res.json(info)
