@@ -28,9 +28,15 @@
           <template v-slot:activator="{ on }">
             <v-icon v-on="on">{{ drawer ? 'far fa-hand-point-left' : 'far fa-hand-point-right' }}</v-icon>
           </template>
-          <span class="caption">{{ drawer ? 'Скрыть меню' : 'Показать меню' }}</span>
+          <span class="caption">
+            {{ drawer
+            ? ($vuetify.breakpoint.width >= 800 ? 'Скрыть меню' : '')
+            : 'Показать меню' }}
+          </span>
         </v-tooltip>
       </v-app-bar-nav-icon>
+
+      <v-icon v-if="!drawer" class="mr-12">fas fa-bars</v-icon>
 
       <v-toolbar-title>Тотализатор</v-toolbar-title>
 
@@ -38,12 +44,18 @@
 
       <mu-header-user @openDialog="isOpenDialog"/>
 
-      <v-app-bar-nav-icon class="ml-md-12" @click.stop="drawerRight = !drawerRight">
+      <v-icon v-if="!drawerRight" class="ml-md-12">fas fa-ruble-sign</v-icon>
+
+      <v-app-bar-nav-icon :class="drawerRight ? 'ml-md-12' : ''" @click.stop="drawerRight = !drawerRight">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <v-icon v-on="on">{{ drawerRight ? 'far fa-hand-point-right' : 'far fa-hand-point-left' }}</v-icon>
           </template>
-          <span class="caption">{{ drawerRight ? 'Скрыть результаты' : 'Показать результаты' }}</span>
+          <span class="caption">
+            {{ drawerRight
+            ? ($vuetify.breakpoint.width >= 800 ? 'Скрыть результаты' : '')
+            : 'Показать результаты' }}
+          </span>
         </v-tooltip>
       </v-app-bar-nav-icon>
     </v-app-bar>

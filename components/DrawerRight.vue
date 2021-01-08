@@ -25,7 +25,7 @@
           <v-sheet color="rgba(0, 0, 0, .12)">
             <v-sparkline
               :value="values"
-              :labels="labels"
+              label-size="6"
               color="rgba(255, 255, 255, .7)"
               height="100"
               padding="10"
@@ -34,7 +34,20 @@
               line-width="1"
             >
               <template v-slot:label="item">
-                {{ item.value }}
+                <tspan
+                  :class="item.index === 0 ? 'yellow--text' : 'white'"
+                  :dx="item.index === 0 ? 3 : 0"
+                  dy="-1em"
+                >
+                  {{ places[item.index] }}
+                </tspan>
+                <tspan
+                  :class="item.index === 0 ? 'yellow--text' : 'black--text'"
+                  :dx="item.index === 0 ? -19 : -9"
+                  dy="1.25em"
+                >
+                  {{ points[item.index] }}
+                </tspan>
               </template>
             </v-sparkline>
           </v-sheet>
@@ -70,7 +83,7 @@
               bottom
             >
               <template v-slot:activator="{ on, attrs }">
-                <span v-bind="attrs" v-on="on">{{ item.nickname }}</span>
+                <span style="text-decoration: underline" v-bind="attrs" v-on="on">{{ item.nickname }}</span>
               </template>
               <span>Посмотреть динамику результатов</span>
             </v-tooltip>
@@ -126,7 +139,8 @@ export default {
     return {
       dialog: false,
       values: [],
-      labels: [],
+      places: [],
+      points: [],
       gambler: '',
       placeColors: [
         {place: 1, color: 'error'},
@@ -196,19 +210,28 @@ export default {
     async loadChart(id) {
       this.dialog = true
 
-      this.values = []
-      this.labels = []
+      this.values = [0]
+      this.places = [count]
+      this.points = [0]
 
       const item = this.getGamblers.find(e => e.id === id)
       this.gambler = `${item.family} ${item.name} (${item.nickname})`
 
       const count = this.getGamblers.length
 
+      this.values = [0]
+      this.places = ['место:']
+      this.points = ['очки:']
+
+      let points = 0
+
       await this.loadPoints()
 
       this.getPoints.filter(e => e.gambler_id == id).forEach(e => {
         this.values.push(count - e.place)
-        this.labels.push(e.place)
+        this.places.push(e.place)
+        points += parseFloat(e.points)
+        this.points.push(parseFloat(points).toFixed(2))
       })
     }
   }
