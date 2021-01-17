@@ -1,34 +1,188 @@
 <template>
-<v-container class="fill-height pink align-start" >
-  <div ref="top">
-    Top
-  </div>
-  <div :style="{maxHeight: `calc(100vh - ${maxHeight})`, overflowY: 'auto'}">
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab accusantium aspernatur delectus deleniti doloribus eos et eum exercitationem fuga fugiat incidunt laboriosam laborum laudantium mollitia numquam quidem quod rem saepe, sint suscipit tempora tenetur totam unde voluptatibus! Accusamus aperiam atque aut dignissimos illum impedit ipsum itaque iure libero, neque officia officiis, pariatur repellendus sequi sint totam, voluptatem. Adipisci animi autem debitis dolorum eius excepturi facilis itaque laborum modi nisi, odio quae quaerat quos similique totam. Aliquam consequatur corporis cum eligendi eum, exercitationem facilis fugiat fugit ipsa ipsum itaque laboriosam laborum laudantium molestias nesciunt nisi odit pariatur placeat porro quaerat quibusdam quisquam quod sapiente sequi similique, sunt tempore ut. A asperiores cum debitis dicta dignissimos error et eveniet fuga fugit hic ipsa laborum laudantium magni molestias nam neque obcaecati, officiis placeat quia quis quo reprehenderit rerum sapiente sunt temporibus voluptas, voluptate. Accusantium aliquid aperiam asperiores at atque, blanditiis culpa cum dicta eius eligendi eos ex facilis ipsa itaque magni maiores nostrum odio officiis pariatur quas quia quis rerum tempore temporibus unde vero voluptatem. Ab animi at autem blanditiis corporis debitis distinctio ea eligendi est eum iure magnam magni mollitia non odio odit officiis quam quibusdam ratione rem sed, sunt ullam unde ut vitae! Architecto, asperiores at atque beatae blanditiis commodi cumque doloremque eaque eos est, eveniet exercitationem harum hic incidunt inventore iste iusto magnam nemo nihil officiis praesentium quae quam quas quisquam repellat rerum sed sunt tempora tenetur ullam veritatis vitae voluptates voluptatum? Cupiditate deleniti ea eaque facilis laboriosam magnam minus optio perspiciatis possimus ratione. Amet aspernatur beatae consequatur cupiditate deleniti eius, officiis? Architecto aut, beatae, consequuntur debitis, hic modi molestias necessitatibus non nulla odio quaerat repudiandae saepe sapiente tempora ut veritatis voluptatem voluptates! Asperiores at consequuntur, dignissimos ducimus excepturi iste maxime necessitatibus neque sed unde? Dicta dolore ipsum nostrum! Consequuntur dicta dolore dolorem, doloribus eum fuga harum iusto neque numquam qui reprehenderit saepe sed tempora temporibus ut. Blanditiis dolor dolores ducimus eos iste nemo nihil porro sed. Dicta, dolore doloremque hic nam odio officia possimus praesentium quae rem. Autem corporis harum odio optio porro quia suscipit, veniam vitae. Accusantium blanditiis, consequatur, error fugit hic necessitatibus porro quae quidem quis quo, reprehenderit sapiente totam voluptate. Accusamus amet atque beatae blanditiis corporis culpa cumque dolor ea est eum illum impedit laborum necessitatibus nobis numquam obcaecati officiis optio porro quae quam qui, quis ratione repellat repellendus sapiente sint sit tenetur unde vero voluptatem? Accusamus consequuntur enim minima natus odit perferendis perspiciatis provident quis velit voluptatum. Atque eaque labore sapiente? Ab consectetur consequatur delectus dicta distinctio dolorem expedita incidunt, inventore ipsum iure labore magnam magni, maiores, necessitatibus officia perferendis quae quidem quo rem repellat soluta vel veritatis. Aliquam blanditiis cumque deleniti dolorum itaque officiis quia reprehenderit rerum voluptas voluptate. Asperiores eos impedit non obcaecati perspiciatis quibusdam reprehenderit, sit temporibus vel. At dolorum ipsum itaque laboriosam odio placeat rerum suscipit ut veritatis? Ducimus eveniet id, maiores minus quae ratione rem vero voluptates? Accusantium ea explicabo maxime nobis, odio sapiente similique. Alias amet dolor dolore ducimus, esse eveniet explicabo ipsa laboriosam magni minima modi molestiae molestias nemo omnis porro possimus quae quas quo repellendus rerum similique suscipit temporibus, velit. A aliquid aperiam aspernatur corporis, ducimus illum iusto laboriosam, maxime quia quis tempore voluptatum? Accusantium alias cumque dicta distinctio doloribus eos, et eveniet exercitationem inventore laboriosam libero molestiae mollitia natus nihil nisi nobis placeat quam quo ratione repudiandae sapiente veritatis voluptatem, voluptates. Ab aliquid architecto asperiores consectetur facere impedit, magni molestiae nostrum porro quod quos temporibus voluptate. Accusantium at beatae deserunt distinctio dolorum in laboriosam mollitia nemo non nostrum omnis porro possimus provident quam, quibusdam quidem rem similique sit vel voluptatum? Aspernatur consequatur et eveniet excepturi explicabo illo impedit iure maiores nobis officiis omnis perferendis quos repudiandae rerum sapiente tempora, unde voluptatem! Accusamus accusantium alias aliquam at blanditiis commodi dicta dignissimos distinctio doloremque dolores dolorum earum, eius et eum hic id ipsum molestias nemo nesciunt, nisi nostrum numquam perferendis perspiciatis porro provident quaerat quia quis repellat rerum sequi, soluta vitae voluptates voluptatibus. Ad alias aliquid amet animi at dignissimos esse fugit harum illum labore laudantium magnam minima molestiae natus nemo, neque nihil obcaecati pariatur quae quia quis quo quos reiciendis repellendus ullam vitae voluptates voluptatibus? Accusamus, architecto aut delectus distinctio exercitationem fugit itaque libero molestias qui quos, reiciendis rem reprehenderit soluta, ut vel. Ab aperiam aspernatur beatae cupiditate dignissimos distinctio doloribus dolorum enim et eveniet facilis in ipsum itaque laboriosam laborum nemo neque, nisi non porro qui quidem, quo similique sit suscipit unde veniam vitae, voluptas voluptate voluptatem voluptatibus. Aspernatur corporis cum debitis, enim et eveniet expedita facilis hic illum impedit mollitia nostrum provident, quasi quia sit. Ab ad aperiam culpa eaque eos expedita, illo illum in natus nulla optio quae repudiandae, voluptatum! Ab aliquam architecto atque consequatur cum dolorem eum in inventore maiores perspiciatis porro quas quos ratione repellendus sint ullam, unde. Accusantium ad, aperiam asperiores autem consequuntur culpa deserunt earum eligendi eos eveniet expedita explicabo fugiat id ipsa iste laborum libero magni nam non perspiciatis porro possimus provident quaerat quam quas qui quia quibusdam repudiandae sed sequi sit soluta tempore temporibus totam veritatis vero voluptatem! Amet animi at dolores et facilis, fugit harum incidunt ipsum maiores molestiae odio officia perferendis, quod reiciendis rem sed tempore unde veniam. A ab ad aliquid amet aut cupiditate deleniti dolores esse eum exercitationem facilis harum iste iusto maiores minus mollitia nemo nesciunt nobis officiis, omnis perspiciatis porro possimus praesentium quam quasi quos, tempore temporibus totam ullam ut vel veritatis voluptas voluptate? At consectetur, consequuntur debitis dicta dolorem ipsam iste itaque modi numquam reiciendis rem tenetur totam, ut voluptatibus voluptatum! Asperiores assumenda id iste voluptas! Consequatur eaque eos error iure laudantium, qui quis quisquam reprehenderit. Animi assumenda aut autem commodi cupiditate deserunt eius eligendi error est ex impedit inventore labore magnam minima, nam nulla obcaecati officiis, porro possimus quis rem repellendus reprehenderit sunt tempora ullam vel vitae voluptatem. A beatae corporis, debitis eum fuga inventore ipsam ipsum laudantium molestias quaerat sapiente similique sint. Accusantium aliquid architecto assumenda corporis cum cupiditate dignissimos facere fugiat fugit in ipsam iusto maxime modi, molestiae, omnis possimus ratione sapiente! Ab asperiores, voluptas. A beatae blanditiis eaque eius error esse fugit harum id impedit incidunt ipsum iste neque nostrum obcaecati odit possimus quaerat quas quibusdam quos ratione reiciendis reprehenderit, repudiandae sunt suscipit vel velit voluptate. Accusamus dolores ea veritatis! Accusamus accusantium alias architecto asperiores aspernatur autem commodi consectetur consequatur corporis debitis doloremque, ducimus earum enim error exercitationem fugit illo illum inventore ipsum itaque maiores maxime mollitia nisi nostrum officia officiis optio placeat, quaerat, quo reiciendis sed sit suscipit tenetur totam vitae voluptas voluptatem! Architecto, at commodi culpa dolorem enim esse id ipsa ipsum iste minima mollitia nobis quasi quod recusandae temporibus unde, veritatis. Cum cupiditate doloremque repellat sint ut! Distinctio enim est facere labore libero nihil nisi numquam officia soluta voluptatem. Accusantium ad culpa deleniti distinctio dolores eligendi eos esse et facere, facilis hic itaque libero maxime mollitia, nihil quibusdam sed, ut? Adipisci culpa ducimus enim est molestias, sed? Accusamus alias blanditiis dignissimos dolorum eius illum minima nihil officiis sapiente voluptate. Et, laudantium provident? Amet deleniti dolorum earum eligendi exercitationem expedita facilis, fugit inventore libero minus, nam quia quidem sequi sit soluta, suscipit voluptate! Asperiores debitis dolor esse explicabo fuga nobis repellendus vitae? Accusantium ad adipisci consectetur, debitis distinctio dolorem ducimus ea et ex exercitationem harum illum ipsum iste laudantium modi molestias obcaecati quas quasi qui ratione repellat repellendus, repudiandae, sapiente sed velit veniam voluptate! A, adipisci culpa cum debitis dolore doloremque dolores eligendi et eum fuga fugiat illum impedit ipsa ipsam itaque labore laudantium magni odio provident quam quibusdam quis quo recusandae velit voluptatem? Adipisci aspernatur, eius et iusto necessitatibus nostrum quisquam repudiandae voluptatum? Ab accusantium aliquam amet, aperiam asperiores cum cumque doloribus est et ex excepturi explicabo fugiat id ipsa iste mollitia natus non, odio pariatur praesentium quam quidem quisquam, recusandae repellendus repudiandae tempora veniam voluptates! Accusamus alias, asperiores commodi consequatur et eum illo impedit ipsa ipsum numquam, obcaecati provident quis voluptatum! Animi asperiores, aspernatur debitis ducimus maiores obcaecati perferendis porro quasi sapiente sint. Accusamus adipisci animi assumenda atque consectetur cum cumque dolore, ea eligendi eum fugiat iste magni minus mollitia natus nobis optio perspiciatis porro quos repellat repudiandae soluta totam! Deleniti doloremque ipsa itaque libero maxime nam non, officia officiis, quod sapiente sit soluta velit, voluptate! A consequatur deserunt ducimus harum illum in molestiae molestias, officia sed totam unde, vitae? Assumenda autem consectetur esse possimus praesentium, quod tenetur. At atque, consequuntur doloribus error facere labore minus modi nesciunt nobis quod soluta voluptatibus. Aperiam aspernatur commodi consequuntur corporis dolore dolores doloribus eius id, laborum quam quibusdam repellat repellendus reprehenderit saepe sit velit veritatis vitae voluptatum. Dolorem id impedit, libero molestiae natus nemo nobis obcaecati odit officiis, sed, sequi soluta vero vitae. Alias blanditiis consequuntur cumque, dicta et quidem quos. Ab amet at consectetur consequatur cum dicta doloribus eaque earum eum facere facilis fugit minima molestias odit placeat quibusdam quis ratione recusandae sint, ullam vitae voluptatem voluptates voluptatibus. Cumque, excepturi exercitationem id illo, ipsa ipsum maxime neque officiis, perferendis ratione saepe suscipit totam voluptatibus? Doloremque expedita laboriosam maiores necessitatibus odit quis vitae voluptate. Dolore itaque mollitia officia perspiciatis quas quis quisquam sapiente sint unde, voluptatum! Ab accusantium adipisci architecto aut, autem consequatur corporis deserunt distinctio ea eaque et exercitationem harum id illo ipsam ipsum labore libero magni maiores provident qui quia quidem quos repellendus sed temporibus tenetur vero voluptas voluptate, voluptatum. Delectus esse fugiat maxime rerum sed sunt ut! Debitis dolor doloremque nihil omnis quibusdam, sit ullam. Ab blanditiis consectetur cumque dignissimos dolore earum eius eos fugit illum incidunt itaque iure laudantium minima nihil odit quidem quisquam quo rem tempore temporibus ut veniam vero, voluptates. Accusantium animi, asperiores autem dolor doloremque doloribus ducimus enim eum facere id iste iusto obcaecati provident quo saepe sapiente veniam. Ad, dolor dolores ex explicabo nobis qui. Alias dignissimos ea inventore iure labore modi praesentium sed. Commodi corporis ea facere fuga fugiat iure libero nostrum sapiente veritatis voluptas. Blanditiis dolor doloribus molestiae temporibus. Eaque eius error incidunt iste maxime, nam neque nisi quis quod repudiandae, tempora vitae! Animi autem consequatur cum cumque distinctio dolorem dolores eligendi enim eveniet impedit labore laboriosam maiores nesciunt, nisi nobis officia officiis pariatur perferendis quidem, quos repellat repudiandae sunt ullam veritatis voluptate. Amet aspernatur autem blanditiis consequatur cum dolore ea eaque eius ex explicabo impedit, ipsa ipsum itaque iusto molestiae natus necessitatibus neque nisi non optio pariatur placeat praesentium provident quia reprehenderit voluptatibus voluptatum. Consectetur corporis distinctio eos in laboriosam libero nostrum pariatur placeat, quo. Culpa deserunt error laborum maiores, quia rerum sapiente sequi sint. Aliquid incidunt nihil ratione rem. Ab aliquid animi at, beatae cum deserunt dicta est exercitationem ipsum maiores nam natus nihil placeat possimus quibusdam quo quos reprehenderit sed. Esse, itaque temporibus. Alias asperiores beatae ex incidunt laboriosam molestias nam perspiciatis quae tempore! Accusamus aspernatur beatae corporis debitis dignissimos doloremque eligendi eveniet excepturi exercitationem illum incidunt inventore iure labore magnam mollitia nam natus nobis non nostrum nulla odio, quasi quo quod repellendus sint sunt tempora tenetur totam ullam unde velit vitae voluptatem voluptatibus? Atque corporis debitis distinctio, in laudantium, minus molestiae quasi quia quisquam soluta tenetur velit! Adipisci architecto asperiores aspernatur aut, deserunt doloribus, earum eius esse eum ex ipsa ipsum labore laboriosam libero molestiae neque nisi nobis perferendis placeat quas quisquam quod reiciendis rem sed sequi soluta tempora voluptas! Animi commodi fugit illum iste minima molestias tenetur voluptate? Ab, ad alias amet consequatur, debitis delectus deleniti dolor dolorum facilis fugit harum iure labore laborum laudantium molestias, nam nesciunt nobis nostrum numquam odio pariatur placeat quam quos temporibus veniam voluptate voluptatem. Consequatur dignissimos error et minima. Accusamus aliquam animi consectetur consequatur cum debitis deleniti dolorem earum eius eligendi, eum exercitationem facere hic id illo illum impedit incidunt itaque maxime natus optio porro quasi quis, quisquam reprehenderit sapiente soluta tempora tempore tenetur veniam veritatis, vitae voluptatibus voluptatum! Accusamus aliquam aperiam beatae consequatur consequuntur ea exercitationem facere hic id, laboriosam maiores non numquam pariatur perferendis placeat praesentium quae repudiandae sit, suscipit veritatis vitae!
-  </div>
+  <div class="container">
+    <h4 class="text-center">Коэффициенты на результаты</h4>
 
-  <div ref="bottom">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, cupiditate deleniti harum labore officiis perferendis quo recusandae sed sint tempore. Adipisci aspernatur autem consectetur, corporis culpa debitis deserunt dicta dolor dolorum ea esse expedita fugiat harum in, incidunt iste magnam molestiae nemo neque nesciunt omnis possimus quas quasi quisquam ratione rem repellendus saepe sint sit ullam vel, veritatis voluptas voluptatum. Aliquam asperiores cupiditate dicta incidunt ipsam itaque molestiae reiciendis sit sunt unde. Aliquam culpa cupiditate deleniti dolore, dolorum enim facere in labore maiores mollitia nam neque nobis nulla numquam odit officia, omnis perferendis quam, recusandae repellendus sunt suscipit veniam voluptate!
+    <div class="text-body-2">
+      <h4>Правила расчёта коэффициетов</h4>
+      <p>
+        Подсчитывается количество ставок на каждый возможный исход для конкретной игры и делится на количество
+        игроков.
+      </p>
+      <p>
+        Коэффициент за отсутствие ставки - это отрицательное среднее значение всех коэффициентов на данную игру,
+        делённое на <b>2</b>.
+      </p>
+    </div>
+
+    <v-simple-table dense class="purple lighten-5">
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-center">игра</th>
+          <th class="text-center">победа</th>
+          <th class="text-center">ничья</th>
+          <th class="text-center">поражение</th>
+          <th class="text-center">нет ставки</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          v-for="game in getGames"
+          :key="game.id"
+          class="text-center"
+        >
+          <td>{{ game.id }}</td>
+          <td class="font-weight-bold error--text">{{ game.points.winPoints }}</td>
+          <td class="font-weight-bold success--text">{{ game.points.drawPoints }}</td>
+          <td class="font-weight-bold primary--text">{{ game.points.defeatPoints }}</td>
+          <td class="font-weight-bold">-{{ game.points.avgPoints }}</td>
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+
+    <h4 class="text-center mt-2">Результаты игр</h4>
+
+    <v-row class="mb-2">
+      <v-col
+        v-for="game in getGames"
+        :key="game.id"
+        class="text-center py-0 font-weight-bold"
+        :class="game.goal1 > game.goal2 ? 'error--text' : game.goal1 == game.goal2 ? 'success--text' : ''"
+      >
+        {{ game.goal1 }} : {{ game.goal2 }}
+      </v-col>
+    </v-row>
+
+    <h4 class="text-center">Ставки</h4>
+
+    <div class="text-body-2 mb-2">
+      <h4>Правила расчёта очков:</h4>
+
+      <ul type="disk">
+        <li>
+          если ставка не сделана, то назначается штраф, равный отрицательному среднему значению всех коэффициентов
+          на данную игру, делённому на <b>2</b>;
+        </li>
+        <li>
+          если угадан счёт, то коэффициент на данный исход умножается на <b>2</b>;
+        </li>
+        <li>
+          если не ничья и угадана разница мячей, то коэффициент на данный исход умножается на <b>1.25</b>;
+        </li>
+        <li>
+          если угадан исход (победа, ничья, поражение), то количество очков равно коэффициенту на данный исход;
+        </li>
+        <li>
+          если угадан исход и угадано количество забитых или пропущенных мячей, то коэффициент на данный исход
+          умножается на <b>1.1</b>;
+        </li>
+        <li>
+          если исход не угадан, но угадано количество забитых или пропущенных мячей, то количество очков равно
+          <b>0.15</b>
+        </li>
+      </ul>
+    </div>
+
+    <v-simple-table dense class="purple lighten-5">
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-center" rowspan="2">
+            Игрок
+          </th>
+          <th class="text-center" rowspan="2">
+            Взнос
+          </th>
+          <th v-for="game in getGames" class="text-center" colspan="2">
+            {{ game.id }}-я игра
+          </th>
+          <th class="text-center" rowspan="2">Итого</th>
+        </tr>
+        <tr>
+          <template v-for="i in getGames.length">
+            <th class="text-center">Счёт</th>
+            <th class="text-center">Очки</th>
+          </template>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          v-for="gambler in getGamblers"
+          :key="gambler.gambler"
+        >
+          <td>{{ gambler.gambler }}</td>
+          <td class="text-center">{{ gambler.summa }}</td>
+          <template
+            v-for="stake in gambler.stakes"
+          >
+            <td v-if="stake.goal1 !== ''" class="text-center">{{ stake.goal1 }} : {{ stake.goal2 }}</td>
+            <td v-else class="text-center font-weight-bold">нет</td>
+            <td class="text-center primary--text font-weight-bold">
+              {{ gambler.result[stake.game_id - 1].points }}
+            </td>
+          </template>
+          <td class="text-center red--text font-weight-bold">{{ sum[gambler.id - 1] }}</td>
+        </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </div>
-</v-container>
 </template>
 
 <script>
-	export default {
-		name: "rule",
-    data() {
-		  return {
-		    maxHeight: 0
-      }
-    },
-    mounted() {
-		  this.maxHeight = this.$refs.top.clientHeight + this.$refs.bottom.clientHeight + 135;
-		  this.maxHeight += 'px'
-      console.log('maxHeight:', this.maxHeight)
+import {mapGetters, mapMutations} from 'vuex'
+
+export default {
+  name: "rules",
+  data() {
+    return {}
+  },
+  mounted() {
+    this.loadSumma({min: 300, max: 1000})
+    this.loadStakes()
+    this.loadGames({min: 0, max: 3})
+    this.calcGamePoints()
+    this.calcResult()
+  },
+  computed: {
+    ...mapGetters({
+      getGamblers: 'example/getGamblers',
+      getGames: 'example/getGames'
+    }),
+    sum() {
+      let result = []
+
+      this.getGamblers.forEach(g => {
+        let points = 0
+        g.result.forEach(r => points += r.points)
+        result.push(parseFloat(points.toFixed(2)))
+      })
+
+      return result
     }
+  },
+  methods: {
+    ...mapMutations({
+      loadSumma: 'example/LOAD_SUMMA',
+      loadStakes: 'example/LOAD_STAKES',
+      loadGames: 'example/LOAD_GAMES',
+      calcGamePoints: 'example/CALC_GAME_POINTS',
+      calcResult: 'example/CALC_RESULT'
+    })
   }
+}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+p {
+  margin-bottom: .25em;
+}
+.v-list--dense .v-list-item {
+  min-height: auto !important;
+}
 
+.v-list-item__content {
+  padding: 0 !important
+}
 </style>
