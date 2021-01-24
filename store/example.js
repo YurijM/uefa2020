@@ -78,7 +78,9 @@ export const state = () => ({
 
 export const getters = {
   getGamblers: state => state.gamblers,
-  getGames: state => state.games
+  getGames: state => state.games,
+  getCountGroupGames: state => state.countGroupGames,
+  getCountPlayoffGames: state => state.countPlayoffGames
 }
 
 export const mutations = {
@@ -117,7 +119,7 @@ export const mutations = {
 
     emptyStakes.push({
       gambler_id: idGambler,
-      game_id: getGoal({min: 1, max: state.games.length})
+      game_id: getGoal({min: 1, max: state.countGroupGames})
     })
 
     state.gamblers[emptyStakes[0].gambler_id - 1].stakes[emptyStakes[0].game_id - 1].goal1 = ''
@@ -125,6 +127,32 @@ export const mutations = {
 
     state.gamblers[emptyStakes[1].gambler_id - 1].stakes[emptyStakes[1].game_id - 1].goal1 = ''
     state.gamblers[emptyStakes[1].gambler_id - 1].stakes[emptyStakes[1].game_id - 1].goal2 = ''
+
+    state.gamblers.forEach(e => {
+      let gameId = state.countGroupGames + 1
+
+      for (let i = 1; i <= state.countPlayoffGames; i++) {
+        let goal1 = getGoal({min: 0, max: 3})
+        let goal2 = getGoal({min: 0, max: 3})
+
+        let addGoal1 = ''
+        let addGoal2 = ''
+        let penaltyId = 0
+
+        if (goal1 === goal2) {
+          addGoal1 = getGoal({min: goal1, max: 3})
+          addGoal2 = getGoal({min: goal1, max: 3})
+
+          if (addGoal1 === addGoal2) {
+            penaltyId = getGoal({min: 1, max: 2})
+          }
+        }
+
+        e.stakes.push({game_id: gameId, goal1, goal2, addGoal1, addGoal2, penaltyId})
+
+        gameId++
+      }
+    })
   },
   LOAD_GAMES(state, payload) {
     state.games = []
@@ -133,6 +161,27 @@ export const mutations = {
       let goal1 = getGoal({min: 0, max: 3})
       let goal2 = getGoal({min: 0, max: 3})
       state.games.push({id: i, goal1, goal2})
+    }
+
+    let gameId = state.countGroupGames + 1
+
+    for (let i = 1; i <= state.countPlayoffGames; i++) {
+      let goal1 = getGoal({min: 0, max: 3})
+      let goal2 = goal1
+
+      let addGoal1 = getGoal({min: goal1, max: 3})
+      let addGoal2 = getGoal({min: goal1, max: 3})
+
+      state.games.push({
+        id: gameId,
+        goal1,
+        goal2,
+        addGoal1,
+        addGoal2,
+        penaltyId: addGoal1 === addGoal2 ? getGoal({min: 1, max: 2}) : 0
+      })
+
+      gameId++
     }
   },
   CALC_GAME_POINTS(state) {
@@ -203,6 +252,32 @@ export const mutations = {
           points = 0.15
         }
 
+        //Если есть ставка на дополнительное время
+        if (typeof e.addGoal1 != 'undefined' && stake.addGoal1 != '') {
+          //Если угадан счёт в дополнительное время
+          if (stake.addGoal1 == e.addGoal1 && stake.addGoal2 == e.addGoal2) {
+            points += 2
+            //Если не ничья и угадана разница мячей
+          } else if (e.addGoal1 !== e.addGoal2
+            && stake.addGoal1 - stake.addGoal2 === e.addGoal1 - e.addGoal2) {
+            points += 1.25
+            //Если угадан результат
+          } else if ((stake.addGoal1 > stake.addGoal2 && e.addGoal1 > e.addGoal2)
+            || (stake.addGoal1 == stake.addGoal2 && e.addGoal1 == e.addGoal2)
+            || (stake.addGoal1 < stake.addGoal2 && e.addGoal1 < e.addGoal2)) {
+            points += 1
+            //Если угадано количество забитых или пропущенных мячей
+            if (stake.addGoal1 == e.addGoal1 || stake.addGoal2 == e.addGoal2) {
+              points += 0.1
+            }
+          } else if (stake.addGoal1 == e.addGoal1 || stake.addGoal2 == e.addGoal2) {
+            points += 0.1
+          }
+
+          if (e.addGoal1 == e.addGoal2 && stake.penaltyId == e.penaltyId) {
+            points += 1
+          }
+        }
         g.result.push({game_id: e.id, points})
       })
     })

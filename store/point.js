@@ -73,7 +73,6 @@ export const mutations = {
       //Если ставка не сделана
       if (stake.goal1 === '') {
         points = -payload.gamePoints.avgPoints
-        console.log(points)
         //Если угадан счёт
       } else if (stake.goal1 === payload.game.goal1 && stake.goal2 === payload.game.goal2) {
         points = parseFloat((payload.game.points * 2).toFixed(2))

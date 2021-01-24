@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    :value="value"
+    :value="value.drawer"
     @input="$emit('input', $event)"
     app
     clipped
@@ -15,6 +15,7 @@
         link
         class="px-2 purple--text text--darken-3"
         :to="item.to"
+        v-if="item.status <= status"
       >
         <v-list-item-action class="mr-1">
           <v-icon small>{{item.icon}}</v-icon>
@@ -35,6 +36,10 @@
       value: {
         type: Boolean,
         default: true
+      },
+      status: {
+        type: Number,
+        default: 0
       }
     },
     data() {
@@ -43,27 +48,32 @@
           {
             title: 'Участники',
             to: '/gamblers',
-            icon: 'fas fa-users'
+            icon: 'fas fa-users',
+            status: 1
           },
           {
             title: 'Правила',
             to: '/rules',
-            icon: 'fas fa-file-alt'
+            icon: 'fas fa-file-alt',
+            status: 1
           },
           {
             title: 'Ставки',
             to: '/stakes',
-            icon: 'fas fa-money-check'
+            icon: 'fas fa-money-check',
+            status: 10
           },
           {
             title: 'Тотализатор',
             to: '/totalizator',
-            icon: 'fas fa-money-bill-alt'
+            icon: 'fas fa-money-bill-alt',
+            status: 10
           },
           {
             title: 'Чат',
             to: '/chat',
-            icon: 'fas fa-comments'
+            icon: 'fas fa-comments',
+            status: 1
           }
         ]
       }

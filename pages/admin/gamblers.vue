@@ -132,7 +132,8 @@ export default {
       statuses: [
         {text: 'Исключён', value: -1},
         {text: 'Отправлено письмо', value: 0},
-        {text: 'Зарегистрирован', value: 1}
+        {text: 'Зарегистрирован', value: 1},
+        {text: 'Принят в клуб', value: 10}
       ],
       rules: {
         isNumber: value => (!isNaN(parseFloat(value)) && isFinite(value)) || 'Поле должно быть числом',

@@ -213,7 +213,7 @@ module.exports.loadGamblers = async (req, res) => {
   const query = 'SELECT CONCAT(family, \' \', `name`, \' (\', nickname, \')\') AS fullName,\n' +
     'gamblers.*\n' +
     'FROM gamblers\n' +
-    'WHERE status = 1\n' +
+    'WHERE status >= 1\n' +
     'ORDER BY nickname';
 
   await pool.promise().execute(query)
