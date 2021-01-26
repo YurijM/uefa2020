@@ -77,7 +77,7 @@
 
     <!---------------------------------------------------------------------------------->
     <!-- ПОДВАЛ -->
-    <mu-footer color="purple lighten-1"/>
+    <mu-footer color="purple lighten-1" :year="currentYear !== 2020 ? currentYear : 0"/>
   </v-app>
 </template>
 
@@ -97,7 +97,8 @@ export default {
     drawerRight: true,
     snackbar: false,
     message: '',
-    color: ''
+    color: '',
+    currentYear: (new Date()).getFullYear()
   }),
   components: {
     MuDrawerLeft,
@@ -120,6 +121,7 @@ export default {
     checkMessage() {
       return this.isMessage;
     }
+
   },
   watch: {
     checkMessage(isMessage) {
