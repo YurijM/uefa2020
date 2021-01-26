@@ -434,7 +434,9 @@ export const actions = {
         }, {root: true});
       } else {
         await commit('LOAD_GAMBLERS', data)
-        await commit('SET_GAMBLER', data.find(e => e.id === getters.getGambler.id))
+        if (!!getters.getGambler) {
+          await commit('SET_GAMBLER', data.find(e => e.id === getters.getGambler.id))
+        }
       }
     } catch (e) {
       console.log('Error loadGamblers:', e);
