@@ -95,8 +95,10 @@ io.on('connection', (socket) => {
 
   /****************************************************************************/
   socket.on('changeGambler', data => {
-    socket.broadcast.emit('loadGamblers');
-    socket.broadcast.emit('changeResult');
+    /*socket.broadcast.emit('loadGamblers');
+    socket.broadcast.emit('changeResult');*/
+    io.to(room).emit('loadGamblers');
+    io.to(room).emit('changeResult');
 
     socket.broadcast.emit('setMessage', {
       status: 'primary',

@@ -151,15 +151,14 @@ export default {
   computed: {
     ...mapGetters({
       getGambler: 'gambler/getGambler',
-      getGamblers: 'gambler/getGamblers',
-      getGamblersByName: 'gambler/getGamblersByName',
+      getGamblers: 'gambler/getAdminGamblers',
       isMessage: 'common/isMessage'
     }),
     gambler() {
       return this.getGambler
     },
     gamblers() {
-      return this.getGamblersByName
+      return this.getGamblers
     },
   },
   methods: {

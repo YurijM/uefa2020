@@ -6,6 +6,7 @@ export const state = () => ({
   gambler: null,
   token: null,
   gamblers: [],
+  adminGamblers: [],
 });
 
 export const getters = {
@@ -14,6 +15,7 @@ export const getters = {
   isAuth: state => (!!state.gambler && (state.gambler.status > 0)),
   isAdmin: state => (!!state.gambler && (state.gambler.admin === 1)),
   getGamblers: state => state.gamblers, // всегда отсортирован по points !!!
+  getAdminGamblers: state => state.adminGamblers, // всегда отсортирован по имени !!!
   getGamblersByName: state => state.gamblers.slice().sort((a, b) => { // сортируется КОПИЯ state.gamblers !!!
     // Используем toUpperCase() для преобразования регистра
     const family1 = a.family.toUpperCase();
@@ -82,7 +84,8 @@ export const mutations = {
     }, {new_place: 1, count: 1});
   },
   LOAD_GAMBLERS(state, payload) {
-    state.gamblers = payload
+    state.adminGamblers = payload
+    state.gamblers = payload.filter(e => e.status > 1)
   },
 };
 
@@ -418,7 +421,7 @@ export const actions = {
     }
   },
 
-  async loadGamblers({commit}) {
+  async loadGamblers({commit, getters}) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
@@ -431,6 +434,7 @@ export const actions = {
         }, {root: true});
       } else {
         await commit('LOAD_GAMBLERS', data)
+        await commit('SET_GAMBLER', data.find(e => e.id === getters.getGambler.id))
       }
     } catch (e) {
       console.log('Error loadGamblers:', e);
