@@ -160,6 +160,49 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('setMessage', {status: 'primary', text: message.message});
   });
 
+  /*socket.on('disconnect', () => {
+    console.log('clients before:', clients)
+
+    let gamblerId = 0
+    const idx = clients.findIndex(e => e.socketId === socket.id)
+
+    if (idx >= 0) {
+      gamblerId = clients[idx].gamblerId
+      clients.splice(idx, 1)
+    }
+
+    clients = clients.filter(e => e.gamblerId > 0)
+
+    console.log('clients after:', clients)
+
+    socket.broadcast.emit('exit', {id: gamblerId, sockets: clients});
+  })*/
+
+  /*socket.on('disconnect', () => {
+    let id = gamblerId
+    console.log('socket.id:', socket.id)
+    let idClient = clients.indexOf(socket.id)
+    clients.splice(idClient, 1)
+    //console.log('socket:', io.sockets.connected[clients[0]])
+    console.log('socket:', clients.length > 0 ? io.sockets.connected[clients[0]] : 'Нет клиентов')
+
+    //io.sockets.connected[clients[0]].emit('exit', {id: gamblerId});
+    //io.sockets.connected[clients[0]].emit('exit', {id});
+    socket.broadcast.emit('logout', {id});
+
+    const message = {
+      fromId: 0,
+      fromNick: 'администратор',
+      to: room,
+      date: Date.now(),
+      message: `disconnect: gambler - ${id}, clients length - ${clients.length}`
+    };
+
+    socket.broadcast.emit('messageToDB', message);
+    socket.broadcast.emit('sendMessage', message);
+    socket.broadcast.emit('setMessage', {status: 'primary', text: message.message});
+  });*/
+
   /****************************************************************************/
   /*socket.on('reload', data => {
     console.log('socket-reload');

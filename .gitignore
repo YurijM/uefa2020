@@ -83,6 +83,7 @@ dist
 # Service worker
 sw.*
 
+package-lock.json
 static/photo
 static/flags
 static/stadiums

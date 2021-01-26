@@ -12,7 +12,7 @@
     <mu-dialog-exit v-model="dialog" @closeApp="closeApp"/>
 
     <!-- Левая панель - МЕНЮ -->
-    <mu-drawer-left v-model="drawer" :status="getGambler.status"/>
+    <mu-drawer-left v-model="drawer"/>
 
     <!---------------------------------------------------------------------------------->
     <!-- ЗАГОЛОВОК -->
