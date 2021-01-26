@@ -77,7 +77,7 @@
 
     <!---------------------------------------------------------------------------------->
     <!-- ПОДВАЛ -->
-    <mu-footer color="purple lighten-1" :year="currentYear !== 2020 ? currentYear : 0"/>
+    <mu-footer color="purple lighten-1" :year="currentYear !== 2020 ? `-${currentYear}` : ''"/>
   </v-app>
 </template>
 
