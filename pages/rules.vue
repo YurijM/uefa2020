@@ -16,9 +16,24 @@
           После поступления денег на счёт Вы получите доступ к остальным страницам сайта.
         </p>
 
-        <h2 class="text-center deep-orange--text text--accent-4 font-italic">
-          {{ getGambler.name }}, делайте свой взнос и становитесь полноценным участником!
-        </h2>
+        <v-row>
+          <v-col
+            align-self="center"
+            class="deep-orange--text text--accent-4 text-center font-italic font-weight-bold py-0"
+            :style="{fontSize: ($vuetify.breakpoint.name === 'xs' ? '1.1em'
+            : $vuetify.breakpoint.name === 'sm' ? '1.2em'
+            : $vuetify.breakpoint.name === 'md' ? '1.3em' : '1.4em'
+            )}"
+          >
+            {{ getGambler.name }}, делайте свой взнос и становитесь полноценным участником!
+          </v-col>
+          <v-col cols="auto" class="py-0">
+            <img
+              :src="getGambler.sex === 'м' ? '/money-men.png' : '/money-women.png'"
+              alt="Деньги"
+            >
+          </v-col>
+        </v-row>
       </div>
 
       <hr>
