@@ -1,86 +1,155 @@
 export const state = () => ({
   countGroupGames: 3,
   countPlayoffGames: 2,
+  games: [],
+  win1Count: 1,
+  win2Count: 1,
+  win3Count: 1,
+  win1Points: 0,
+  win2Points: 0,
+  win3Points: 0,
   gamblers: [
     {
       id: 0,
       gambler: 'Пушкин А.С.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Толстой Л.Н.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Булгаков М.А.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Гоголь Н.В.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Тургенев И.С.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Бунин И.А.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Тютчев Ф.И.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Есенин С.А.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Чехов А.П.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
     {
       id: 0,
       gambler: 'Некрасов Н.А.',
       summa: 0,
       stakes: [],
-      result: []
+      result: [],
+      points: 0,
+      place: 0,
+      total: 0
     },
   ],
-  games: []
 })
 
 export const getters = {
   getGamblers: state => state.gamblers,
   getGames: state => state.games,
   getCountGroupGames: state => state.countGroupGames,
-  getCountPlayoffGames: state => state.countPlayoffGames
+  getGamblersByPoints: state => state.gamblers.slice().sort((a, b) => { // сортируется КОПИЯ state.gamblers !!!
+    // Используем toUpperCase() для преобразования регистра
+    const points1 = a.points;
+    const points2 = b.points;
+    const gambler1 = a.gambler.toUpperCase();
+    const gambler2 = b.gambler.toUpperCase();
+
+    let result;
+
+      if (points1 > points2) {
+        result = -1;
+      } else if (points1 < points2) {
+        result = 1;
+      } else {
+        if (gambler1 > gambler2) {
+          result = 1;
+        } else {
+          result = -1;
+        }
+      }
+    return result;
+  }),
+  getAvgStake: state => {
+    return state.gamblers.reduce((sum, e) => sum + e.summa, 0) / state.gamblers.length
+  },
+  getAllStakes: state => {
+    return state.gamblers.reduce((sum, e) => sum + e.summa, 0)
+  },
+  getWin1Count: state => state.win1Count,
+  getWin2Count: state => state.win2Count,
+  getWin3Count: state => state.win3Count,
+  getWin1Points: state => state.win1Points,
+  getWin2Points: state => state.win2Points,
+  getWin3Points: state => state.win3Points,
 }
 
 export const mutations = {
@@ -93,6 +162,11 @@ export const mutations = {
       let number = Math.floor(Math.random() * (payload.max - payload.min)) + payload.min
       let modulo = number % 100
       e.summa = modulo ? number - modulo + (modulo >= 50 ? 100 : 0) : number
+
+      const minPoints = 116
+      const maxPoints = 117
+      e.points = Math.floor(Math.random() * (maxPoints - minPoints)) + minPoints +
+        Math.floor(Math.random() * 9) / 10
     })
   },
   LOAD_STAKES(state) {
@@ -100,26 +174,26 @@ export const mutations = {
       e.stakes = []
 
       for (let i = 1; i <= state.countGroupGames; i++) {
-        let goal1 = getGoal({min: 0, max: 3})
-        let goal2 = getGoal({min: 0, max: 3})
+        let goal1 = getRandom({min: 0, max: 3})
+        let goal2 = getRandom({min: 0, max: 3})
         e.stakes.push({game_id: i, goal1, goal2})
       }
     })
 
     let emptyStakes = [
       {
-        gambler_id: getGoal({min: 1, max: state.gamblers.length}),
-        game_id: getGoal({min: 1, max: state.countGroupGames})
+        gambler_id: getRandom({min: 1, max: state.gamblers.length}),
+        game_id: getRandom({min: 1, max: state.countGroupGames})
       }
     ]
-    let idGambler = getGoal({min: 1, max: state.gamblers.length})
+    let idGambler = getRandom({min: 1, max: state.gamblers.length})
     while (idGambler === emptyStakes[0].gambler_id) {
-      idGambler = getGoal({min: 1, max: state.countGroupGames})
+      idGambler = getRandom({min: 1, max: state.countGroupGames})
     }
 
     emptyStakes.push({
       gambler_id: idGambler,
-      game_id: getGoal({min: 1, max: state.countGroupGames})
+      game_id: getRandom({min: 1, max: state.countGroupGames})
     })
 
     state.gamblers[emptyStakes[0].gambler_id - 1].stakes[emptyStakes[0].game_id - 1].goal1 = ''
@@ -132,19 +206,19 @@ export const mutations = {
       let gameId = state.countGroupGames + 1
 
       for (let i = 1; i <= state.countPlayoffGames; i++) {
-        let goal1 = getGoal({min: 0, max: 3})
-        let goal2 = getGoal({min: 0, max: 3})
+        let goal1 = getRandom({min: 0, max: 3})
+        let goal2 = getRandom({min: 0, max: 3})
 
         let addGoal1 = ''
         let addGoal2 = ''
         let penaltyId = 0
 
         if (goal1 === goal2) {
-          addGoal1 = getGoal({min: goal1, max: 3})
-          addGoal2 = getGoal({min: goal1, max: 3})
+          addGoal1 = getRandom({min: goal1, max: 3})
+          addGoal2 = getRandom({min: goal1, max: 3})
 
           if (addGoal1 === addGoal2) {
-            penaltyId = getGoal({min: 1, max: 2})
+            penaltyId = getRandom({min: 1, max: 2})
           }
         }
 
@@ -158,19 +232,19 @@ export const mutations = {
     state.games = []
 
     for (let i = 1; i <= state.countGroupGames; i++) {
-      let goal1 = getGoal({min: 0, max: 3})
-      let goal2 = getGoal({min: 0, max: 3})
+      let goal1 = getRandom({min: 0, max: 3})
+      let goal2 = getRandom({min: 0, max: 3})
       state.games.push({id: i, goal1, goal2})
     }
 
     let gameId = state.countGroupGames + 1
 
     for (let i = 1; i <= state.countPlayoffGames; i++) {
-      let goal1 = getGoal({min: 0, max: 3})
+      let goal1 = getRandom({min: 0, max: 3})
       let goal2 = goal1
 
-      let addGoal1 = getGoal({min: goal1, max: 3})
-      let addGoal2 = getGoal({min: goal1, max: 3})
+      let addGoal1 = getRandom({min: goal1, max: 3})
+      let addGoal2 = getRandom({min: goal1, max: 3})
 
       state.games.push({
         id: gameId,
@@ -178,7 +252,7 @@ export const mutations = {
         goal2,
         addGoal1,
         addGoal2,
-        penaltyId: addGoal1 === addGoal2 ? getGoal({min: 1, max: 2}) : 0
+        penaltyId: addGoal1 === addGoal2 ? getRandom({min: 1, max: 2}) : 0
       })
 
       gameId++
@@ -281,11 +355,70 @@ export const mutations = {
         g.result.push({game_id: e.id, points})
       })
     })
+  },
+  SET_PLACE(state, payload) {
+    state.gamblers.find(g => g.id === payload.id).place = payload.place
+  },
+  SET_WIN_COUNT(state, payload) {
+    console.log('SET_WIN_COUNT:', payload.win1Count)
+    state.win1Count = payload.win1Count
+    state.win2Count = payload.win2Count
+    state.win3Count = payload.win3Count
+  },
+  SET_WIN_POINTS(state, payload) {
+    state.win1Points = payload.win1Points
+    state.win2Points = payload.win2Points
+    state.win3Points = payload.win3Points
   }
 }
 
-function getGoal(payload) {
-  return parseInt(Math.round(payload.min - 0.5 + Math.random() * (payload.max - payload.min + 1)))
+export const actions = {
+  calcPlaces({getters, commit}) {
+    console.log('calcPlaces')
+    let win1Count = 1
+    let win2Count = 1
+    let win3Count = 1
+    let win1Points = 0
+    let win2Points = 0
+    let win3Points = 0
+    let place = 1
+    let delta = 0
+
+    let gamblers = getters.getGamblersByPoints
+    gamblers.forEach((e, i, arr) => {
+      if (i > 0) {
+        if (arr[i].points === arr[i - 1].points) {
+          switch (place) {
+            case 1:
+              win1Points = arr[i].points
+              win1Count++
+              console.log('win1Count:', win1Count)
+              if (win2Count === 0) win3Count = 0
+              else win2Count = 0
+              break
+            case 2:
+              win2Points = arr[i].points
+              win2Count++
+              win3Count = 0
+              break
+            case 3:
+              win3Points = arr[i].points
+              win3Count++
+              break
+          }
+          delta++
+        } else {
+          place += (delta + 1)
+          delta = 0
+        }
+      }
+      commit('SET_PLACE', {id: e.id, place})
+    })
+    commit('SET_WIN_COUNT', {win1Count, win2Count, win3Count})
+    commit('SET_WIN_POINTS', {win1Points, win2Points, win3Points})
+  }
 }
 
-export const actions = {}
+function getRandom(payload) {
+  return parseInt(Math.round(payload.min - 0.5 + Math.random() * (payload.max - payload.min + 1)))
+}

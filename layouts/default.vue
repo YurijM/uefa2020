@@ -36,7 +36,7 @@
         </v-tooltip>
       </v-app-bar-nav-icon>
 
-      <v-icon v-if="!drawer" class="mr-12">fas fa-bars</v-icon>
+      <v-icon v-if="!drawer" class="mr-2 mr-sm-4 mr-md-10 mr-lg-12">fas fa-bars</v-icon>
 
       <v-toolbar-title>Тотализатор</v-toolbar-title>
 
