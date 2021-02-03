@@ -2,12 +2,7 @@ export const state = () => ({
   countGroupGames: 3,
   countPlayoffGames: 2,
   games: [],
-  win1Count: 1,
-  win2Count: 1,
-  win3Count: 1,
-  win1Points: 0,
-  win2Points: 0,
-  win3Points: 0,
+  winners: [],
   gamblers: [
     {
       id: 0,
@@ -125,17 +120,17 @@ export const getters = {
 
     let result;
 
-      if (points1 > points2) {
-        result = -1;
-      } else if (points1 < points2) {
+    if (points1 > points2) {
+      result = -1;
+    } else if (points1 < points2) {
+      result = 1;
+    } else {
+      if (gambler1 > gambler2) {
         result = 1;
       } else {
-        if (gambler1 > gambler2) {
-          result = 1;
-        } else {
-          result = -1;
-        }
+        result = -1;
       }
+    }
     return result;
   }),
   getAvgStake: state => {
@@ -144,12 +139,7 @@ export const getters = {
   getAllStakes: state => {
     return state.gamblers.reduce((sum, e) => sum + e.summa, 0)
   },
-  getWin1Count: state => state.win1Count,
-  getWin2Count: state => state.win2Count,
-  getWin3Count: state => state.win3Count,
-  getWin1Points: state => state.win1Points,
-  getWin2Points: state => state.win2Points,
-  getWin3Points: state => state.win3Points,
+  getWinners: state => state.winners,
 }
 
 export const mutations = {
@@ -162,6 +152,7 @@ export const mutations = {
       let number = Math.floor(Math.random() * (payload.max - payload.min)) + payload.min
       let modulo = number % 100
       e.summa = modulo ? number - modulo + (modulo >= 50 ? 100 : 0) : number
+      e.summa += (e.summa < payload.max ? Math.floor(Math.random() * 99) : 0)
 
       const minPoints = 116
       const maxPoints = 117
@@ -306,20 +297,24 @@ export const mutations = {
           points = -e.points.avgPoints
           //Если угадан счёт
         } else if (stake.goal1 === e.goal1 && stake.goal2 === e.goal2) {
-          points = parseFloat((gamePoints * 2).toFixed(2))
+          //points = parseFloat((gamePoints * 2).toFixed(2))
+          points = gamePoints * 2
           //Если не ничья и угадана разница мячей
         } else if (e.goal1 !== e.goal2
           && stake.goal1 - stake.goal2 === e.goal1 - e.goal2) {
-          points = parseFloat((gamePoints * 1.25).toFixed(2))
+          //points = parseFloat((gamePoints * 1.25).toFixed(2))
+          points = gamePoints * 1.25
           //Если угадан результат
         } else if ((stake.goal1 > stake.goal2 && e.goal1 > e.goal2)
           || (stake.goal1 === stake.goal2 && e.goal1 === e.goal2)
           || (stake.goal1 < stake.goal2 && e.goal1 < e.goal2)) {
-          points = parseFloat((gamePoints).toFixed(2))
+          //points = parseFloat((gamePoints).toFixed(2))
+          points = gamePoints
 
           //Если угадано количество забитых или пропущенных мячей
           if (stake.goal1 === e.goal1 || stake.goal2 === e.goal2) {
-            points = parseFloat((gamePoints * 1.1).toFixed(2))
+            //points = parseFloat((gamePoints * 1.1).toFixed(2))
+            points = gamePoints * 1.1
           }
           //Если угадано количество забитых или пропущенных мячей
         } else if (stake.goal1 === e.goal1 || stake.goal2 === e.goal2) {
@@ -352,6 +347,7 @@ export const mutations = {
             points += 1
           }
         }
+        points = parseFloat(points.toFixed(2))
         g.result.push({game_id: e.id, points})
       })
     })
@@ -359,22 +355,16 @@ export const mutations = {
   SET_PLACE(state, payload) {
     state.gamblers.find(g => g.id === payload.id).place = payload.place
   },
-  SET_WIN_COUNT(state, payload) {
-    console.log('SET_WIN_COUNT:', payload.win1Count)
-    state.win1Count = payload.win1Count
-    state.win2Count = payload.win2Count
-    state.win3Count = payload.win3Count
+  CLEAR_WINNERS(state) {
+    state.winners = []
   },
-  SET_WIN_POINTS(state, payload) {
-    state.win1Points = payload.win1Points
-    state.win2Points = payload.win2Points
-    state.win3Points = payload.win3Points
-  }
+  SET_WINNER(state, payload) {
+    state.winners.push(payload)
+  },
 }
 
 export const actions = {
-  calcPlaces({getters, commit}) {
-    console.log('calcPlaces')
+  calcPlaces({state, getters, commit}) {
     let win1Count = 1
     let win2Count = 1
     let win3Count = 1
@@ -390,32 +380,85 @@ export const actions = {
         if (arr[i].points === arr[i - 1].points) {
           switch (place) {
             case 1:
-              win1Points = arr[i].points
               win1Count++
-              console.log('win1Count:', win1Count)
               if (win2Count === 0) win3Count = 0
               else win2Count = 0
               break
             case 2:
-              win2Points = arr[i].points
               win2Count++
               win3Count = 0
               break
             case 3:
-              win3Points = arr[i].points
               win3Count++
               break
           }
           delta++
         } else {
+          switch (place) {
+            case 2:
+              win2Points = arr[i - 1].points
+              break
+            case 3:
+              win3Points = arr[i - 1].points
+              break
+          }
+
           place += (delta + 1)
           delta = 0
         }
+      } else {
+        win1Points = arr[0].points
       }
       commit('SET_PLACE', {id: e.id, place})
     })
-    commit('SET_WIN_COUNT', {win1Count, win2Count, win3Count})
-    commit('SET_WIN_POINTS', {win1Points, win2Points, win3Points})
+
+    commit('CLEAR_WINNERS')
+
+    let summa1 = 0
+    let coef = 0
+    let winners = []
+    const countGamblers = getters.getGamblers.length
+
+    gamblers.filter(e => e.place <= 3).forEach(g => {
+      let winner = {}
+
+      winner.coef = g.summa / getters.getAvgStake
+
+      switch (g.place) {
+        case 1:
+          winner.summa1 = g.summa * (countGamblers / 3)
+          if (win1Count <= 2) {
+            winner.coef *= ((win1Points - (win3Count > 0 ? win3Points : win2Points)) / 10 + 1)
+          }
+          break
+        case 2:
+          winner.summa1 = g.summa * (countGamblers / 6)
+          if (win2Count === 1) {
+            winner.coef *= ((win2Points - win3Points) / 10 + 1)
+          }
+          break
+        case 3:
+          winner.summa1 = g.summa * (countGamblers / 12)
+          break
+      }
+
+      winner.id = g.id
+      winner.gambler = g.gambler
+      winners.push(winner)
+
+      coef += winner.coef
+      summa1 += winner.summa1
+    })
+
+    const residual = (getters.getAllStakes - summa1) / coef
+
+    winners.forEach(e => {
+      e.summa2 = e.coef * residual
+      e.summa = parseFloat((e.summa1 + e.summa2).toFixed(2))
+      //e.summa = parseFloat(((e.summa1 + e.summa2) / 50).toFixed(0)) * 50
+      e.summa = parseFloat((e.summa1 + e.summa2).toFixed(0))
+      commit('SET_WINNER', e)
+    })
   }
 }
 

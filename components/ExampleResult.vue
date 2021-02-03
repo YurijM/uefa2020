@@ -128,60 +128,46 @@
       <h4>Результат</h4>
     </div>
 
-    <v-simple-table
-      v-if="isCalced"
-      dense
-      :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
-    >
-      <template v-slot:default>
-        <thead>
-        <tr>
-          <th class="text-center">Место</th>
-          <th class="text-center">Игрок</th>
-          <th class="text-center">Взнос</th>
-          <th class="text-center">Кол-во очков</th>
-          <th class="text-center">1-я часть</th>
-          <th class="text-center">К</th>
-          <th class="text-center">ДК</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr
-          v-for="gambler in gamblersByPoints"
-          :key="gambler.gambler"
-          :class="gambler.place === 1
+
+    <v-sheet max-width="400" class="mx-auto">
+      <v-simple-table
+        v-if="isCalced"
+        dense
+        :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
+      >
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-center">Место</th>
+            <th class="text-center">Игрок</th>
+            <th class="text-center">Взнос</th>
+            <th class="text-center">Кол-во очков</th>
+            <th class="text-center">Выигрыш</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+            v-for="gambler in gamblersByPoints"
+            :key="gambler.gambler"
+            :class="gambler.place === 1
           ? 'font-weight-bold deep-orange--text text--accent-4'
           : gambler.place === 2
           ? 'font-weight-bold green--text text--darken-4'
           : gambler.place === 3
           ? 'font-weight-bold light-blue--text text--darken-4' : ''"
-        >
-          <td class="text-center">{{ gambler.place }}</td>
-          <td>{{ gambler.gambler }}</td>
-          <td class="text-center">{{ gambler.summa }}</td>
-          <td class="text-center">{{ gambler.points }}</td>
-          <td v-if="gambler.place <= 3" class="text-center">
-            {{ gambler.place === 1
-            ? gambler.summa * (gamblers.length / 3)
-            : gambler.place === 2
-              ? gambler.summa * (gamblers.length / 6)
-              : gambler.summa * (gamblers.length / 12)}}
-          </td>
-          <td v-if="gambler.place <= 3" class="text-center">
-            {{ gambler.summa / avgStake}}
-          </td>
-          <td v-if="gambler.place <= 3" class="text-center">
-            !{{ win3Points }}!
-            {{ gambler.place === 1 && win1Count <= 2
-            ? (gambler.points - (win3Count > 0 ? win3Points : win2Points)) / 10 + 1
-            : gambler.place === 2 && win2Count === 1
-              ? (gambler.points - (win3Count > 0 ? win3Points : win2Points)) / 10 + 1
-              : '-'}}
-          </td>
-        </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+          >
+            <td class="text-center">{{ gambler.place }}</td>
+            <td>{{ gambler.gambler }}</td>
+            <td class="text-center">{{ gambler.summa }}</td>
+            <td class="text-center">{{ gambler.points }}</td>
+            <td v-if="gambler.place <= 3" class="text-center">
+              {{ winners.find(e => e.id === gambler.id).summa }}
+            </td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-sheet>
   </div>
 </template>
 
@@ -190,7 +176,7 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: 'ExampleResult',
-  props:{
+  props: {
     isCalced: {
       type: Boolean,
       default: false
@@ -200,14 +186,15 @@ export default {
     ...mapGetters({
       gamblers: 'example/getGamblers',
       gamblersByPoints: 'example/getGamblersByPoints',
-      avgStake: 'example/getAvgStake',
+      winners: 'example/getWinners'
+      /*avgStake: 'example/getAvgStake',
       allStakes: 'example/getAllStakes',
       win1Count: 'example/getWin1Count',
       win2Count: 'example/getWin2Count',
       win3Count: 'example/getWin3Count',
       win1Points: 'example/getWin1Points',
       win2Points: 'example/getWin2Points',
-      win3Points: 'example/getWin3Points',
+      win3Points: 'example/getWin3Points',*/
     })
   },
   methods: {

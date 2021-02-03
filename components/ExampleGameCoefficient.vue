@@ -70,64 +70,66 @@
       <h4 class="ml-2">Коэффициенты на результаты</h4>
     </div>
 
-    <v-simple-table
-      v-if="isCalced"
-      dense
-      :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
-    >
-      <template v-slot:default>
-        <thead>
-        <tr>
-          <th class="text-center">игра</th>
-          <th class="text-center">победа</th>
-          <th class="text-center">ничья</th>
-          <th class="text-center">поражение</th>
-          <th class="text-center">нет ставки</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr
-          v-for="game in games"
-          v-if="game.id <= countGroupGames"
-          :key="game.id"
-          class="text-center"
-        >
-          <td>
-            {{ game.id }}
-            <span v-if="game.id > countGroupGames">
+    <v-sheet max-width="400" class="mx-auto">
+      <v-simple-table
+        v-if="isCalced"
+        dense
+        :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
+      >
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-center">игра</th>
+            <th class="text-center">победа</th>
+            <th class="text-center">ничья</th>
+            <th class="text-center">поражение</th>
+            <th class="text-center">нет ставки</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+            v-for="game in games"
+            v-if="game.id <= countGroupGames"
+            :key="game.id"
+            class="text-center"
+          >
+            <td>
+              {{ game.id }}
+              <span v-if="game.id > countGroupGames">
               (плэйофф)
             </span>
-          </td>
-          <td class="font-weight-bold deep-orange--text text--accent-4">{{ game.points.winPoints }}</td>
-          <td class="font-weight-bold green--text text--darken-4">{{ game.points.drawPoints }}</td>
-          <td class="font-weight-bold light-blue--text text--darken-4">{{ game.points.defeatPoints }}</td>
-          <td class="font-weight-bold">-{{ game.points.avgPoints }}</td>
-        </tr>
+            </td>
+            <td class="font-weight-bold deep-orange--text text--accent-4">{{ game.points.winPoints }}</td>
+            <td class="font-weight-bold green--text text--darken-4">{{ game.points.drawPoints }}</td>
+            <td class="font-weight-bold light-blue--text text--darken-4">{{ game.points.defeatPoints }}</td>
+            <td class="font-weight-bold">-{{ game.points.avgPoints }}</td>
+          </tr>
 
-        <tr>
-          <th class="text-center" colspan="5">. . .</th>
-        </tr>
+          <tr>
+            <th class="text-center" colspan="5">. . .</th>
+          </tr>
 
-        <tr
-          v-for="game in games"
-          v-if="game.id > countGroupGames"
-          :key="game.id"
-          class="text-center"
-        >
-          <td>
-            {{ game.id }}
-            <span v-if="game.id > countGroupGames">
+          <tr
+            v-for="game in games"
+            v-if="game.id > countGroupGames"
+            :key="game.id"
+            class="text-center"
+          >
+            <td>
+              {{ game.id }}
+              <span v-if="game.id > countGroupGames">
               (плэйофф)
             </span>
-          </td>
-          <td class="font-weight-bold deep-orange--text text--accent-4">{{ game.points.winPoints }}</td>
-          <td class="font-weight-bold green--text text--darken-4">{{ game.points.drawPoints }}</td>
-          <td class="font-weight-bold light-blue--text text--darken-4">{{ game.points.defeatPoints }}</td>
-          <td class="font-weight-bold">-{{ game.points.avgPoints }}</td>
-        </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+            </td>
+            <td class="font-weight-bold deep-orange--text text--accent-4">{{ game.points.winPoints }}</td>
+            <td class="font-weight-bold green--text text--darken-4">{{ game.points.drawPoints }}</td>
+            <td class="font-weight-bold light-blue--text text--darken-4">{{ game.points.defeatPoints }}</td>
+            <td class="font-weight-bold">-{{ game.points.avgPoints }}</td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-sheet>
   </div>
 </template>
 
@@ -136,7 +138,7 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: "ExampleGameCoefficient",
-  props:{
+  props: {
     isCalced: {
       type: Boolean,
       default: false

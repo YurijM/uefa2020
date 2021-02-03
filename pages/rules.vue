@@ -6,8 +6,7 @@
       <div class="text-body-2 mb-3">
         <p>
           Минимальная ставка для участия в тотализаторе <b>{{ minStake }} рублей</b>, максимальная - <b>{{
-            maxStake
-          }} рублей</b> (кратность ставки <b>{{ stepStake }}</b> рублей).
+            maxStake }} рублей</b>.
         </p>
         <p>
           Перечислить деньги Вы можете клиенту Сбербанка по телефону <b>XXX-XXX-XX-XX</b>
@@ -39,7 +38,7 @@
       <hr>
     </div>
 
-    <div
+<!--    <div
       class="d-flex align-center justify-space-between mb-2"
       :class="gambler.status === 1 ? 'mt-2' : ''">
       <h2>Правила начисления очков</h2>
@@ -52,7 +51,13 @@
         <v-icon left>far fa-clipboard</v-icon>
         {{ isCalced ? 'Обновить данные' : 'Пример' }}
       </v-btn>
-    </div>
+    </div>-->
+    <h2
+      class="mb-2"
+      :class="gambler.status === 1 ? 'mt-2' : ''"
+    >
+      Правила начисления очков
+    </h2>
 
     <hr>
 
@@ -63,11 +68,6 @@
     <mu-example-stakes :isCalced="isCalced" @calculate="calculate"/>
 
     <mu-example-result :isCalced="isCalced" @calculate="calculate"/>
-
-    <p class="text-center font-italic font-weight-black blue--text text--darken-4 mt-2">
-      При окончательном определении выигранной суммы результаты вышеописанного расчёта будут округлены с
-      точностью до 50 рублей.
-    </p>
   </div>
 </template>
 
@@ -92,7 +92,6 @@ export default {
       recalculate: false,
       minStake: 300,
       maxStake: 1000,
-      stepStake: 100
     }
   },
   computed: {
@@ -141,11 +140,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/*.v-list--dense .v-list-item {
-  min-height: auto !important;
-}
-
-.v-list-item__content {
-  padding: 0 !important
-}*/
 </style>

@@ -10,31 +10,76 @@
         {{ isCalced ? 'Обновить данные' : 'Пример' }}
       </v-btn>
 
-      <h4>Игры</h4>
+      <h4>Результаты игр</h4>
     </div>
 
-    <v-row
-      v-if="isCalced"
-      class="align-center justify-center mx-1 rounded"
-      :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
-    >
-      <v-col
-        cols="auto"
-        v-for="(game) of games"
-        :key="game.id"
-        class="text-center py-0 font-weight-bold"
-        :class="game.goal1 > game.goal2 ? 'deep-orange--text text--accent-4' : game.goal1 === game.goal2 ?
-        'green--text text--darken-4' : 'light-blue--text text--darken-4'"
+    <v-sheet max-width="600" class="mx-auto">
+      <v-simple-table
+        v-if="isCalced"
+        dense
+        :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
       >
-        {{ game.goal1 }} : {{ game.goal2 }}
-        <div v-if="game.id > countGroupGames" class="black--text text-caption">
-          доп. время - {{ game.addGoal1 }} : {{ game.addGoal2 }}
-        </div>
-        <div v-if="game.penaltyId" class="black--text text-caption">
-          по пенальти - {{ game.penaltyId }}-я команда
-        </div>
-      </v-col>
-    </v-row>
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th
+              v-for="game in games"
+              v-if="game.id <= countGroupGames"
+              class="text-center"
+            >
+              {{ game.id }}-я игра
+            </th>
+
+            <th class="text-center"><b>. . .</b></th>
+
+            <th
+              v-for="game in games"
+              v-if="game.id > countGroupGames"
+              class="text-center"
+            >
+              {{ game.id }}-я игра
+              <br>(плэйофф)
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr class="text-center">
+            <td
+              v-for="(game) of games"
+              v-if="game.id <= countGroupGames"
+              :key="game.id"
+              class="font-weight-bold"
+              :class="game.goal1 > game.goal2
+              ? 'deep-orange--text text--accent-4'
+              : game.goal1 === game.goal2
+              ? 'green--text text--darken-4'
+              : 'light-blue--text text--darken-4'"
+            >
+              {{ game.goal1 }} : {{ game.goal2 }}
+            </td>
+
+            <td class="text-center"><b>. . .</b></td>
+
+            <td
+              v-for="(game) of games"
+              v-if="game.id > countGroupGames"
+              :key="game.id"
+              class="font-weight-bold green--text text--darken-4"
+            >
+              {{ game.goal1 }} : {{ game.goal2 }}
+              <div class="black--text text-caption">
+                доп. время - {{ game.addGoal1 }} : {{ game.addGoal2 }}
+              </div>
+              <div v-if="game.penaltyId" class="black--text text-caption">
+                по пенальти - {{ game.penaltyId }}-я команда
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-sheet>
   </div>
 </template>
 

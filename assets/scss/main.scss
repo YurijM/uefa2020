@@ -33,6 +33,10 @@
   outline: none !important;
 }
 
+.v-btn {
+  outline: none!important;
+}
+
 /*.v-btn--icon.v-size--default {
   margin: 0 !important;
   width: 20px !important;
@@ -52,7 +56,7 @@
 
 /************************************************/
 p {
-  margin-bottom: .25em;
+  margin-bottom: .25em !important;
 }
 
 .text-field-center {
