@@ -15,10 +15,11 @@
           После поступления денег на счёт Вы получите доступ к остальным страницам сайта.
         </p>
 
+        <v-alert outlined color="deep-orange accent-4">
         <v-row>
           <v-col
             align-self="center"
-            class="deep-orange--text text--accent-4 text-center font-italic font-weight-bold py-0"
+            class="text-center font-italic font-weight-bold py-0"
             :style="{fontSize: ($vuetify.breakpoint.name === 'xs' ? '1.1em'
             : $vuetify.breakpoint.name === 'sm' ? '1.2em'
             : $vuetify.breakpoint.name === 'md' ? '1.3em' : '1.4em'
@@ -33,6 +34,7 @@
             >
           </v-col>
         </v-row>
+        </v-alert>
       </div>
 
       <hr>

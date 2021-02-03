@@ -15,6 +15,12 @@
           :style="{width: '100%', whiteSpace: 'normal !important'}"
         >
           Профиль участника
+          <div class="body-2" v-if="user.stake === 0">
+            (деньги ещё не внесены)
+          </div>
+          <div v-else class="body-2">
+            (взнос {{ user.stake }} <v-icon x-small>fas fa-ruble-sign</v-icon>)
+          </div>
         </v-toolbar-title>
       </v-toolbar>
 
