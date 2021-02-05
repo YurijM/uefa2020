@@ -61,7 +61,7 @@ export const mutations = {
     state.gamePoints.avgPoints = (state.gamePoints.winPoints
       + state.gamePoints.drawPoints
       + state.gamePoints.defeatPoints
-    ) / 6
+    ) / 3 / 2
   },
   CLEAR_STAKES_GAME(state) {
     state.stakesGame = []

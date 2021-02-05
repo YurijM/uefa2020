@@ -271,7 +271,7 @@ export const mutations = {
         defeatPoints: defeatCount > 0 ? parseFloat((countGamblers / defeatCount).toFixed(2)) : 0
       }
       e.points.avgPoints = parseFloat(
-        ((e.points.winPoints + e.points.drawPoints + e.points.defeatPoints) / 6).toFixed(2)
+        ((e.points.winPoints + e.points.drawPoints + e.points.defeatPoints) / 3 / 2).toFixed(2)
       )
     })
   },

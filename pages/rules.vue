@@ -40,20 +40,6 @@
       <hr>
     </div>
 
-<!--    <div
-      class="d-flex align-center justify-space-between mb-2"
-      :class="gambler.status === 1 ? 'mt-2' : ''">
-      <h2>Правила начисления очков</h2>
-
-      <v-btn
-        outlined
-        small
-        @click="recalculate = true"
-      >
-        <v-icon left>far fa-clipboard</v-icon>
-        {{ isCalced ? 'Обновить данные' : 'Пример' }}
-      </v-btn>
-    </div>-->
     <h2
       class="mb-2"
       :class="gambler.status === 1 ? 'mt-2' : ''"

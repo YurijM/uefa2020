@@ -11,6 +11,8 @@ export default async function ({store, route, redirect}) {
     } else if (/\/admin\/*/g.test(route.path)) {
       if (!store.getters['gambler/isAdmin']) {
         redirect('/notadmin');
+      } else if (route.path === '/admin') {
+        redirect('/admin/games')
       }
     }
   }

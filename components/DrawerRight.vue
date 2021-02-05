@@ -42,7 +42,7 @@
                   {{ places[item.index] }}
                 </tspan>
                 <tspan
-                  :class="item.index === 0 ? 'yellow--text' : 'black--text'"
+                  :class="item.index === 0 ? 'yellow--text' : 'orange--text'"
                   :dx="item.index === 0 ? -19 : -9"
                   dy="1.25em"
                 >
