@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" dense>
     <v-col cols="12" class="text-center">
-      <div class="text-h6">Тотализатор</div>
+      <h2 class="text-center mt-1 purple--text">Тотализатор</h2>
     </v-col>
 
     <v-col

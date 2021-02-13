@@ -34,7 +34,7 @@ module.exports.loadStakesPlayoff = async (req, res) => {
 
 module.exports.loadStakesGroups = async (req, res) => {
   const query = 'SELECT g.id AS gameId, stakes.id AS stakeId, ' +
-    'g.`start`, g.game_no, s.city, gr.`order`, gr.`group`, ' +
+    'g.`start`, g.game_no, s.city, gr.id AS groupId, gr.`order`, gr.`group`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
     'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2 ' +
     'FROM games g ' +

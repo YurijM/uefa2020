@@ -121,6 +121,42 @@ export const actions = {
     }
   },
 
+  /*async updatePlaces({commit, dispatch, rootGetters}, payload) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const groupGames = rootGetters['game/getGroupGames'](payload)
+      const places = groupGames.map(e => {
+        const id = rootGetters['team/getTeams'].find(t => t.team === e.team).id
+        return {id, place: e.place}
+      })
+
+      for (let place of places) {
+        let data = await this.$axios.$get('/api/team/updatePlace', {
+          params: {
+            id: place.id,
+            place: place.place
+          }
+        })
+
+        if (data.error) {
+          await commit('common/SET_MESSAGE', {
+            status: 'error',
+            text: `updatePlaces (id = ${place.id}): ${data.error}`
+          }, {root: true});
+        }
+      }
+
+      await dispatch('loadTeams')
+    } catch (e) {
+      console.log('Error updatePlaces', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении updatePlaces(см. в консоли ошибку "Error updatePlaces)'
+      }, {root: true});
+    }
+  },*/
+
   async updateTeam({dispatch, commit, getters}, payload) {
     const team = payload.team
     const file = payload.file
@@ -165,7 +201,6 @@ export const actions = {
         text: 'Ошибка при выполнении updateTeam (см. в консоли ошибку "Error updateTeam")'
       }, {root: true});
     }
-    //}
   },
 
   async updateTeamPlace({commit}, payload) {

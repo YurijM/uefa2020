@@ -67,7 +67,7 @@
         :key="item.gambler_id"
         class="px-2"
       >
-        <v-list-item-avatar size="35" class="mr-2 my-0 mt-1">
+        <v-list-item-avatar rounded="lg" size="35" class="mr-2 my-0 mt-1">
           <v-img :src="`/photo/${item.photo}`"/>
         </v-list-item-avatar>
 

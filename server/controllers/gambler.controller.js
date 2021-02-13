@@ -85,7 +85,7 @@ module.exports.login = async (req, res) => {
   });
 };
 
-module.exports.updatePlace = async (req, res) => {
+/*module.exports.updatePlace = async (req, res) => {
   let query = 'UPDATE gamblers SET ' +
     '`points` = ?, ' +
     '`place` = ?, ' +
@@ -108,8 +108,7 @@ module.exports.updatePlace = async (req, res) => {
   .catch((e) => {
     res.json({error: e.message})
   })
-};
-
+};*/
 
 module.exports.saveFeatures = async (req, res) => {
   let query = 'UPDATE gamblers SET ' +
@@ -220,9 +219,9 @@ module.exports.loadGamblers = async (req, res) => {
   .then(([rows, fields]) => {
     res.json(rows)
   })
-  /*.catch((e) => {
-    res.status(500).json(e)
-  })*/
+  .catch((e) => {
+    res.json({error: e.message})
+  })
 };
 
 module.exports.deletePhoto = async (req, res) => {
@@ -263,13 +262,24 @@ module.exports.resizePhoto = async (req, res) => {
 };
 
 module.exports.profile = async (req, res) => {
-  let query = 'UPDATE gamblers SET ' +
-    '`nickname` = ?, ' +
-    '`family` = ?, ' +
-    '`name` = ?, ' +
-    '`sex` = ?, ' +
-    '`photo` = ?, ' +
-    '`status` = 1 ' +
+  let status
+  let query = 'SELECT status FROM gamblers WHERE `id` = ?';
+
+  await pool.promise().execute(query, [req.query.id])
+  .then(([rows, fields]) => {
+    status = rows[0].status
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+
+  query = 'UPDATE gamblers SET\n' +
+    '`nickname` = ?,\n' +
+    '`family` = ?,\n' +
+    '`name` = ?,\n' +
+    '`sex` = ?,\n' +
+    '`photo` = ?,\n' +
+    '`status` = ' + (status ? status : 1) + '\n' +
     'WHERE `id` = ?';
 
   await pool.promise().execute(query, [

@@ -97,7 +97,9 @@ module.exports.updateTeam = async (req, res) => {
   })
 };
 
-module.exports.updateTeamPlace = async (req, res) => {
+/*module.exports.updatePlace = async (req, res) => {
+  console.log('id:', req.query.id)
+  console.log('place:', req.query.place)
   const query = 'UPDATE `teams` SET `place` = ? ' +
     'WHERE `id` = ?';
 
@@ -115,7 +117,7 @@ module.exports.updateTeamPlace = async (req, res) => {
   .catch((e) => {
     res.json({error: e.message})
   })
-};
+};*/
 
 module.exports.deleteTeam = async (req, res) => {
   const query = 'DELETE FROM `teams` WHERE `id` = ?';

@@ -48,7 +48,12 @@ export const actions = {
 
   async socket_changeResult({dispatch}) {
     await dispatch('point/loadResult', null, {root: true});
+    await dispatch('game/loadGames', null, {root: true});
   },
+
+  /*async socket_updatePlaces({dispatch}, groupId) {
+    await dispatch('team/updatePlaces', groupId, {root: true});
+  },*/
 
   async socket_loadMessages({dispatch}, payload) {
     await dispatch('chat/loadMessages', payload, {root: true});

@@ -12,7 +12,7 @@ router.post('/updateFlag',
   team.updateFlag
 );
 router.get('/updateTeam', team.updateTeam);
-router.get('/updateTeamPlace', team.updateTeamPlace);
+//router.get('/updatePlace', team.updatePlace);
 router.get('/deleteTeam', team.deleteTeam);
 
 module.exports = router;

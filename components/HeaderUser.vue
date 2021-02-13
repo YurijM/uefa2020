@@ -6,7 +6,7 @@
         v-on="on"
         :style="{cursor: 'pointer'}"
       >
-        <v-avatar width="40" height="40">
+        <v-avatar size="45">
           <img
             :src="`/photo/${gambler.photo}`"
             :alt="gambler.nickname"

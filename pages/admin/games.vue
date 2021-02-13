@@ -634,7 +634,13 @@ export default {
           this.editedItem.curResult.penaltyTeam !== this.editedItem.penaltyTeam
         ) {
           await this.changeResult(this.editedItem)
+
           this.$socket.emit('changeResult', {
+            /*groupId: (
+              this.getGroups.find(g => g.id === this.editedItem.group_id).order <= this.countGroups
+                ? this.editedItem.group_id
+                : 0
+            ),*/
             team1: this.editedItem.team1,
             team2: this.editedItem.team2,
             goal1: this.editedItem.goal1,

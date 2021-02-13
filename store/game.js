@@ -9,6 +9,88 @@ export const getters = {
   getGamesForTeam: (state) => (teamId) => {
 
   },
+  getGroupGames: (state, getters, rootState, rootGetters) => (id) => {
+    const games = state.games.filter(g => g.group_id === id)
+
+    const teams = rootGetters['team/getTeams'].filter(t => t.group_id === id)
+    teams.sort((a, b) => {
+      return (a.order > b.order ? 1 : -1)
+    })
+
+    const groupGames = teams.map((t, i, arr) => {
+      const result = games.filter(g => g.team1 === t.team || g.team2 === t.team).map(e => {
+        return {
+          order: arr.find(a => a.team === (e.team1 === t.team ? e.team2 : e.team1)).order,
+          scope: e.team1 === t.team ? e.goal1 + '-' + e.goal2 : e.goal2 + '-' + e.goal1
+        }
+      }).sort((a, b) => {
+        return (a.order > b.order ? 1 : -1)
+      })
+
+      let win = 0, draw = 0, defeat = 0, balls1 = 0, balls2 = 0, points = 0
+      result.forEach(r => {
+        if (r.scope !== '-') {
+          let arr = (r.scope).split('-').map(Number)
+          if (arr[0] > arr[1]) {
+            win++
+            points += 3
+          }
+          else if (arr[0] < arr[1]) {
+            defeat++
+          }
+          else {
+            draw++
+            points++
+          }
+          balls1 += arr[0]
+          balls2 += arr[1]
+        }
+      })
+
+      return {
+        order: t.order,
+        flag: t.flag,
+        team: t.team,
+        win, draw, defeat, balls1, balls2, points,
+        games: result
+      }
+    })
+
+    let places = groupGames.slice()
+    places.sort((a, b) => {
+      if (a.points < b.points) {
+        return 1
+      } else if (a.points > b.points) {
+        return -1
+      } else {
+        if ((a.balls1 - a.balls2) < (b.balls1 - b.balls2)) {
+          return 1
+        }
+        else if ((a.balls1 - a.balls2) > (b.balls1 - b.balls2)) {
+          return -1
+        }
+        else {
+          return (a.balls1 < b.balls1)
+        }
+      }
+    })
+
+    if (places[0].points > 0) {
+      let place = 1, delta = 0, points = places[0].points
+      places.forEach(p => {
+        if (p.points === points) {
+          delta++
+        } else {
+          place += delta
+          delta = 0
+          points = p.points
+        }
+        groupGames.find(g => g.team === p.team).place = place
+      })
+    }
+
+    return groupGames
+  },
 }
 
 export const mutations = {

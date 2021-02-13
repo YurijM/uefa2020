@@ -44,16 +44,22 @@ export default {
     return {
       menu: [
         {
+          title: 'Правила',
+          to: '/rules',
+          icon: 'fas fa-file-alt',
+          status: 1
+        },
+        {
           title: 'Участники',
           to: '/gamblers',
           icon: 'fas fa-users',
           status: 1
         },
         {
-          title: 'Правила',
-          to: '/rules',
-          icon: 'fas fa-file-alt',
-          status: 1
+          title: 'Игры',
+          to: '/games',
+          icon: 'fas fa-futbol',
+          status: 10
         },
         {
           title: 'Ставки',
@@ -76,7 +82,7 @@ export default {
       ]
     }
   },
-  created() {
+  /*created() {
     this.menu.sort((a, b) => {
       // Используем toUpperCase() для преобразования регистра
       const title1 = a.title.toUpperCase();
@@ -84,7 +90,7 @@ export default {
 
       return (title1 > title2 ? 1 : -1)
     })
-  },
+  },*/
   computed: {
     ...mapGetters({
       gambler: 'gambler/getGambler'

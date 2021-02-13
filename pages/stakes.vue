@@ -12,12 +12,29 @@
       :style="{ fontSize: '.9em', maxWidth: widthTable }"
     >
       На данной странице отображаются
-      <span class="error--text"><strong>только</strong></span> игры, которые
-      <span class="error--text"><strong>ещё не начались</strong></span>.<br/>
+      <span class="primary--text"><strong>только</strong></span> игры, которые
+      <span class="primary--text"><strong>ещё не начались</strong></span>.<br/>
       На игры, которые
-      <span class="error--text"><strong>уже начались или закончились</strong></span>,
-      ставки сделать <span class="error--text"><strong>нельзя</strong></span>.
+      <span class="primary--text"><strong>уже начались или закончились</strong></span>,
+      ставки сделать <span class="primary--text"><strong>нельзя</strong></span>.
     </v-alert>
+
+    <v-dialog persistent v-model="viewGroupResults" max-width="500">
+      <v-sheet class="px-3 pt-2 purple lighten-4">
+        <mu-group-result :group="group" :result="result"/>
+        <div class="text-right">
+        <v-btn class="py-0" color="purple" small text @click="viewGroupResults = false">
+          Закрыть
+        </v-btn>
+        </div>
+      </v-sheet>
+    </v-dialog>
+
+    <!--    <mu-results-compare
+          :open="viewResults"
+          :item="viewItem"
+          @closeViewResults="closeViewResults"
+        />-->
 
     <v-dialog v-model="dialog" persistent max-width="350px">
       <v-card>
@@ -212,6 +229,14 @@
         <template v-slot:item.actions="{ item }">
           <v-icon
             class="mr-2"
+            title="Просмотр результатов"
+            x-small
+            @click="editItem(item)"
+          >fas fa-eye
+          </v-icon>
+
+          <v-icon
+            class="mr-2"
             title="Редактировать"
             x-small
             @click="editItem(item)"
@@ -272,6 +297,14 @@
         <template v-slot:item.actions="{ item }">
           <v-icon
             class="mr-2"
+            title="Просмотр результатов"
+            x-small
+            @click="groupResults(item.groupId, item.group)"
+          >fas fa-eye
+          </v-icon>
+
+          <v-icon
+            class="mr-2"
             title="Редактировать"
             x-small
             @click="editItem(item)"
@@ -285,29 +318,41 @@
 </template>
 
 <script>
-import {mapActions, mapMutations, mapGetters} from "vuex";
+import {mapActions, mapMutations, mapGetters} from "vuex"
+import MuGroupResult from '../components/GroupResult'
+import MuResultsCompare from '../components/ResultsCompare'
 
 export default {
   name: "stakes",
+  components: {
+    MuGroupResult,
+    MuResultsCompare
+  },
   async asyncData({store}) {
-    await store.dispatch("group/loadGroups");
+    await store.dispatch('group/loadGroups');
+    await store.dispatch('team/loadTeams')
+    await store.dispatch('game/loadGames')
 
-    const gamblerId = store.getters["gambler/getGambler"].id
-    const order = store.getters["group/getCountGroups"]
-    await store.dispatch("stake/loadStakes", {
+    const gamblerId = store.getters['gambler/getGambler'].id
+    const order = store.getters['group/getCountGroups']
+    await store.dispatch('stake/loadStakes', {
       gambler_id: gamblerId,
       order,
-      source: "group",
+      source: 'group',
     });
-    await store.dispatch("stake/loadStakes", {
+    await store.dispatch('stake/loadStakes', {
       gambler_id: gamblerId,
       order,
-      source: "playoff",
+      source: 'playoff',
     });
   },
   data() {
     return {
       dialog: false,
+      viewGroupResults: false,
+      group: '',
+      result: [],
+      groups: [],
       valid: true,
       loading: false,
       gameTeams: [],
@@ -324,7 +369,7 @@ export default {
           align: "center",
           value: "actions",
           sortable: false,
-          width: "5%",
+          width: "10%",
         },
       ],
       headerPlayoff: [
@@ -385,6 +430,7 @@ export default {
       stakesPlayoff: "stake/getStakesPlayoff",
       getCountGroups: "group/getCountGroups",
       getGambler: "gambler/getGambler",
+      groupGames: 'game/getGroupGames'
     }),
     widthTable() {
       switch (this.$vuetify.breakpoint.name) {
@@ -411,6 +457,14 @@ export default {
 
       const [year, month, day] = date.split("-");
       return `${day}.${month}.${year}`;
+    },
+    groupResults(groupId, group) {
+      this.group = group
+      this.result = this.groupGames(groupId)
+      this.viewGroupResults = true;
+    },
+    closeViewResults() {
+      this.viewResults = false
     },
     editItem(item) {
       this.dialog = true;

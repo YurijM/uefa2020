@@ -161,7 +161,7 @@ export const actions = {
     }
   },
 
-  async updatePlace({commit, dispatch}, gamblers) {
+  /*async updatePlace({commit, dispatch}, gamblers) {
     await commit('common/CLEAR_MESSAGE', null, {root: true});
 
     let data = {};
@@ -200,19 +200,19 @@ export const actions = {
         await dispatch('loadGamblers');
       }
     }
-  },
+  },*/
 
   async saveFeatures({commit, dispatch, getters}, payload) {
     await commit('common/CLEAR_MESSAGE', null, {root: true});
 
     let data = {};
     const gambler = payload.gambler
-    const changedPoints = payload.changedPoints
+    /*const changedPoints = payload.changedPoints
 
     if (changedPoints) {
       await commit('CALCULATE_PLACE', gambler)
       await dispatch('updatePlace', getters.getGamblers);
-    }
+    }*/
 
     try {
       data = await this.$axios.$get('/api/gambler/saveFeatures', {
