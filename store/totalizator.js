@@ -10,12 +10,10 @@ export const getters = {
   getGames: state => state.games,
   isGames: state => state.games.length,
   getPoints: state => state.points,
+  getStakes: (state) => (id) => state.games.find(g => g.id === id).stakes
 }
 
 export const mutations = {
-  CLEAR_GAMBLERS(state) {
-    state.gamblers = []
-  },
   LOAD_GAMBLERS(state, payload) {
     state.gamblers = payload
   },
@@ -23,19 +21,16 @@ export const mutations = {
     state.games = []
   },
   LOAD_GAMES(state, payload) {
-    state.games = payload
-  },
-  CLEAR_POINTS(state) {
-    state.points = []
+    state.games = payload.map(e => {
+      e.stakes = []
+      return e
+    })
   },
   LOAD_POINTS(state, payload) {
     state.points = payload
   },
-  CLEAR_STAKES(state) {
-    state.games.forEach(e => e.stakes = [])
-  },
-  SET_STAKE(state, payload) {
-    state.games[payload.idx].stakes.push(payload.stake)
+  SET_STAKES(state, payload) {
+    state.games[payload.idx].stakes = payload.stakes
   }
 }
 
@@ -114,13 +109,15 @@ export const actions = {
             text: stakes.error
           }, {root: true});
         } else {
-          commit('CLEAR_STAKES')
+          //await commit('CLEAR_STAKES')
 
           let i = 0
 
           for (const e of games) {
             let st = stakes.filter(s => s.game_id === e.id)
             let pt = points.filter(s => s.game_id === e.id)
+
+            let gameStakes = []
 
             for (const g of gamblers) {
               let stake = {
@@ -138,17 +135,14 @@ export const actions = {
                 stake.penaltyWin = s.penaltyWin
               } else {
                 stake.result = 'нет'
-                /*stake.addResult = ''
-                stake.penaltyWin = ''*/
               }
 
               let p = pt.find(p => p.gambler_id === g.id)
-              if (p) {
-                stake.points = p.points
-              }
+              if (p) stake.points = p.points
 
-              commit('SET_STAKE', {idx: i, stake})
+              gameStakes.push(stake)
             }
+            await commit('SET_STAKES', {idx: i, stakes: gameStakes})
             i++
           }
         }
@@ -162,4 +156,3 @@ export const actions = {
     }
   }
 }
-

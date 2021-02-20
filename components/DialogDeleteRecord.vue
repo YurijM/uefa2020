@@ -6,9 +6,6 @@
     light
   >
     <v-card border="left">
-      <!--<v-card-title
-        class="dark blue-grey lighten-3 pa-2 caption"
-      >-->
       <v-card-title
         class="dark red darken-1 pa-2 white--text text-body-1"
       >

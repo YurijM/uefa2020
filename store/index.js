@@ -49,6 +49,10 @@ export const actions = {
   async socket_changeResult({dispatch}) {
     await dispatch('point/loadResult', null, {root: true});
     await dispatch('game/loadGames', null, {root: true});
+    await dispatch('totalizator/loadStakes', null, {root: true})
+    /*await dispatch('totalizator/loadGames', null, {root: true});
+    await dispatch('totalizator/loadGamblers', null, {root: true});
+    await dispatch('totalizator/loadStakes', null, {root: true});*/
   },
 
   /*async socket_updatePlaces({dispatch}, groupId) {

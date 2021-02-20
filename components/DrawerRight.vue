@@ -110,12 +110,12 @@
           </v-chip>
 
           <div v-if="item.prevPlace > 0">
-            <v-icon small :class="getColorStatistic(item.lastPlace, item.prevPlace)">
-              {{ getIcon(item.lastPlace, item.prevPlace) }}
+            <v-icon small :class="getColorStatistic(parseInt(item.lastPlace), parseInt(item.prevPlace))">
+              {{ getIcon(parseInt(item.lastPlace), parseInt(item.prevPlace)) }}
             </v-icon>
 
-            <span class="caption" :class="getColorStatistic(item.lastPlace, item.prevPlace)">
-              {{ getStatistic(item.lastPlace, item.prevPlace) }}
+            <span class="caption" :class="getColorStatistic(parseInt(item.lastPlace), parseInt(item.prevPlace))">
+              {{ getStatistic(parseInt(item.lastPlace), parseInt(item.prevPlace)) }}
             </span>
           </div>
         </v-list-item-action>

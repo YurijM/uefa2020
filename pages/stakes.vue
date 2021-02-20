@@ -19,149 +19,9 @@
       ставки сделать <span class="primary--text"><strong>нельзя</strong></span>.
     </v-alert>
 
-    <v-dialog persistent v-model="viewGroupResults" max-width="500">
-      <v-sheet class="px-3 pt-2 purple lighten-4">
-        <mu-group-result :group="group" :result="result"/>
-        <div class="text-right">
-        <v-btn class="py-0" color="purple" small text @click="viewGroupResults = false">
-          Закрыть
-        </v-btn>
-        </div>
-      </v-sheet>
-    </v-dialog>
-
-    <!--    <mu-results-compare
-          :open="viewResults"
-          :item="viewItem"
-          @closeViewResults="closeViewResults"
-        />-->
-
-    <v-dialog v-model="dialog" persistent max-width="350px">
-      <v-card>
-        <v-form ref="form" v-model="valid" lazy-validation>
-          <v-card-title class="blue-grey lighten-3 text-subtitle-2 py-2">
-            <v-row>
-              <v-col cols="6" class="py-0">
-                {{ editedItem.group }}
-              </v-col>
-              <v-col cols="6" class="py-0 text-right">
-                {{ dateGame }} {{ timeGame }}
-              </v-col>
-            </v-row>
-          </v-card-title>
-
-          <v-card-text
-            class="pt-2 pb-0 blue-grey lighten-4"
-            :style="{
-              borderTop: '1px #eee solid !important',
-              borderBottom: '1px #eee solid !important',
-            }"
-          >
-            <v-card-title class="justify-center pa-0 primary--text">
-              {{ editedItem.team1 }} - {{ editedItem.team2 }}
-            </v-card-title>
-
-            <v-subheader
-              class="justify-center font-weight-bold"
-              :style="{ height: 'auto' }"
-            >
-              Счёт
-            </v-subheader>
-
-            <v-row justify="center">
-              <v-col cols="3" class="pt-0">
-                <v-text-field
-                  autofocus
-                  class="text-field-center"
-                  v-model="editedItem.goal1"
-                  :rules="[rules.required, rules.isNumber]"
-                />
-              </v-col>
-
-              <v-col cols="3" class="pt-0">
-                <v-text-field
-                  class="text-field-center"
-                  v-model="editedItem.goal2"
-                  :rules="[rules.required, rules.isNumber]"
-                />
-              </v-col>
-            </v-row>
-
-            <div
-              v-if="
-                editedItem.order > countGroups &&
-                editedItem.goal1 &&
-                editedItem.goal1 === editedItem.goal2
-              "
-            >
-              <v-subheader
-                class="justify-center font-weight-bold"
-                :style="{ height: 'auto' }"
-              >
-                Дополнительное время
-              </v-subheader>
-
-              <v-row justify="center">
-                <v-col cols="4" class="py-0">
-                  <v-text-field
-                    class="text-field-center pt-1"
-                    v-model="editedItem.addGoal1"
-                    :rules="[rules.isNumber, rules.notLess1]"
-                  />
-                </v-col>
-
-                <v-col cols="4" class="py-0">
-                  <v-text-field
-                    class="text-field-center pt-1"
-                    v-model="editedItem.addGoal2"
-                    :rules="[rules.isNumber, rules.notLess2]"
-                  />
-                </v-col>
-              </v-row>
-
-              <v-row
-                v-if="
-                  editedItem.addGoal1 &&
-                  editedItem.addGoal1 === editedItem.addGoal2 &&
-                  editedItem.goal1 &&
-                  editedItem.goal1 === editedItem.goal2
-                "
-                justify="center"
-              >
-                <v-subheader
-                  class="justify-center font-weight-bold"
-                  :style="{ height: 'auto' }"
-                >
-                  Победитель по пенальти
-                </v-subheader>
-
-                <v-col cols="7" class="pt-0">
-                  <v-select
-                    class="pb-0"
-                    :items="gameTeams"
-                    v-model="editedItem.penaltyId"
-                    label="Команда"
-                    no-data-text="Команды не заведены"
-                    :rules="[rules.required]"
-                  />
-                </v-col>
-              </v-row>
-            </div>
-          </v-card-text>
-        </v-form>
-
-        <v-card-actions class="dark blue-grey darken-3 py-2 px-5">
-          <v-spacer></v-spacer>
-          <v-btn color="error" text @click="close"> Отмена</v-btn>
-          <v-btn color="success" text :loading="loading" @click="save">
-            Сохранить
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <div v-if="stakesPlayoff.length > 0">
-      <h3 class="text-center mb-1">Плей-офф</h3>
+    <div v-if="playoffStakes.length > 0">
+      <mu-playoff-stakes :maxWidth="widthTable" />
+<!--      <h3 class="text-center mb-1">Плей-офф</h3>
 
       <v-data-table
         dense
@@ -243,90 +103,25 @@
           >fas fa-pen
           </v-icon>
         </template>
-      </v-data-table>
+      </v-data-table>-->
     </div>
 
-    <div v-if="stakesGroups.length > 0">
-      <h3 class="text-center mb-1">Групповой турнир</h3>
-
-      <v-data-table
-        dense
-        class="mb-5 mx-auto purple lighten-5"
-        :style="{ maxWidth: widthTable }"
-        :headers="headerGroups"
-        :items="stakesGroups"
-        item-key="game-no"
-        no-data-text="Игры ещё не введены"
-        hide-default-footer
-        :items-per-page="stakesGroups.length"
-        mobile-breakpoint="350"
-      >
-        <template v-slot:item.start="{ item }">
-          {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}
-          {{ new Date(item.start).toLocaleTimeString().substr(0, 5) }}
-        </template>
-
-        <template v-slot:item.team1="{ item }">
-          <div class="d-flex flex-row justify-center">
-            <div class="flex-grow-1 mr-1 text-right">{{ item.team1 }}</div>
-            <v-img
-              class="flex-grow-0"
-              :src="`/flags/${item.flag1}`"
-              height="20"
-              width="30"
-            />
-          </div>
-        </template>
-
-        <template v-slot:item.team2="{ item }">
-          <div class="d-flex flex-row justify-center">
-            <v-img
-              class="flex-grow-0"
-              :src="`/flags/${item.flag2}`"
-              height="20"
-              width="30"
-            />
-            <div class="flex-grow-1 ml-1 text-left">{{ item.team2 }}</div>
-          </div>
-        </template>
-
-        <template v-slot:item.result="{ item }">
-          {{ item.goal1 }} - {{ item.goal2 }}
-        </template>
-
-        <template v-slot:item.actions="{ item }">
-          <v-icon
-            class="mr-2"
-            title="Просмотр результатов"
-            x-small
-            @click="groupResults(item.groupId, item.group)"
-          >fas fa-eye
-          </v-icon>
-
-          <v-icon
-            class="mr-2"
-            title="Редактировать"
-            x-small
-            @click="editItem(item)"
-          >fas fa-pen
-          </v-icon
-          >
-        </template>
-      </v-data-table>
+    <div v-if="groupStakes.length > 0">
+      <mu-group-stakes :maxWidth="widthTable" />
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions, mapMutations, mapGetters} from "vuex"
-import MuGroupResult from '../components/GroupResult'
-import MuResultsCompare from '../components/ResultsCompare'
+import {mapMutations, mapGetters} from "vuex"
+import MuGroupStakes from '../components/GroupStakes'
+import MuPlayoffStakes from '../components/PlayoffStakes'
 
 export default {
   name: "stakes",
   components: {
-    MuGroupResult,
-    MuResultsCompare
+    MuGroupStakes,
+    MuPlayoffStakes
   },
   async asyncData({store}) {
     await store.dispatch('group/loadGroups');
@@ -348,31 +143,7 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-      viewGroupResults: false,
-      group: '',
-      result: [],
-      groups: [],
-      valid: true,
-      loading: false,
-      gameTeams: [],
-      countGroups: 0,
-      headerGroups: [
-        {text: "Начало", value: "start"},
-        {text: "Город", value: "city"},
-        {text: "Группа", value: "group"},
-        {text: "", value: "team1", align: "center", sortable: false},
-        {text: "Игра", value: "result", align: "center", sortable: false},
-        {text: "", value: "team2", align: "center", sortable: false},
-        {
-          text: "",
-          align: "center",
-          value: "actions",
-          sortable: false,
-          width: "10%",
-        },
-      ],
-      headerPlayoff: [
+      /*headerPlayoff: [
         {text: "Начало", value: "start", align: "center"},
         {text: "Город", value: "city"},
         {text: "", value: "team1", align: "center", sortable: false},
@@ -391,46 +162,14 @@ export default {
           sortable: false,
         },
         {text: "", align: "center", value: "actions", sortable: false},
-      ],
-      editedItem: {
-        goal1: "",
-        goal2: "",
-        addGoal1: "",
-        addGoal2: "",
-        penaltyTeam: "",
-      },
-      defaultItem: {
-        goal1: "",
-        goal2: "",
-        addGoal1: "",
-        addGoal2: "",
-        penaltyTeam: "",
-      },
-      dateGame: "",
-      timeGame: "",
-      rules: {
-        required: (value) => !!value || "Не может быть пустым",
-        isNumber: (value) =>
-          value == null || !isNaN(value) || "Должно быть число",
-        notLess1: (value) =>
-          value >= this.editedItem.goal1 ||
-          `Не может быть меньше ${this.editedItem.goal1}`,
-        notLess2: (value) =>
-          value >= this.editedItem.goal2 ||
-          `Не может быть меньше ${this.editedItem.goal2}`,
-      },
+      ],*/
     };
-  },
-  created() {
-    this.countGroups = this.getCountGroups;
   },
   computed: {
     ...mapGetters({
-      stakesGroups: "stake/getStakesGroups",
-      stakesPlayoff: "stake/getStakesPlayoff",
-      getCountGroups: "group/getCountGroups",
+      groupStakes: "stake/getStakesGroups",
+      playoffStakes: "stake/getStakesPlayoff",
       getGambler: "gambler/getGambler",
-      groupGames: 'game/getGroupGames'
     }),
     widthTable() {
       switch (this.$vuetify.breakpoint.name) {
@@ -444,10 +183,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions({
-      addStake: "stake/addStake",
-      updateStake: "stake/updateStake",
-    }),
     ...mapMutations({
       clearMessage: "common/CLEAR_MESSAGE",
       setMessage: "common/SET_MESSAGE",
@@ -457,80 +192,6 @@ export default {
 
       const [year, month, day] = date.split("-");
       return `${day}.${month}.${year}`;
-    },
-    groupResults(groupId, group) {
-      this.group = group
-      this.result = this.groupGames(groupId)
-      this.viewGroupResults = true;
-    },
-    closeViewResults() {
-      this.viewResults = false
-    },
-    editItem(item) {
-      this.dialog = true;
-
-      this.$nextTick(() => {
-        this.$refs.form.reset();
-
-        this.gameTeams = [
-          {
-            value: item.team1_id,
-            text: item.team1,
-          },
-          {
-            value: item.team2_id,
-            text: item.team2,
-          },
-        ];
-
-        this.editedItem = Object.assign({}, item);
-
-        const start = new Date(item.start);
-        this.dateGame = this.formatDate(start.toISOString().substr(0, 10));
-        this.timeGame = start.toLocaleTimeString().substr(0, 5);
-      });
-    },
-    async save() {
-      if (!this.$refs.form.validate()) return;
-
-      const now = new Date();
-      const start = new Date(this.editedItem.start);
-
-      if (now > start) {
-        await this.clearMessage(null, {root: true})
-        await this.setMessage(
-          {
-            status: "error",
-            text: "К сожалению, Вы не можете изменить ставку, так как игра уже началась",
-          },
-          {root: true}
-        )
-
-        return
-      }
-
-      this.loading = true;
-
-      this.editedItem.gambler_id = this.getGambler.id;
-
-      if (!!this.editedItem.stakeId) {
-        await this.updateStake(this.editedItem);
-      } else {
-        await this.addStake(this.editedItem);
-      }
-
-      this.loading = false;
-
-      this.close();
-    },
-    close() {
-      this.$refs.form.reset();
-      this.dialog = false;
-
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
   },
 };

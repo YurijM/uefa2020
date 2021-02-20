@@ -4,7 +4,7 @@ module.exports.loadPoints = async (req, res) => {
   const query = 'SELECT gambler_id, game_id, nickname, p.points, p.place, g.game_no\n' +
     'FROM points p\n' +
     'INNER JOIN games g ON g.id = p.game_id\n' +
-    'INNER JOIN gamblers gm ON gm.id = p.gambler_id\n' +
+    'INNER JOIN gamblers gm ON gm.id = p.gambler_id AND gm.status = 10\n' +
     'ORDER BY game_no'
 
   await pool.promise().execute(query)

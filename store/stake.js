@@ -183,8 +183,6 @@ export const actions = {
         }
       });
 
-      console.log('rows:', data.rows)
-
       if (data.rows) {
         await dispatch('updatePlayoff', payload);
 

@@ -8,13 +8,12 @@
       cols="auto"
       v-for="game in games"
       :key="game.id"
-      justify-center
-      class="text-center text-body-2"
+      class="text-center"
     >
-      <div >
+      <div class="text-body-1 font-weight-black">
         {{ game.group }}
       </div>
-      <div>
+      <div class="text-body-2 font-weight-black">
         {{ game.game }} {{ game.result}}
         <template v-if="game.addResult">
           доп. время - {{ game.addResult }}
@@ -26,6 +25,7 @@
 
       <v-simple-table
         dense
+        class="text-body-1"
         :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
       >
         <template v-slot:default>
@@ -38,7 +38,7 @@
           </thead>
           <tbody>
           <tr
-            v-for="stake in game.stakes"
+            v-for="stake in stakes(game.id)"
             :key="stake.gambler"
           >
             <td class="text-left">{{ stake.gambler }}</td>
@@ -71,6 +71,7 @@ export default {
   computed: {
     ...mapGetters({
       games: 'totalizator/getGames',
+      stakes: 'totalizator/getStakes'
     })
   }
 }

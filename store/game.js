@@ -6,9 +6,8 @@ export const state = () => ({
 export const getters = {
   getGames: state => state.games,
   getGame: state => state.game,
-  getGamesForTeam: (state) => (teamId) => {
-
-  },
+  getTeamGames: state => id => state.games.filter(g => g.team1_id === id || g.team2_id === id)
+  .sort((a, b) => a.game_no > b.game_no),
   getGroupGames: (state, getters, rootState, rootGetters) => (id) => {
     const games = state.games.filter(g => g.group_id === id)
 

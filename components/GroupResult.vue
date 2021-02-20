@@ -47,7 +47,7 @@
           <td class="text-center green--text">{{ team.draw }}</td>
           <td class="text-center blue--text">{{ team.defeat }}</td>
           <td class="text-center">{{ `${team.balls1}-${team.balls2}` }}</td>
-          <td class="text-center">{{ team.points }}</td>
+          <td class="text-center font-weight-bold">{{ team.points }}</td>
           <td
             class="text-center"
             :class="team.place < 3 ? 'red--text' : ''"
