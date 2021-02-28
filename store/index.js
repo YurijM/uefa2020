@@ -1,5 +1,5 @@
 export const actions = {
-  async nuxtServerInit({dispatch}) {
+  async nuxtServerInit({dispatch, commit, rootGetters}) {
     await dispatch('gambler/autoLogin');
     await dispatch('gambler/loadGamblers');
     await dispatch('game/loadGames');

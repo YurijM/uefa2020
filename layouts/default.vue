@@ -111,6 +111,19 @@ export default {
     this.$vuetify.theme.dark = false;
     this.drawer = this.$vuetify.breakpoint.width < 800 ? false : true;
     this.drawerRight = this.$vuetify.breakpoint.width < 700 ? false : true;
+
+    console.log('process:', process.browser, process.server)
+    if (process.browser) {
+      window.addEventListener('beforeunload', this.handlerClose);
+    }
+  },
+  /*beforeDestroy() {
+    this.handlerClose()
+  },*/
+  destroyed() {
+    if (process.browser) {
+      window.removeEventListener('beforeunload', this.handlerClose);
+    }
   },
   computed: {
     ...mapGetters({
@@ -155,7 +168,21 @@ export default {
 
         this.$router.push('/login');
       }
-    }
+    },
+    handlerClose(event) {
+      //event.preventDefault()
+
+      const gambler = this.getGambler
+      console.log('socketId:', gambler.socket_id)
+
+      //if (gambler !== null) {
+      this.$socket.emit('close', gambler)
+      this.logout(gambler.id)
+      //}
+
+      //event.returnValue = ''
+      //return null
+    },
   }
 }
 </script>

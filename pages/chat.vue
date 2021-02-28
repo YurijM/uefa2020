@@ -50,7 +50,7 @@
         <v-chip
           v-for="gambler in gamblers"
           :key="gambler.id"
-          v-if="gambler.id !== currentGambler.id"
+          v-if="gambler.id !== (!currentGambler ? gambler.id : currentGambler.id)"
           class="ml-1 mt-1"
           dark
           :color="gambler.sex === 'м' ? 'blue lighten-2' : 'pink lighten-2'"
@@ -206,7 +206,7 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
   name: 'chat',
-  async asyncData({store}) {
+  async asyncData({store, socket}) {
     await store.dispatch('chat/loadGamblers');
     const showSystemMessages = store.getters['chat/getShowSystem']
     await store.dispatch('chat/loadMessages', {range: 1, system: showSystemMessages})
@@ -242,6 +242,8 @@ export default {
     MuDialogDeleteMessage
   },
   mounted() {
+    this.$socket.emit('addToChat', this.getGambler)
+
     setTimeout(() => {
       this.$refs['chat'].scrollTop = this.$refs['chat'].scrollHeight
     })
