@@ -29,9 +29,11 @@
             <v-icon v-on="on">{{ drawer ? 'far fa-hand-point-left' : 'far fa-hand-point-right' }}</v-icon>
           </template>
           <span class="caption">
-            {{ drawer
-            ? ($vuetify.breakpoint.width >= 800 ? 'Скрыть меню' : '')
-            : 'Показать меню' }}
+            {{
+              drawer
+                ? ($vuetify.breakpoint.width >= 800 ? 'Скрыть меню' : '')
+                : 'Показать меню'
+            }}
           </span>
         </v-tooltip>
       </v-app-bar-nav-icon>
@@ -52,9 +54,11 @@
             <v-icon v-on="on">{{ drawerRight ? 'far fa-hand-point-right' : 'far fa-hand-point-left' }}</v-icon>
           </template>
           <span class="caption">
-            {{ drawerRight
-            ? ($vuetify.breakpoint.width >= 800 ? 'Скрыть результаты' : '')
-            : 'Показать результаты' }}
+            {{
+              drawerRight
+                ? ($vuetify.breakpoint.width >= 800 ? 'Скрыть результаты' : '')
+                : 'Показать результаты'
+            }}
           </span>
         </v-tooltip>
       </v-app-bar-nav-icon>
@@ -82,7 +86,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 import MuDrawerLeft from '~/components/DrawerLeft'
 import MuDrawerRight from '~/components/DrawerRight'
@@ -112,7 +116,6 @@ export default {
     this.drawer = this.$vuetify.breakpoint.width < 800 ? false : true;
     this.drawerRight = this.$vuetify.breakpoint.width < 700 ? false : true;
 
-    console.log('process:', process.browser, process.server)
     if (process.browser) {
       window.addEventListener('beforeunload', this.handlerClose);
     }
@@ -127,6 +130,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      getCloseApp: 'common/getCloseApp',
       getMessage: 'common/getMessage',
       isMessage: 'common/isMessage',
       getGambler: 'gambler/getGambler'
@@ -150,35 +154,40 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setCloseApp: 'common/SET_CLOSE',
+      clearCloseApp: 'common/CLEAR_CLOSE'
+    }),
     ...mapActions({
       logout: 'gambler/logout'
     }),
     isOpenDialog(data) {
       this.dialog = data.dialog
     },
-    closeApp(data) {
+    async closeApp(data) {
       this.dialog = false;
 
       if (data.close) {
+        await this.setCloseApp()
+
         const gambler = this.getGambler;
 
-        this.logout(gambler.id);
+        await this.logout(gambler.id);
 
-        this.$socket.emit('logout', gambler);
+        this.$socket.emit('logout', {gambler, closeApp: this.getCloseApp});
 
-        this.$router.push('/login');
+        await this.$router.push('/login');
+      } else {
+        await this.clearCloseApp()
       }
     },
     handlerClose(event) {
       //event.preventDefault()
 
       const gambler = this.getGambler
-      console.log('socketId:', gambler.socket_id)
 
-      //if (gambler !== null) {
-      this.$socket.emit('close', gambler)
       this.logout(gambler.id)
-      //}
+      this.$socket.emit('logout', {gambler, closeApp: this.getCloseApp})
 
       //event.returnValue = ''
       //return null

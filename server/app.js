@@ -155,26 +155,27 @@ io.on('connection', (socket) => {
 
   /****************************************************************************/
   socket.on('addToChat', data => {
-    socket.broadcast.emit('addToChat', data)  })
+    socket.broadcast.emit('addToChat', data)
+  })
 
   /****************************************************************************/
   socket.on('logout', data => {
-    console.log('logout:', data)
-
     if (data) {
-      io.to(room).emit('logout', data);
+      io.to(room).emit('logout', data.gambler);
 
-      const message = {
-        fromId: 0,
-        fromNick: 'администратор',
-        to: room,
-        date: Date.now(),
-        message: `${data.nickname} ${data.sex === 'м' ? 'вышёл' : 'вышла'} из приложения`
-      };
+      if (data.closeApp) {
+        const message = {
+          fromId: 0,
+          fromNick: 'администратор',
+          to: room,
+          date: Date.now(),
+          message: `${data.gambler.nickname} ${data.gambler.sex === 'м' ? 'вышёл' : 'вышла'} из приложения`
+        };
 
-      socket.broadcast.emit('sendMessage', message);
-      socket.broadcast.emit('setMessage', {status: 'primary', text: message.message});
-      socket.emit('messageToDB', message);
+        socket.broadcast.emit('sendMessage', message);
+        socket.broadcast.emit('setMessage', {status: 'primary', text: message.message});
+        socket.emit('messageToDB', message);
+      }
     }
   });
 

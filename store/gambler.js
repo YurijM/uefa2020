@@ -339,7 +339,7 @@ export const actions = {
     }
   },
 
-  async logout({commit, dispatch}, id) {
+  async logout({commit, dispatch, rootGetters}, id) {
     try {
       const data = await this.$axios.$get('/api/gambler/logout', {
         params: {
@@ -353,12 +353,15 @@ export const actions = {
           text: data.error
         }, {root: true});
       } else {
-        await commit('CLEAR_GAMBLER');
-        await dispatch('clearToken');
-        await commit('common/SET_MESSAGE', {
-          status: 'primary',
-          text: 'Сессия закрыта'
-        }, {root: true});
+        if (rootGetters['common/getCloseApp']) {
+          await commit('common/CLEAR_CLOSE', null, {root: true})
+          await commit('CLEAR_GAMBLER')
+          await dispatch('clearToken')
+          await commit('common/SET_MESSAGE', {
+            status: 'primary',
+            text: 'Сессия закрыта'
+          }, {root: true})
+        }
       }
     } catch (e) {
       console.log('Error logout:', e);
@@ -383,7 +386,7 @@ export const actions = {
 
     const token = cookies['uefa2020-jwt-token'];
 
-    if (token) {
+    if (!!token) {
       const jwtData = jwtDecode(token) || {};
       const expires = jwtData.exp || 0;
 

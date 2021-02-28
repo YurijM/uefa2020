@@ -15,7 +15,7 @@
         link
         class="px-2 purple--text text--darken-3"
         :to="item.to"
-        v-if="item.status <= gambler.status"
+        v-if="item.status <= (!!gambler ? gambler.status : 0)"
       >
         <v-list-item-action class="mr-1">
           <v-icon small>{{ item.icon }}</v-icon>

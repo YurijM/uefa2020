@@ -8,18 +8,18 @@
       >
         <v-avatar size="45">
           <img
-            :src="`/photo/${gambler.photo}`"
-            :alt="gambler.nickname"
+            :src="!!gambler ? `/photo/${gambler.photo}` : 'user.jpg'"
+            :alt="!!gambler ? gambler.nickname : ''"
           >
         </v-avatar>
 
-        <span :style="{textDecoration: 'underline'}">{{gambler.nickname}}</span>
+        <span :style="{textDecoration: 'underline'}">{{!!gambler ? gambler.nickname : ''}}</span>
       </div>
     </template>
 
     <v-list class="py-1" color="purple lighten-3">
       <v-list-item
-        v-if="gambler.admin"
+        v-if="!!gambler ? gambler.admin : 0"
         class="px-3 mb-1"
         :style="{minHeight: '10px'}"
         @click="$router.push('/admin')"
@@ -29,7 +29,7 @@
         </v-list-item-title>
       </v-list-item>
 
-      <v-divider v-if="gambler.admin" class="mb-1"/>
+      <v-divider v-if="!!gambler ? gambler.admin : 0" class="mb-1"/>
 
       <v-list-item
         class="px-3 mb-1"
