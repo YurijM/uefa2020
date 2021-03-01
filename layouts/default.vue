@@ -117,7 +117,11 @@ export default {
     this.drawerRight = this.$vuetify.breakpoint.width < 700 ? false : true;
 
     if (process.browser) {
-      window.addEventListener('beforeunload', this.handlerClose);
+      if (navigator.userAgent.search('Chrome') > 0) {
+        window.addEventListener('unload', this.handlerClose)
+      } else {
+        window.addEventListener('beforeunload', this.handlerClose)
+      }
     }
   },
   /*beforeDestroy() {
@@ -125,7 +129,11 @@ export default {
   },*/
   destroyed() {
     if (process.browser) {
-      window.removeEventListener('beforeunload', this.handlerClose);
+      if (navigator.userAgent.search('Chrome') > 0) {
+        window.removeEventListener('unload', this.handlerClose);
+      } else {
+        window.removeEventListener('beforeunload', this.handlerClose);
+      }
     }
   },
   computed: {
