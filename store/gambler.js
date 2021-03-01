@@ -354,7 +354,7 @@ export const actions = {
         }, {root: true});
       } else {
         if (rootGetters['common/getCloseApp']) {
-          await commit('common/CLEAR_CLOSE', null, {root: true})
+          //await commit('common/CLEAR_CLOSE', null, {root: true})
           await commit('CLEAR_GAMBLER')
           await dispatch('clearToken')
           await commit('common/SET_MESSAGE', {
