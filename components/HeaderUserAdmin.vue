@@ -8,12 +8,12 @@
       >
         <v-avatar width="40" height="40" color="yellow">
           <img
-            :src="`/photo/${gambler.photo}`"
-            :alt="gambler.nickname"
+            :src="!!gambler ? `/photo/${gambler.photo}` : 'user.jpg'"
+            :alt="!!gambler ? gambler.nickname : ''"
           >
         </v-avatar>
 
-        {{gambler.nickname}}
+        {{!!gambler ? gambler.nickname : ''}}
       </div>
     </template>
 

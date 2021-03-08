@@ -136,8 +136,7 @@ module.exports.saveFeatures = async (req, res) => {
 };
 
 module.exports.logout = async (req, res) => {
-  //const query = 'UPDATE gamblers SET `connected` = 0 WHERE id = ?';
-  const query = 'UPDATE gamblers SET `socket_id` = \'\' WHERE id = ?';
+  const query = 'UPDATE gamblers SET `socket_id` = \'\' WHERE id = ?'
 
   await pool.promise().execute(query, [req.query.id])
   .then(result => {
