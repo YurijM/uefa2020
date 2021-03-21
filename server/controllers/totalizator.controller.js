@@ -53,7 +53,7 @@ module.exports.loadGames = async (req, res) => {
     'IF(NOT ISNULL(a.goal1), CONCAT(a.goal1, \':\', a.goal2), \'\') addResult,\n' +
     'IFNULL(tp.team, \'\') penaltyWin\n' +
     'FROM games g\n' +
-    'LEFT JOIN groups gr ON gr.id = g.group_id\n' +
+    'LEFT JOIN `groups` gr ON gr.id = g.group_id\n' +
     'LEFT JOIN teams t1 ON t1.id = g.team1_id\n' +
     'LEFT JOIN teams t2 ON t2.id = g.team2_id\n' +
     'LEFT JOIN addtime a ON a.game_id = g.id \n' +
