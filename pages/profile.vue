@@ -165,7 +165,7 @@
         file: null,
         rules: {
           required: value => !!value || 'Поле должно быть заполнено',
-          image: value => !value || value.size < 5000000 || 'Размер файла не должен быть больше 5Мб',
+          image: value => !value || value.size < 20000000 || 'Размер файла не должен быть больше 20Мб',
         },
         loading: false
       }
