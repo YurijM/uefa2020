@@ -24,6 +24,7 @@
       class="mb-5 mx-auto purple lighten-5"
       :style="{ maxWidth: maxWidth }"
       :headers="header"
+      group-by="startDate"
       :items="stakes"
       item-key="game-no"
       no-data-text="Игры ещё не введены"
@@ -31,8 +32,37 @@
       :items-per-page="stakes.length"
       mobile-breakpoint="350"
     >
+      <template v-slot:group.header="{ items, isOpen, toggle }">
+        <th :colspan="Object.keys(items[0]).length">
+          <v-icon small @click="toggle">
+            {{ isOpen ? "fas fa-minus" : "fas fa-plus" }}
+          </v-icon>
+          <span class="ml-2" :style="{ fontSize: '1.25em' }">{{
+              items[0].startDate
+            }}</span>
+        </th>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          class="mr-2"
+          title="Просмотр результатов"
+          x-small
+          @click="getGroupResult(item.groupId, item.group)"
+        >fas fa-eye
+        </v-icon>
+
+        <v-icon
+          class="mr-2"
+          title="Редактировать"
+          x-small
+          @click="editItem(item)"
+        >fas fa-pen
+        </v-icon>
+      </template>
+
       <template v-slot:item.start="{ item }">
-        {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}
+<!--        {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}-->
         {{ new Date(item.start).toLocaleTimeString().substr(0, 5) }}
       </template>
 
@@ -63,25 +93,6 @@
       <template v-slot:item.result="{ item }">
         {{ item.goal1 }} - {{ item.goal2 }}
       </template>
-
-      <template v-slot:item.actions="{ item }">
-        <v-icon
-          class="mr-2"
-          title="Просмотр результатов"
-          x-small
-          @click="getGroupResult(item.groupId, item.group)"
-        >fas fa-eye
-        </v-icon>
-
-        <v-icon
-          class="mr-2"
-          title="Редактировать"
-          x-small
-          @click="editItem(item)"
-        >fas fa-pen
-        </v-icon
-        >
-      </template>
     </v-data-table>
   </div>
 </template>
@@ -111,19 +122,18 @@ export default {
       group: '',
       result: [],
       header: [
+        {
+          text: '',
+          align: 'center',
+          value: 'actions',
+          sortable: false,
+        },
         {text: 'Начало', value: 'start'},
         {text: 'Город', value: 'city'},
         {text: 'Группа', value: 'group'},
         {text: '', value: 'team1', align: 'center', sortable: false},
         {text: 'Игра', value: 'result', align: 'center', sortable: false},
         {text: '', value: 'team2', align: 'center', sortable: false},
-        {
-          text: '',
-          align: 'center',
-          value: 'actions',
-          sortable: false,
-          width: '10%',
-        },
       ],
       defaultItem: {
         goal1: '',
@@ -146,16 +156,25 @@ export default {
       stakes: 'stake/getStakesGroups',
       groupGames: 'game/getGroupGames'
     }),
-    widthTable() {
-      switch (this.$vuetify.breakpoint.name) {
-        case 'lg':
-          return '80%'
-        case 'xl':
-          return '60%'
-        default:
-          return '95%'
+    changedBreakpointWidth() {
+      return this.$vuetify.breakpoint.width
+    }
+  },
+  watch: {
+    changedBreakpointWidth(width) {
+      if (width < 1075) {
+        if (this.header.length > 5) {
+          this.header.splice(2, 2)
+        }
+      } else {
+        if (this.header.length < 7) {
+          this.header.splice(2, 0,
+            {text: 'Город', value: 'city'},
+            {text: 'Группа', value: 'group'}
+          )
+        }
       }
-    },
+    }
   },
   methods: {
     formatDate(date) {

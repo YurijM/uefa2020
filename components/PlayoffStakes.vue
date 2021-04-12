@@ -22,7 +22,7 @@
     <v-data-table
       dense
       class="mb-2 mx-auto purple lighten-5"
-      :style="{ maxWidth: widthTable }"
+      :style="{ maxWidth: maxWidth }"
       :headers="headerPlayoff"
       :items="playoffStakes"
       item-key="game-no"
@@ -37,10 +37,28 @@
           <v-icon small @click="toggle">
             {{ isOpen ? "fas fa-minus" : "fas fa-plus" }}
           </v-icon>
-          <span class="ml-2" :style="{ fontSize: '1.35em' }">{{
+          <span class="ml-2" :style="{ fontSize: '1.25em' }">{{
               items[0].group
             }}</span>
         </th>
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          class="mr-2"
+          title="Просмотр результатов"
+          x-small
+          @click="getPlayoffResult(item)"
+        >fas fa-eye
+        </v-icon>
+
+        <v-icon
+          class="mr-2"
+          title="Редактировать"
+          x-small
+          @click="editItem(item)"
+        >fas fa-pen
+        </v-icon>
       </template>
 
       <template v-slot:item.start="{ item }">
@@ -81,24 +99,6 @@
           {{ item.addGoal1 }} - {{ item.addGoal2 }}
         </div>
       </template>
-
-      <template v-slot:item.actions="{ item }">
-        <v-icon
-          class="mr-2"
-          title="Просмотр результатов"
-          x-small
-          @click="getPlayoffResult(item)"
-        >fas fa-eye
-        </v-icon>
-
-        <v-icon
-          class="mr-2"
-          title="Редактировать"
-          x-small
-          @click="editItem(item)"
-        >fas fa-pen
-        </v-icon>
-      </template>
     </v-data-table>
   </div>
 </template>
@@ -127,6 +127,7 @@ export default {
       viewResult: false,
       teams: {},
       headerPlayoff: [
+        {text: '', align: 'center', value: 'actions', sortable: false},
         {text: 'Начало', value: 'start', align: 'center'},
         {text: 'Город', value: 'city'},
         {text: '', value: 'team1', align: 'center', sortable: false},
@@ -144,7 +145,6 @@ export default {
           align: 'center',
           sortable: false,
         },
-        {text: '', align: 'center', value: 'actions', sortable: false},
       ],
       defaultItem: {
         goal1: '',
@@ -168,16 +168,24 @@ export default {
       groupGames: 'game/getGroupGames',
       getTeamGames: 'game/getTeamGames'
     }),
-    widthTable() {
-      switch (this.$vuetify.breakpoint.name) {
-        case 'lg':
-          return '80%'
-        case 'xl':
-          return '60%'
-        default:
-          return '95%'
+    changedBreakpointWidth() {
+      return this.$vuetify.breakpoint.width
+    }
+  },
+  watch: {
+    changedBreakpointWidth(width) {
+      if (width < 1075) {
+        if (this.headerPlayoff.length > 7) {
+          this.headerPlayoff.splice(2, 1)
+        }
+      } else {
+        if (this.headerPlayoff.length < 8) {
+          this.headerPlayoff.splice(2, 0,
+            {text: 'Город', value: 'city'}
+          )
+        }
       }
-    },
+    }
   },
   methods: {
     formatDate(date) {
