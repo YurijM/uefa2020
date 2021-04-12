@@ -33,18 +33,18 @@ module.exports.loadStakesPlayoff = async (req, res) => {
 }
 
 module.exports.loadStakesGroups = async (req, res) => {
-  const query = 'SELECT g.id AS gameId, stakes.id AS stakeId, ' +
-    'DATE_FORMAT(g.`start`,\'%d.%m.%Y\') AS startDate, g.`start`, g.game_no, s.city, gr.id AS groupId,' +
-    ' gr.`order`, gr.`group`, ' +
-    't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
-    'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2 ' +
-    'FROM games g ' +
-    'LEFT JOIN `groups` gr ON gr.id = g.group_id ' +
-    'LEFT JOIN teams t1 ON t1.id = g.team1_id ' +
-    'LEFT JOIN teams t2 ON t2.id = g.team2_id ' +
-    'LEFT JOIN stadiums s ON s.id = g.stadium_id ' +
-    'LEFT JOIN stakes ON stakes.gambler_id = ? AND stakes.game_id = g.id ' +
-    'WHERE `start` > NOW() AND gr.`order` <= ? ' +
+  const query = 'SELECT g.id AS gameId, stakes.id AS stakeId,\n' +
+    'DATE_FORMAT(g.`start`,\'%d.%m.%Y\') AS startDate, g.`start`, g.game_no,\n' +
+    's.city, s.stadium, gr.id AS groupId, gr.`order`, gr.`group`,\n' +
+    't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2,\n' +
+    'IFNULL(stakes.goal1, \'\') goal1, IFNULL(stakes.goal2, \'\') goal2\n' +
+    'FROM games g\n' +
+    'LEFT JOIN `groups` gr ON gr.id = g.group_id\n' +
+    'LEFT JOIN teams t1 ON t1.id = g.team1_id\n' +
+    'LEFT JOIN teams t2 ON t2.id = g.team2_id\n' +
+    'LEFT JOIN stadiums s ON s.id = g.stadium_id\n' +
+    'LEFT JOIN stakes ON stakes.gambler_id = ? AND stakes.game_id = g.id\n' +
+    'WHERE `start` > NOW() AND gr.`order` <= ?\n' +
     'ORDER BY g.game_no'
 
   await pool.promise().execute(query, [

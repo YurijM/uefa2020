@@ -10,6 +10,12 @@
             <v-col cols="6" class="py-0 text-right">
               {{ dateGame }} {{ timeGame }}
             </v-col>
+            <v-col cols="12" class="py-0 text-center">
+              {{ item.city }}
+            </v-col>
+            <v-col cols="12" class="py-0 text-center">
+              стадион {{ item.stadium }}
+            </v-col>
           </v-row>
         </v-card-title>
 

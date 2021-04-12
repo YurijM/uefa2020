@@ -55,7 +55,7 @@ module.exports.sendMail = async (req, res) => {
       secure: true,
       auth: {
         user: 'y-myagkov@mail.ru',
-        pass: 'Gtnhjdrf3',
+        pass: 'Rcdjhf,f[26',
       }
       //encryption: 'ssl',
   });
