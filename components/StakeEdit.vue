@@ -13,6 +13,9 @@
             <v-col cols="12" class="py-0 text-center">
               {{ item.city }}
             </v-col>
+            <v-col cols="12" class="py-0">
+              <v-img class="mx-auto" :src="`/stadiums/${item.stadiumImage}`" height="20" width="57" />
+            </v-col>
             <v-col cols="12" class="py-0 text-center">
               стадион {{ item.stadium }}
             </v-col>
