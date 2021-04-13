@@ -4,9 +4,17 @@
       <h2 class="text-center mt-1 purple--text">Тотализатор</h2>
     </v-col>
 
+    <v-col cols="12" class="text-body-1 text-center">
+      Коэффициенты:
+      <span class="red--text text--accent-4">на победу</span>,
+      <span class="green--text text--darken-2">на ничью</span>,
+      <span class="light-blue--text text--darken-4">на проигрыш</span>,
+      <span class="gray--text text--darken-3">штраф</span>
+    </v-col>
+
     <v-col
       cols="auto"
-      v-for="game in games"
+      v-for="(game, i) in games"
       :key="game.id"
       class="text-center"
     >
@@ -14,14 +22,20 @@
         {{ game.group }}
       </div>
       <div class="text-body-2 font-weight-black">
-        {{ game.game }} {{ game.result }} {{ stakesWin(game.id) }}
-        {{ win }}, {{ draw }}, {{ defeat }}, {{ avg }}
+        {{ game.game }} {{ game.result }}
         <template v-if="game.addResult">
           доп. время - {{ game.addResult }}
           <template v-if="game.penaltyWin">
             по пенальти - {{ game.penaltyWin }}
           </template>
         </template>
+      </div>
+
+      <div class="text-body-2">
+        (<span class="red--text text--accent-4">{{ coefs[i].win }}</span>,
+        <span class="green--text text--darken-2">{{ coefs[i].draw }}</span>,
+        <span class="light-blue--text text--darken-4">{{ coefs[i].defeat }}</span>,
+        <span class="gray--text text--darken-3">{{ coefs[i].avg }}</span>)
       </div>
 
       <v-simple-table
@@ -71,11 +85,11 @@ export default {
   },
   data() {
     return {
-      win: 0,
-      draw: 0,
-      defeat: 0,
-      avg: 0
+      coefs: [],
     }
+  },
+  created() {
+    this.loadCoefs()
   },
   computed: {
     ...mapGetters({
@@ -84,27 +98,38 @@ export default {
     }),
   },
   methods: {
-    stakesWin(gameId) {
-      this.win = 0
-      this.draw = 0
-      this.defeat = 0
-      this.avg = 0
+    loadCoefs() {
+      const gameIds = this.games.map(g => g.id)
 
-      const results = this.stakes(gameId).map(s => s.result)
-      results.forEach(s => {
-        let result = s.split(':')
-        if (result[0] !== 'нет') {
-          if (result[0] > result[1]) this.win++
-          else if (result[0] < result[1]) this.defeat++
-          else this.draw++
-        }
+      gameIds.forEach(id => {
+        let win = 0
+        let draw = 0
+        let defeat = 0
+        let avg = 0
+
+        const results = this.stakes(id).map(s => s.result)
+        results.forEach(s => {
+          let result = s.split(':')
+          if (result[0] !== 'нет') {
+            if (result[0] > result[1]) win++
+            else if (result[0] < result[1]) defeat++
+            else draw++
+          }
+        })
+
+        win = (win > 0 ? results.length / win : 0)
+        draw = (draw > 0 ? results.length / draw : 0)
+        defeat = (defeat > 0 ? results.length / defeat : 0)
+        avg = (win + defeat + draw) / 6
+
+        this.coefs.push({
+          id: id,
+          avg: parseFloat(avg).toFixed(2),
+          win: parseFloat(win).toFixed(2),
+          draw: parseFloat(draw).toFixed(2),
+          defeat: parseFloat(defeat).toFixed(2)
+        })
       })
-      const avg = results.length / (this.win + this.defeat + this.draw) / 6
-      this.avg = parseFloat(avg).toFixed(2)
-      this.win = (this.win > 0 ? parseFloat(results.length / this.win).toFixed(2) : 0)
-      this.draw = (this.draw > 0 ? parseFloat(results.length / this.draw).toFixed(2) : 0)
-      this.defeat = (this.defeat > 0 ? parseFloat(results.length / this.defeat).toFixed(2) : 0)
-      return ''
     }
   }
 }
