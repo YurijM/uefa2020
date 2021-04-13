@@ -14,7 +14,8 @@
         {{ game.group }}
       </div>
       <div class="text-body-2 font-weight-black">
-        {{ game.game }} {{ game.result}}
+        {{ game.game }} {{ game.result }} {{ stakesWin(game.id) }}
+        {{ win }}, {{ draw }}, {{ defeat }}, {{ avg }}
         <template v-if="game.addResult">
           доп. время - {{ game.addResult }}
           <template v-if="game.penaltyWin">
@@ -68,11 +69,43 @@ export default {
   async asyncData({store}) {
     await store.dispatch('totalizator/loadStakes')
   },
+  data() {
+    return {
+      win: 0,
+      draw: 0,
+      defeat: 0,
+      avg: 0
+    }
+  },
   computed: {
     ...mapGetters({
       games: 'totalizator/getGames',
       stakes: 'totalizator/getStakes'
-    })
+    }),
+  },
+  methods: {
+    stakesWin(gameId) {
+      this.win = 0
+      this.draw = 0
+      this.defeat = 0
+      this.avg = 0
+
+      const results = this.stakes(gameId).map(s => s.result)
+      results.forEach(s => {
+        let result = s.split(':')
+        if (result[0] !== 'нет') {
+          if (result[0] > result[1]) this.win++
+          else if (result[0] < result[1]) this.defeat++
+          else this.draw++
+        }
+      })
+      const avg = results.length / (this.win + this.defeat + this.draw) / 6
+      this.avg = parseFloat(avg).toFixed(2)
+      this.win = (this.win > 0 ? parseFloat(results.length / this.win).toFixed(2) : 0)
+      this.draw = (this.draw > 0 ? parseFloat(results.length / this.draw).toFixed(2) : 0)
+      this.defeat = (this.defeat > 0 ? parseFloat(results.length / this.defeat).toFixed(2) : 0)
+      return ''
+    }
   }
 }
 </script>
