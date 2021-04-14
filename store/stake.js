@@ -3,6 +3,7 @@ export const state = () => ({
   stakesGroups: [],
   stakesPlayoff: [],
   stakesGame: [],
+  stakesNear: [],
   gamePoints: {
     winPoints: 0,
     drawPoints: 0,
@@ -14,6 +15,7 @@ export const getters = {
   getStakes: state => state.stakes,
   getStakesGroups: state => state.stakesGroups,
   getStakesPlayoff: state => state.stakesPlayoff,
+  getStakesNear: state => state.stakesNear,
   getStakesGame: state => state.stakesGame,
   getGamePoints: state => state.gamePoints
 }
@@ -33,6 +35,9 @@ export const mutations = {
   },
   LOAD_STAKES_PLAYOFF(state, payload) {
     state.stakesPlayoff = payload
+  },
+  LOAD_STAKES_NEAR(state, payload) {
+    state.stakesNear = payload
   },
   CLEAR_STAKES_PLAYOFF(state) {
     state.stakesPlayoff = []
@@ -129,6 +134,29 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении loadStakesGame (см. в консоли ошибку "Error loadStakesGame")'
+      }, {root: true});
+    }
+  },
+
+  async loadStakesNear({commit, getters}) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/stake/loadStakesNear');
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('LOAD_STAKES_NEAR', data)
+      }
+    } catch (e) {
+      console.log('Error loadStakesNear:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении loadStakesNear (см. в консоли ошибку "Error loadStakesNear")'
       }, {root: true});
     }
   },

@@ -60,14 +60,14 @@ module.exports.loadStakesGroups = async (req, res) => {
 }
 
 module.exports.loadStakesGame = async (req, res) => {
- /* const query = 'SELECT gambler_id, ' +
-      'IFNULL(s.goal1, \'\') goal1, IFNULL(s.goal2, \'\') goal2, ' +
-      'IFNULL(sa.goal1, \'\') addGoal1, IFNULL(sa.goal2, \'\') addGoal2, ' +
-      'IFNULL(sp.team_id, 0) penaltyId ' +
-      'FROM stakes s ' +
-      'LEFT JOIN `stakes-addtime` sa ON sa.stake_id = s.id ' +
-      'LEFT JOIN `stakes-penalty` sp ON sp.stake_id = s.id ' +
-      'WHERE game_id = ?'*/
+  /* const query = 'SELECT gambler_id, ' +
+       'IFNULL(s.goal1, \'\') goal1, IFNULL(s.goal2, \'\') goal2, ' +
+       'IFNULL(sa.goal1, \'\') addGoal1, IFNULL(sa.goal2, \'\') addGoal2, ' +
+       'IFNULL(sp.team_id, 0) penaltyId ' +
+       'FROM stakes s ' +
+       'LEFT JOIN `stakes-addtime` sa ON sa.stake_id = s.id ' +
+       'LEFT JOIN `stakes-penalty` sp ON sp.stake_id = s.id ' +
+       'WHERE game_id = ?'*/
   const query = 'SELECT g.id AS gambler_id,\n' +
     'IFNULL(s.goal1, \'\') goal1, IFNULL(s.goal2, \'\') goal2,\n' +
     'IFNULL(sa.goal1, \'\') addGoal1, IFNULL(sa.goal2, \'\') addGoal2,\n' +
@@ -207,6 +207,27 @@ module.exports.deletePenaltyTeam = async (req, res) => {
     } else {
       res.json({error: 'Ошибка при удалении ставки победителя по пенальти из таблицы stake-penalty'})
     }
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+module.exports.loadStakesNear = async (req, res) => {
+  const query = 'SELECT gm.nickname, IFNULL(CONCAT(s.goal1, \' : \', s.goal2), \'нет\') AS result\n' +
+    'FROM gamblers gm\n' +
+    'LEFT JOIN (\n' +
+    'SELECT s.*, g.`start` FROM stakes s\n' +
+    'INNER JOIN (\n' +
+    'SELECT id, `start` FROM games\n' +
+    'WHERE `start` > NOW()\n' +
+    'ORDER BY `start`\n' +
+    'LIMIT 1) g ON g.id = s.game_id\n' +
+    ') s ON s.gambler_id = gm.id\n' +
+    'ORDER BY nickname'
+
+  await pool.promise().execute(query, [])
+  .then(async ([rows, fields]) => {
+    res.json(rows)
   })
   .catch((e) => {
     res.json({error: e.message})

@@ -65,6 +65,11 @@ export default {
           icon: 'fas fa-clock'
         },
         {
+          title: 'Прогноз',
+          to: '/admin/stakes',
+          icon: 'fas fa-money-check'
+        },
+        {
           title: 'Письмо для регистрации',
           to: '/admin/email',
           icon: 'fas fa-envelope'
