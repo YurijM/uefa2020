@@ -11,9 +11,10 @@
     <v-data-table
       dense
       class="mt-5 grey darken-3 mx-auto"
-      :style="{maxWidth: '325px'}"
+      :style="{maxWidth: '200px'}"
       :headers="headers"
       :items="stakes"
+      items-per-page="50"
       :hide-default-footer="true"
     />
   </div>
