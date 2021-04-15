@@ -5,7 +5,7 @@
       top
       :color="color"
     >
-      <div class="text-center" :style="{width: '100%'}">{{ message }}</div>
+      <div class="text-center" :style="{width: '100%'}" @click="gotoChat">{{ message }}</div>
     </v-snackbar>
 
     <!-- Диалог подтверждения выхода из приложения -->
@@ -169,6 +169,9 @@ export default {
     ...mapActions({
       logout: 'gambler/logout'
     }),
+    async gotoChat() {
+      await this.$router.push('/chat')
+    },
     isOpenDialog(data) {
       this.dialog = data.dialog
     },

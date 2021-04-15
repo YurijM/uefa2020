@@ -24,6 +24,7 @@
             v-model="text"
             hide-details
             :rows="rows"
+            autofocus
             @keyup.ctrl.enter="sendMessage"
           />
         </v-card-text>
@@ -244,6 +245,9 @@ export default {
   mounted() {
     this.$socket.emit('addToChat', this.getGambler)
 
+    this.maxHeight = this.$refs.top.clientHeight + this.$refs['params'].clientHeight + 125;
+    this.maxHeight += 'px'
+
     setTimeout(() => {
       this.$refs['chat'].scrollTop = this.$refs['chat'].scrollHeight
     })
@@ -254,6 +258,7 @@ export default {
       getMessages: 'chat/getMessages',
       getGambler: 'gambler/getGambler',
       getShowSystem: 'chat/getShowSystem',
+      //getMaxHeight: 'chat/getMaxHeight',
     }),
     systemMessages: {
       get: function () {
@@ -261,7 +266,6 @@ export default {
       },
       set: function (show) {
         this.setShowSystem(show)
-        //return this.getShowSystem
       }
     },
     currentGambler() {
@@ -319,7 +323,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setShowSystem: 'chat/SET_SHOW_SYSTEM'
+      setShowSystem: 'chat/SET_SHOW_SYSTEM',
+      setMaxHeight: 'chat/SET_MAX_HEIGHT'
     }),
     ...mapActions({
       loadMessages: 'chat/loadMessages'
