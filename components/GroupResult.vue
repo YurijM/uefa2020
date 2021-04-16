@@ -10,7 +10,6 @@
       <template v-slot:default>
         <thead>
         <tr>
-          <!--          <th class="text-center">№</th>-->
           <th class="text-center">Команда</th>
           <th v-for="i in 4" :key="i" class="text-center" width="10%">
             {{ i }}
@@ -26,7 +25,6 @@
 
         <tbody>
         <tr v-for="team in result" :key="team.order">
-          <!--          <td class="text-center">{{ team.order }}</td>-->
           <td>
             <div class="d-flex align-center">
               <v-img class="mr-1" max-width="25" :src="`/flags/${team.flag}`"/>

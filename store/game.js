@@ -75,16 +75,44 @@ export const getters = {
     })
 
     if (places[0].points > 0) {
-      let place = 1, delta = 0, points = places[0].points
+      let
+        place = 1,
+        delta = 0,
+        points = places[0].points,
+        balls1 = places[0].balls1,
+        balls2 = places[0].balls2
       places.forEach(p => {
-        if (p.points === points) {
-          delta++
+        if (p.win === 0 && p.draw === 0 && p.defeat === 0) {
+          groupGames.find(g => g.team === p.team).place = ''
         } else {
-          place += delta
-          delta = 0
-          points = p.points
+          if (p.points === points) {
+            if ((p.balls1 - p.balls2) === (balls1 - balls2)) {
+              if (p.balls1 === balls1) {
+                delta++
+              } else {
+                place += delta
+                //delta = 0
+                points = p.points
+                balls1 = p.balls1
+                balls2 = p.balls2
+              }
+            } else {
+              place += delta
+              //delta = 0
+              points = p.points
+              balls1 = p.balls1
+              balls2 = p.balls2
+            }
+            //delta++
+          } else {
+            place += delta
+            //delta = 0
+            points = p.points
+            balls1 = p.balls1
+            balls2 = p.balls2
+          }
+          groupGames.find(g => g.team === p.team).place = place
         }
-        groupGames.find(g => g.team === p.team).place = place
       })
     }
 
