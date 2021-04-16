@@ -44,6 +44,10 @@
 
       <v-spacer/>
 
+      <div v-if="winnersTime.show">Наши победители</div>
+
+      <v-spacer/>
+
       <mu-header-user @openDialog="isOpenDialog"/>
 
       <v-icon v-if="!drawerRight" class="ml-md-12">fas fa-ruble-sign</v-icon>
@@ -102,7 +106,8 @@ export default {
     snackbar: false,
     message: '',
     color: '',
-    currentYear: (new Date()).getFullYear()
+    currentYear: (new Date()).getFullYear(),
+    winnersTime: {show: false}
   }),
   components: {
     MuDrawerLeft,
@@ -112,6 +117,28 @@ export default {
     MuDialogExit
   },
   created() {
+    let n = 0
+    let fnc1 = 0
+    let delay = 2000
+    let wt = this.winnersTime
+    const now = new Date()
+    let fnc = setInterval(function check() {
+      n++
+      let i = new Date() - now
+      console.log('i, n:', i, n)
+
+      if (n === 7) {
+        delay = 1000
+        clearInterval(fnc);
+        fnc1 = setInterval(check, delay)
+      }
+
+      if (i > 20000) {
+        wt.show = true
+        clearInterval(fnc1)
+      }
+    }, delay)
+
     this.$vuetify.theme.dark = false;
     this.drawer = this.$vuetify.breakpoint.width < 800 ? false : true;
     this.drawerRight = this.$vuetify.breakpoint.width < 700 ? false : true;
