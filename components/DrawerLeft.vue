@@ -15,7 +15,7 @@
         link
         class="px-2 purple--text text--darken-3"
         :to="item.to"
-        v-if="item.status <= (!!gambler ? gambler.status : 0)"
+        v-if="(item.hasOwnProperty('show') ? item.show : item.status <= (!!gambler ? gambler.status : 0))"
       >
         <v-list-item-action class="mr-1">
           <v-icon small>{{ item.icon }}</v-icon>
@@ -38,7 +38,14 @@ export default {
     value: {
       type: Boolean,
       default: true
+    },
+    showWinners: {
+      type: Boolean,
+      default: false
     }
+  },
+  async asyncData({store}) {
+    const gamblerId = store.getters['gambler/getGambler'].id
   },
   data() {
     return {
@@ -72,6 +79,12 @@ export default {
           to: '/totalizator',
           icon: 'fas fa-money-bill-alt',
           status: 10
+        },
+        {
+          title: 'Победители',
+          to: '/winners',
+          icon: 'fas fa-trophy',
+          show: this.showWinners
         },
         {
           title: 'Чат',
