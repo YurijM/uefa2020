@@ -84,7 +84,8 @@ export default {
           title: 'Победители',
           to: '/winners',
           icon: 'fas fa-trophy',
-          show: this.showWinners
+          status: 10
+          //show: this.showWinners
         },
         {
           title: 'Чат',

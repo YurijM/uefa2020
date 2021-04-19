@@ -12,7 +12,8 @@
     <mu-dialog-exit v-model="dialog" @closeApp="closeApp"/>
 
     <!-- Левая панель - МЕНЮ -->
-    <mu-drawer-left v-model="drawer" :showWinners="showWinners"/>
+    <mu-drawer-left v-model="drawer"/>
+<!--    <mu-drawer-left v-model="drawer" :showWinners="showWinners"/>-->
 
     <!---------------------------------------------------------------------------------->
     <!-- ЗАГОЛОВОК -->
@@ -44,7 +45,7 @@
 
       <v-spacer/>
 
-      <div v-if="winnersTime.show">Наши победители</div>
+<!--      <div v-if="winnersTime.show">Наши победители</div>-->
 
       <v-spacer/>
 
@@ -107,7 +108,7 @@ export default {
     message: '',
     color: '',
     currentYear: (new Date()).getFullYear(),
-    winnersTime: {show: false}
+    //winnersTime: {show: false}
   }),
   components: {
     MuDrawerLeft,
@@ -117,7 +118,7 @@ export default {
     MuDialogExit
   },
   created() {
-    let n = 0
+    /*let n = 0
     let fnc1 = 0
     let delay = 2000
     let wt = this.winnersTime
@@ -137,7 +138,7 @@ export default {
         wt.show = true
         clearInterval(fnc1)
       }
-    }, delay)
+    }, delay)*/
 
     this.$vuetify.theme.dark = false;
     this.drawer = this.$vuetify.breakpoint.width < 800 ? false : true;

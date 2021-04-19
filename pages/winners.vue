@@ -1,13 +1,13 @@
 <template>
   <div :style="{width: '100%'}">
-    <h2 class="text-center my-2 purple--text">Победители</h2>
+    <h2 class="text-center mt-2 purple--text">Победители</h2>
+    <h3 class="text-center mb-2 purple--text">(на текущий момент)</h3>
+
     <div class="d-flex flex-wrap flex-row justify-center px-1">
-      {{ allStakes }}
-      {{ avgStake }}
       <v-card
         v-for="(winner, i) in winners"
         :key="winner.gambler.id"
-        min-width="175"
+        width="200"
         outlined
         class="mb-1 dark blue-grey lighten-4"
         :class="(i > 0) ? 'ml-1' : ''"
@@ -30,15 +30,15 @@
         </v-img>
 
         <v-card-title
-          class="pa-1 flex-column body-1 text-center"
+          class="pa-1 flex-column body-2 font-weight-bold text-center"
+          :class="(winner.place == 1 ? 'red' : (winner.place == 2 ? 'green' : 'indigo')) + '--text text--darken-4'"
           style="word-break: normal !important"
           :style="{borderTop: '2px solid ' + (winner.place == 1 ? 'red' : (winner.place == 2 ? 'green' : 'blue')) + ' !important'}"
         >
           <div>{{ winner.gambler.family }} {{ winner.gambler.name }}</div>
           <div>({{ winner.gambler.nickname }})</div>
-          <div>({{ winner.gambler.stake }})</div>
-          <div>({{ winner.points }})</div>
-          <div>({{ winner.summa }})</div>
+          <div>ставка - {{ winner.gambler.stake }}</div>
+          <div>выигрыш - {{ winner.summa }} руб.</div>
         </v-card-title>
       </v-card>
     </div>
@@ -73,7 +73,7 @@ export default {
       const countWin3 = win3.length
 
       //const pointsWin1 = win1.reduce((points, e) => points + e.stake, 0)
-      const pointsWin2 = win2.reduce((points, e) => points + e.points, 0)
+      //const pointsWin2 = win2.reduce((points, e) => points + e.points, 0)
       const pointsWin3 = win3.reduce((points, e) => points + e.points, 0)
 
       const countGamblers = this.gamblers.length
@@ -98,7 +98,8 @@ export default {
           case 2:
             summa = gambler.stake * (countGamblers / 6)
             if (countWin2 === 1) {
-              coef *= ((pointsWin2 - pointsWin3) / 10 + 1)
+              //coef *= ((pointsWin2 - pointsWin3) / 10 + 1)
+              coef *= ((r.points - pointsWin3) / 10 + 1)
             }
             break
           case 3:
