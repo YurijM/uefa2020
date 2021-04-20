@@ -43,10 +43,14 @@
                 </tspan>
                 <tspan
                   :class="item.index === 0 ? 'yellow--text' : 'orange--text'"
-                  :dx="item.index === 0 ? -19 : -9"
+                  :dx="item.index === 0
+                  ? -19
+                  : (Math.floor(places[item.index]) < 10
+                  ? (Math.floor(points[item.index]) < 10 ? -5 : -7)
+                  : (Math.floor(points[item.index]) < 10 ? -6 : -8))"
                   dy="1.25em"
                 >
-                  {{ points[item.index] }}
+                  {{ item.index === 0 ? points[item.index] : Math.floor(points[item.index]) }}
                 </tspan>
               </template>
             </v-sparkline>
