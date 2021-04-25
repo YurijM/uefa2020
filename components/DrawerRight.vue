@@ -9,7 +9,7 @@
     mobile-breakpoint="700"
     color="purple lighten-5"
   >
-    <v-dialog v-model="dialog" max-width="650">
+    <v-dialog v-model="dialog" max-width="750">
       <v-card
         class="mx-auto text-center"
         color="primary"

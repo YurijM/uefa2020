@@ -37,7 +37,9 @@ export const mutations = {
     state.stakesPlayoff = payload
   },
   LOAD_STAKES_NEAR(state, payload) {
-    state.stakesNear = payload
+    state.stakesNear = payload.gamesNo.map(game => {
+      return payload.data.filter(d => d.game_no === game)
+    })
   },
   CLEAR_STAKES_PLAYOFF(state) {
     state.stakesPlayoff = []
@@ -138,11 +140,15 @@ export const actions = {
     }
   },
 
-  async loadStakesNear({commit, getters}) {
+  async loadStakesNear({commit, getters}, {start, gamesNo}) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
 
-      const data = await this.$axios.$get('/api/stake/loadStakesNear');
+      const data = await this.$axios.$get('/api/stake/loadStakesNear', {
+        params: {
+          start
+        }
+      })
 
       if (data.error) {
         await commit('common/SET_MESSAGE', {
@@ -150,7 +156,7 @@ export const actions = {
           text: data.error
         }, {root: true});
       } else {
-        await commit('LOAD_STAKES_NEAR', data)
+        await commit('LOAD_STAKES_NEAR', {data, gamesNo})
       }
     } catch (e) {
       console.log('Error loadStakesNear:', e);
@@ -239,9 +245,6 @@ export const actions = {
   async addStakeAddTime({dispatch, commit}, payload) {
     try {
       await commit('common/CLEAR_MESSAGE', null, {root: true});
-
-      console.log('stake_id:', payload.stakeId)
-      console.log('addGoal1, addGoal2:', payload.addGoal1, payload.addGoal2)
 
       const data = await this.$axios.$get('/api/stake/addStakeAddTime', {
         params: {

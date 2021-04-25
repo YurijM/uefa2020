@@ -163,6 +163,7 @@ export default {
           value >= this.item.goal2 ||
           `Не может быть меньше ${this.item.goal2}`,
       },
+      //gameTeams: []
     }
   },
   computed: {
@@ -179,6 +180,12 @@ export default {
       if (this.item.start) {
         return (new Date(this.item.start)).toLocaleTimeString().substr(0, 5)
       }
+    },
+    gameTeams() {
+      let teams = []
+      teams.push({value: this.item.team1_id, text: this.item.team1})
+      teams.push({value: this.item.team2_id, text: this.item.team2})
+      return teams
     }
   },
   methods: {

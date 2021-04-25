@@ -212,20 +212,25 @@ module.exports.deletePenaltyTeam = async (req, res) => {
     res.json({error: e.message})
   })
 }
-module.exports.loadStakesNear = async (req, res) => {
-  const query = 'SELECT gm.nickname, IFNULL(CONCAT(s.goal1, \' : \', s.goal2), \'нет\') AS result\n' +
-    'FROM gamblers gm\n' +
-    'LEFT JOIN (\n' +
-    'SELECT s.*, g.`start` FROM stakes s\n' +
-    'INNER JOIN (\n' +
-    'SELECT id, `start` FROM games\n' +
-    'WHERE `start` > NOW()\n' +
-    'ORDER BY `start`\n' +
-    'LIMIT 1) g ON g.id = s.game_id\n' +
-    ') s ON s.gambler_id = gm.id\n' +
-    'ORDER BY nickname'
 
-  await pool.promise().execute(query, [])
+module.exports.loadStakesNear = async (req, res) => {
+  const query = 'SELECT a.game_no, a.nickname,\n' +
+    'IFNULL(CONCAT(s.goal1, \' : \', s.goal2), \'нет\') AS result,\n' +
+    'IFNULL(CONCAT(sa.goal1, \' : \', sa.goal2), \'\') AS addResult,\n' +
+    'IFNULL(sp.team, \'\') penaltyTeam\n' +
+    'FROM\n' +
+    '(SELECT gm.nickname, g.id, g.game_no, gm.id AS gambler_id\n' +
+    'FROM games g\n' +
+    'INNER JOIN gamblers gm\n' +
+    'WHERE g.start = ?) a\n' +
+    'LEFT JOIN stakes s ON s.game_id = a.id AND s.gambler_id = a.gambler_id\n' +
+    'LEFT JOIN `stakes-addtime` sa ON sa.stake_id = s.id\n' +
+    'LEFT JOIN\n' +
+    '(SELECT sp.stake_id, sp.team_id, t.team FROM `stakes-penalty` sp LEFT JOIN teams t ON t.id = sp.team_id)\n' +
+    'sp ON sp.stake_id = s.id\n' +
+    'ORDER BY game_no, nickname'
+
+  await pool.promise().execute(query, [req.query.start])
   .then(async ([rows, fields]) => {
     res.json(rows)
   })

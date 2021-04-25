@@ -2,26 +2,28 @@
   <div>
     <mu-title-page-admin title="Прогноз"/>
 
-    <div class="text-center yellow--text">
-      <h3>Прогноз на ближайшую игру</h3>
-      <h4>{{ nearDate }}</h4>
-      <h4>{{ game }}</h4>
+    <div class="mt-2 text-center yellow--text">
+      <h4>Прогноз на {{ nearDate }}</h4>
     </div>
 
-    <v-data-table
-      dense
-      class="mt-5 grey darken-3 mx-auto"
-      :style="{maxWidth: '200px'}"
-      :headers="headers"
-      :items="stakes"
-      items-per-page="50"
-      :hide-default-footer="true"
-    />
+    <v-row justify="center">
+      <v-col cols="auto" v-for="(stake, i) in stakes" :key="i">
+        <h4 class="text-center yellow--text">{{ games[i].game }}</h4>
+        <v-data-table
+          dense
+          class="mt-3 grey darken-3 mx-auto"
+          :headers="headers"
+          :items="stake"
+          items-per-page="50"
+          :hide-default-footer="true"
+        />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import MuTitlePageAdmin from '~/components/TitlePageAdmin'
 
 export default {
@@ -32,7 +34,6 @@ export default {
   },
   async asyncData({store}) {
     await store.dispatch('game/loadGames');
-    await store.dispatch('stake/loadStakesNear');
   },
   data() {
     return {
@@ -40,24 +41,38 @@ export default {
       headers: [
         {text: 'Игрок', value: 'nickname'},
         {text: 'Прогноз', align: 'center', value: 'result'},
+        {text: 'Доп. время', align: 'center', value: 'addResult'},
+        {text: 'По пенальти', align: 'center', value: 'penaltyTeam'},
       ],
-      nearGame: null,
       nearDate: null,
-      game: ''
+      games: []
     }
   },
   created() {
-    this.nearGame = this.games.find(g => (new Date()) < (new Date(g.start)))
-    const date = new Date(this.nearGame.start)
+    const dateStart = this.getGames.find(g => (new Date()) < (new Date(g.start))).start
+    const date = new Date(dateStart)
+
     this.nearDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-    this.game = `${this.nearGame.team1} - ${this.nearGame.team2}`
+
+    let start = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.toLocaleTimeString()}`
+
+    this.games = this.getGames.filter(g => g.start === dateStart).map((r) => {
+      return {gameNo: r.game_no, game: `${r.team1} - ${r.team2}`}
+    })
+
+    this.loadStakes({start, gamesNo: this.games.map(g => g.gameNo)})
   },
   computed: {
     ...mapGetters({
-      games: 'game/getGames',
+      getGames: 'game/getGames',
       stakes: 'stake/getStakesNear'
     }),
   },
+  methods: {
+    ...mapActions({
+      loadStakes: 'stake/loadStakesNear'
+    })
+  }
 }
 </script>
 
