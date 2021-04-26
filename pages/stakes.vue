@@ -19,12 +19,12 @@
       ставки сделать <span class="primary--text"><strong>нельзя</strong></span>.
     </v-alert>
 
-    <div v-if="playoffStakes.length > 0">
-      <mu-playoff-stakes :maxWidth="widthTable" />
-    </div>
-
     <div v-if="groupStakes.length > 0">
       <mu-group-stakes :maxWidth="widthTable" />
+    </div>
+
+    <div v-if="playoffStakes.length > 0">
+      <mu-playoff-stakes :maxWidth="widthTable" />
     </div>
   </div>
 </template>

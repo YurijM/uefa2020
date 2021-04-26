@@ -27,6 +27,7 @@
       :items="playoffStakes"
       item-key="game-no"
       group-by="group"
+      group-desc="group"
       no-data-text="Игры ещё не введены"
       hide-default-footer
       :items-per-page="playoffStakes.length"
