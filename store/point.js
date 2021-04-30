@@ -75,25 +75,60 @@ export const mutations = {
         points = -payload.gamePoints.avgPoints
         //Если угадан счёт
       } else if (stake.goal1 === payload.game.goal1 && stake.goal2 === payload.game.goal2) {
-        points = parseFloat((payload.game.points * 2).toFixed(2))
+        //points = parseFloat((payload.game.points * 2).toFixed(2))
+        points = payload.game.points * 2
         //Если не ничья и угадана разница мячей
       } else if (payload.game.goal1 !== payload.game.goal2
         && stake.goal1 - stake.goal2 === payload.game.goal1 - payload.game.goal2) {
-        points = parseFloat((payload.game.points * 1.25).toFixed(2))
+        //points = parseFloat((payload.game.points * 1.25).toFixed(2))
+        points = payload.game.points * 1.25
         //Если угадан результат
       } else if ((stake.goal1 > stake.goal2 && payload.game.goal1 > payload.game.goal2)
         || (stake.goal1 === stake.goal2 && payload.game.goal1 === payload.game.goal2)
         || (stake.goal1 < stake.goal2 && payload.game.goal1 < payload.game.goal2)) {
-        points = parseFloat((payload.game.points).toFixed(2))
+        //points = parseFloat((payload.game.points).toFixed(2))
+        points = payload.game.points
 
         //Если угадано количество забитых или пропущенных мячей
         if (stake.goal1 === payload.game.goal1 || stake.goal2 === payload.game.goal2) {
-          points = parseFloat((payload.game.points * 1.1).toFixed(2))
+          //points = parseFloat((payload.game.points * 1.1).toFixed(2))
+          points = payload.game.points * 1.1
         }
         //Если угадано количество забитых или пропущенных мячей
       } else if (stake.goal1 === payload.game.goal1 || stake.goal2 === payload.game.goal2) {
         points = 0.15
       }
+
+      //Если есть ставка на дополнительное время
+      if (typeof payload.game.addGoal1 != 'undefined' && payload.game.addGoal1 != '' && stake.addGoal1 != '') {
+        //Если угадан счёт в основное и дополнительное время
+        if (stake.goal1 == payload.game.goal1 && stake.goal2 == payload.game.goal2 &&
+          stake.addGoal1 == payload.game.addGoal1 && stake.addGoal2 == payload.game.addGoal2) {
+          points += 2
+          //Если не ничья и угадана разница мячей
+        } else if (payload.game.addGoal1 !== payload.game.addGoal2
+          && stake.addGoal1 - stake.addGoal2 == payload.game.addGoal1 - payload.game.addGoal2) {
+          points += 1.25
+          //Если угадан результат
+        } else if ((stake.addGoal1 > stake.addGoal2 && payload.game.addGoal1 > payload.game.addGoal2)
+          || (stake.addGoal1 == stake.addGoal2 && payload.game.addGoal1 == payload.game.addGoal2)
+          || (stake.addGoal1 < stake.addGoal2 && payload.game.addGoal1 < payload.game.addGoal2)) {
+          points += 1
+          //Если не ничья и угадано количество забитых или пропущенных мячей
+          if ((payload.game.addGoal1 !== payload.game.addGoal2) &&
+            (stake.addGoal1 == payload.game.addGoal1 || stake.addGoal2 == payload.game.addGoal2)) {
+            points += 0.1
+          }
+        } else if (stake.addGoal1 == payload.game.addGoal1 || stake.addGoal2 == payload.game.addGoal2) {
+          points += 0.1
+        }
+
+        if (payload.game.addGoal1 == payload.game.addGoal2 && stake.penaltyId == payload.game.penaltyId) {
+          points += 1
+        }
+      }
+
+      points = parseFloat(points.toFixed(2))
 
       state.pointsGame.push({
         game_id: payload.game.id,

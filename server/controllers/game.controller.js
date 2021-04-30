@@ -2,7 +2,7 @@ const pool = require('../middleware/database');
 
 module.exports.loadGames = async (req, res) => {
   const query = 'SELECT g.id, g.stadium_id, g.group_id, g.team1_id, g.team2_id, ' +
-    'g.`start`, g.game_no, s.city, s.stadium, s.image, gr.`group`, ' +
+    'g.`start`, g.game_no, s.city, s.stadium, s.image, gr.`group`, gr.`order`, ' +
     't1.flag flag1, t1.team team1, t2.flag flag2, t2.team team2, ' +
     'IFNULL(g.goal1, \'\') goal1, IFNULL(g.goal2, \'\') goal2, ' +
     'IFNULL(a.goal1, \'\') addGoal1, IFNULL(a.goal2, \'\') addGoal2, ' +
