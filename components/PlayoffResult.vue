@@ -4,7 +4,7 @@
       <h4>Результаты сыгранных командами матчей</h4>
     </v-col>
 
-    <v-col v-for="(team, i) in teams" :key="i" cols="6">
+    <v-col v-for="(team, i) in teams" :key="i" cols="12">
       <v-simple-table
         dense
         :style="{backgroundColor: '#e3ccea', border: '1px solid grey'}"
@@ -23,8 +23,10 @@
           </thead>
           <tbody>
           <tr v-for="(game, j) in team.games" :key="j">
-            <td class="text-right" width="75%">{{ game.team1 }}-{{ game.team2 }}</td>
-            <td class="font-weight-bold" width="25%">{{ game.goal1 }}:{{ game.goal2 }}</td>
+            <td class="text-right" width="35%">{{ game.team1 }}-{{ game.team2 }}</td>
+            <td class="font-weight-bold" width="65%">
+              {{ game.goal1 }}:{{ game.goal2 }}<span v-if="game.addGoal1">, доп.время {{ game.addGoal1 }}:{{ game.addGoal2 }}</span><span v-if="game.penaltyId">, по пенальти {{ game.penaltyTeam }}</span>
+            </td>
           </tr>
           </tbody>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog persistent v-model="viewResult" max-width="550">
+    <v-dialog persistent v-model="viewResult" max-width="500">
       <v-sheet class="pb-2 px-3 purple lighten-4">
         <mu-playoff-result :teams="teams"/>
         <div class="text-right">
@@ -27,7 +27,6 @@
       :items="playoffStakes"
       item-key="game-no"
       group-by="group"
-      group-desc="group"
       no-data-text="Игры ещё не введены"
       hide-default-footer
       :items-per-page="playoffStakes.length"

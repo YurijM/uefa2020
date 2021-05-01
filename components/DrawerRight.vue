@@ -25,7 +25,7 @@
           <v-sheet color="rgba(0, 0, 0, .12)">
             <v-sparkline
               :value="values"
-              label-size="6"
+              label-size="4"
               color="rgba(255, 255, 255, .7)"
               height="100"
               padding="10"
@@ -36,7 +36,7 @@
               <template v-slot:label="item">
                 <tspan
                   :class="item.index === 0 ? 'yellow--text' : 'white'"
-                  :dx="item.index === 0 ? 3 : 0"
+                  :dx="item.index === 0 ? 0 : 0"
                   dy="-1em"
                 >
                   {{ places[item.index] }}
@@ -44,10 +44,10 @@
                 <tspan
                   :class="item.index === 0 ? 'yellow--text' : 'orange--text'"
                   :dx="item.index === 0
-                  ? -19
+                  ? -14
                   : (Math.floor(places[item.index]) < 10
-                  ? (Math.floor(points[item.index]) < 10 ? -5 : -7)
-                  : (Math.floor(points[item.index]) < 10 ? -6 : -8))"
+                  ? (Math.floor(points[item.index]) < 10 ? -4 : -5)
+                  : (Math.floor(points[item.index]) < 10 ? -5 : -6))"
                   dy="1.25em"
                 >
                   {{ item.index === 0 ? points[item.index] : Math.floor(points[item.index]) }}

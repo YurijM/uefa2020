@@ -18,7 +18,7 @@ module.exports.loadStakesPlayoff = async (req, res) => {
     '(SELECT sp.stake_id, sp.team_id, t.team FROM `stakes-penalty` sp LEFT JOIN teams t ON t.id = sp.team_id)\n' +
     'sp ON sp.stake_id = stakes.id\n' +
     'WHERE `start` > NOW() AND gr.`order` > ?\n' +
-    'ORDER BY g.game_no'
+    'ORDER BY gr.`order`, g.game_no'
 
   await pool.promise().execute(query, [
     req.query.gambler_id,
