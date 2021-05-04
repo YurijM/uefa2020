@@ -47,7 +47,7 @@ module.exports.loadStakes = async(req, res) => {
   })
 }
 module.exports.loadGames = async (req, res) => {
-  const query = 'SELECT g.id, g.game_no, gr.group,\n' +
+  const query = 'SELECT g.id, g.game_no, g.`start`, gr.group,\n' +
     'CONCAT(t1.team, \'-\', t2.team) game,\n' +
     //'CONCAT(IFNULL(g.goal1, \'0\'), \':\', IFNULL(g.goal2, \'0\')) AS `result`,\n' +
     'IF(NOT ISNULL(g.goal1), CONCAT(g.goal1, \':\', g.goal2), \'\') result,\n' +

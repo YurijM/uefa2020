@@ -2,7 +2,7 @@
   <div>
     <mu-title-page-admin title="Прогноз"/>
 
-    <div v-if="stakes.length">
+    <div v-if="games.length > 0">
       <div class="mt-2 text-center yellow--text">
         <h4>Прогноз на {{ nearDate }}</h4>
       </div>

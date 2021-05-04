@@ -204,7 +204,7 @@
                     class="text-field-center pt-1"
                     v-model="editedItem.addGoal1"
                     color="yellow"
-                    :rules="[rules.isNumber, rules.notLess1]"
+                    :rules="[rules.isNumber]"
                   />
                 </v-col>
 
@@ -213,7 +213,7 @@
                     class="text-field-center pt-1"
                     v-model="editedItem.addGoal2"
                     color="yellow"
-                    :rules="[rules.isNumber, rules.notLess2]"
+                    :rules="[rules.isNumber]"
                   />
                 </v-col>
               </v-row>
@@ -239,7 +239,6 @@
                     label="Команда"
                     no-data-text="Команды не заведены"
                     color="yellow"
-                    :rules="[rules.required]"
                   />
                 </v-col>
               </v-row>
@@ -611,7 +610,7 @@ export default {
       })
     },
     async save() {
-      //if (!this.$refs.form.validate()) return;
+      if (!this.$refs.form.validate()) return;
 
       this.loading = true
 
@@ -627,11 +626,25 @@ export default {
       } else {
         await this.updateGame(this.editedItem);
 
+        if (this.editedItem.goal1 != this.editedItem.goal2) {
+          this.editedItem.addGoal1 = this.editedItem.addGoal2 = this.editedItem.penaltyTeam = ''
+        } else if (this.editedItem.addGoal1 != this.editedItem.addGoal2) {
+          this.editedItem.penaltyTeam = ''
+        } else {
+          this.editedItem.penaltyTeam = this.getTeams.find(t => t.id === this.editedItem.penaltyId).team
+        }
+
+        console.log('this.editedItem.addGoal1, this.editedItem.addGoal2, this.editedItem.penaltyTeam:', this.editedItem.addGoal1, this.editedItem.addGoal2, this.editedItem.penaltyTeam)
+
+        /*this.editedItem.penaltyTeam = ((this.editedItem.addGoal1 == this.editedItem.addGoal2 && this.editedItem.penaltyId)
+          ? this.getTeams.find(t => t.id === this.editedItem.penaltyId).team
+          : '')*/
+
         if (this.editedItem.curResult.goal1 !== this.editedItem.goal1 ||
           this.editedItem.curResult.goal2 !== this.editedItem.goal2 ||
           this.editedItem.curResult.addGoal1 !== this.editedItem.addGoal1 ||
           this.editedItem.curResult.addGoal2 !== this.editedItem.addGoal2 ||
-          this.editedItem.curResult.penaltyTeam !== this.editedItem.penaltyTeam
+          this.editedItem.curResult.penaltyId !== this.editedItem.penaltyId
         ) {
           await this.changeResult(this.editedItem)
 
@@ -644,7 +657,10 @@ export default {
             team1: this.editedItem.team1,
             team2: this.editedItem.team2,
             goal1: this.editedItem.goal1,
-            goal2: this.editedItem.goal2
+            goal2: this.editedItem.goal2,
+            addGoal1: this.editedItem.addGoal1,
+            addGoal2: this.editedItem.addGoal2,
+            penaltyTeam: this.editedItem.penaltyTeam
           })
         }
       }

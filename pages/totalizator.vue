@@ -21,6 +21,11 @@
       <div class="text-body-1 font-weight-black">
         {{ game.group }}
       </div>
+
+      <h5 class="text-center">
+        {{ dateToLocale(game.start) }}
+      </h5>
+
       <div class="text-body-2 font-weight-black">
         {{ game.game }} {{ game.result }}
         <template v-if="game.addResult">
@@ -98,6 +103,10 @@ export default {
     }),
   },
   methods: {
+    dateToLocale(date) {
+      const dateLocale = new Date(date)
+      return `${dateLocale.toLocaleDateString()} ${dateLocale.toLocaleTimeString().substr(0, 5)}`
+    },
     loadCoefs() {
       const gameIds = this.games.map(g => g.id)
 

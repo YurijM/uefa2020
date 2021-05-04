@@ -116,7 +116,10 @@ io.on('connection', (socket) => {
     //socket.emit('updatePlaces', data.groupId);
 
     socket.broadcast.emit('setMessage', {
-      status: 'primary', text: `Игра ${data.team1}-${data.team2} - счёт ${data.goal1}:${data.goal2}`
+      status: 'primary',
+      text: `Игра ${data.team1}-${data.team2} - счёт ${data.goal1}:${data.goal2}` +
+        ((data.goal1 == data.goal2 && data.addGoal1) ? `, доп.время ${data.addGoal1}:${data.addGoal2}` : '') +
+        ((data.goal1 == data.goal2 && data.addGoal1 == data.addGoal2 && data.penaltyTeam) ? `, по пенальти ${data.penaltyTeam}` : '')
     });
   });
 

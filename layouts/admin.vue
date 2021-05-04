@@ -38,7 +38,7 @@
 
     <!---------------------------------------------------------------------------------->
     <!-- ПОДВАЛ -->
-    <mu-footer textColor="yellow"/>
+    <mu-footer textColor="yellow" :year="currentYear !== 2020 ? `-${currentYear}` : ''"/>
   </v-app>
 </template>
 
@@ -56,7 +56,8 @@ export default {
     drawer: true,
     snackbar: false,
     message: '',
-    color: ''
+    color: '',
+    currentYear: (new Date()).getFullYear()
   }),
   components: {
     MuDrawerLeftAdmin,
