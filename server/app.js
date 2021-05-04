@@ -16,6 +16,7 @@ const totalizatorRoutes = require('./routes/totalizator.routes');
 const stakeRoutes = require('./routes/stake.routes');
 const pointRoutes = require('./routes/point.routes');
 const imageRoutes = require('./routes/image.routes');
+const endingRoutes = require('./routes/ending.routes');
 
 app.use(cors());
 
@@ -31,6 +32,7 @@ app.use('/api/totalizator', totalizatorRoutes);
 app.use('/api/stake', stakeRoutes);
 app.use('/api/point', pointRoutes);
 app.use('/api/image', imageRoutes);
+app.use('/api/ending', endingRoutes);
 
 io.on('connection', (socket) => {
   //console.log('a user connected');
@@ -116,6 +118,18 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('setMessage', {
       status: 'primary', text: `Игра ${data.team1}-${data.team2} - счёт ${data.goal1}:${data.goal2}`
     });
+  });
+
+  /****************************************************************************/
+  socket.on('changeEnding', data => {
+    io.to(room).emit('changeEnding')
+
+    if (data.finish) {
+      socket.broadcast.emit('setMessage', {
+        status: 'primary',
+        text: data.message
+      })
+    }
   });
 
   /****************************************************************************/

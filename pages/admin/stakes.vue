@@ -2,23 +2,29 @@
   <div>
     <mu-title-page-admin title="Прогноз"/>
 
-    <div class="mt-2 text-center yellow--text">
-      <h4>Прогноз на {{ nearDate }}</h4>
+    <div v-if="stakes.length">
+      <div class="mt-2 text-center yellow--text">
+        <h4>Прогноз на {{ nearDate }}</h4>
+      </div>
+
+      <v-row justify="center">
+        <v-col cols="auto" v-for="(stake, i) in stakes" :key="i">
+          <h4 class="text-center yellow--text">{{ games[i].game }}</h4>
+          <v-data-table
+            dense
+            class="mt-3 grey darken-3 mx-auto"
+            :headers="headers"
+            :items="stake"
+            :items-per-page="50"
+            :hide-default-footer="true"
+          />
+        </v-col>
+      </v-row>
     </div>
 
-    <v-row justify="center">
-      <v-col cols="auto" v-for="(stake, i) in stakes" :key="i">
-        <h4 class="text-center yellow--text">{{ games[i].game }}</h4>
-        <v-data-table
-          dense
-          class="mt-3 grey darken-3 mx-auto"
-          :headers="headers"
-          :items="stake"
-          :items-per-page="50"
-          :hide-default-footer="true"
-        />
-      </v-col>
-    </v-row>
+    <div v-else class="mt-5 text-center">
+      Турнир закончился
+    </div>
   </div>
 </template>
 
@@ -49,18 +55,23 @@ export default {
     }
   },
   created() {
-    const dateStart = this.getGames.find(g => (new Date()) < (new Date(g.start))).start
-    const date = new Date(dateStart)
+    //Ближайшая игра
+    const game = this.getGames.find(g => (new Date()) < (new Date(g.start)))
 
-    this.nearDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    if (game) {
+      const dateStart = game.start
+      const date = new Date(dateStart)
 
-    let start = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.toLocaleTimeString()}`
+      this.nearDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
 
-    this.games = this.getGames.filter(g => g.start === dateStart).map((r) => {
-      return {gameNo: r.game_no, game: `${r.team1} - ${r.team2}`}
-    })
+      let start = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.toLocaleTimeString()}`
 
-    this.loadStakes({start, gamesNo: this.games.map(g => g.gameNo)})
+      this.games = this.getGames.filter(g => g.start === dateStart).map((r) => {
+        return {gameNo: r.game_no, game: `${r.team1} - ${r.team2}`}
+      })
+
+      this.loadStakes({start, gamesNo: this.games.map(g => g.gameNo)})
+    }
   },
   computed: {
     ...mapGetters({

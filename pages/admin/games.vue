@@ -611,7 +611,7 @@ export default {
       })
     },
     async save() {
-      if (!this.$refs.form.validate()) return;
+      //if (!this.$refs.form.validate()) return;
 
       this.loading = true
 

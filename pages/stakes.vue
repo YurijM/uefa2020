@@ -3,6 +3,7 @@
     <h2 class="text-center mt-1 purple--text">Ставки</h2>
 
     <v-alert
+      v-if="groupStakes.length || playoffStakes.length"
       dense
       border="top"
       colored-border
@@ -17,6 +18,19 @@
       На игры, которые
       <span class="primary--text"><strong>уже начались или закончились</strong></span>,
       ставки сделать <span class="primary--text"><strong>нельзя</strong></span>.
+    </v-alert>
+
+    <v-alert
+      v-else
+      dense
+      border="top"
+      color="red"
+      dark
+      elevation="2"
+      class="mb-1 mx-auto text-center"
+      :style="{ fontSize: '1.25em', maxWidth: widthTable }"
+    >
+      {{ ending.message }}
     </v-alert>
 
     <div v-if="groupStakes.length > 0">
@@ -35,7 +49,7 @@ import MuGroupStakes from '../components/GroupStakes'
 import MuPlayoffStakes from '../components/PlayoffStakes'
 
 export default {
-  name: "stakes",
+  name: 'stakes',
   components: {
     MuGroupStakes,
     MuPlayoffStakes
@@ -60,9 +74,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      groupStakes: "stake/getStakesGroups",
-      playoffStakes: "stake/getStakesPlayoff",
-      getGambler: "gambler/getGambler",
+      groupStakes: 'stake/getStakesGroups',
+      playoffStakes: 'stake/getStakesPlayoff',
+      getGambler: 'gambler/getGambler',
+      ending: 'ending/getEnding'
     }),
     widthTable() {
       switch (this.$vuetify.breakpoint.name) {

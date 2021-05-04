@@ -4,6 +4,7 @@ export const actions = {
     await dispatch('gambler/loadGamblers');
     await dispatch('game/loadGames');
     await dispatch('point/loadResult');
+    await dispatch('ending/loadEnding');
   },
 
   async socket_sendMessage({commit}, payload) {
@@ -53,6 +54,10 @@ export const actions = {
     /*await dispatch('totalizator/loadGames', null, {root: true});
     await dispatch('totalizator/loadGamblers', null, {root: true});
     await dispatch('totalizator/loadStakes', null, {root: true});*/
+  },
+
+  async socket_changeEnding({dispatch}) {
+    await dispatch('ending/loadEnding', null, {root: true});
   },
 
   /*async socket_updatePlaces({dispatch}, groupId) {
