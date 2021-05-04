@@ -14,7 +14,7 @@
           class="mt-3 grey darken-3 mx-auto"
           :headers="headers"
           :items="stake"
-          items-per-page="50"
+          :items-per-page="50"
           :hide-default-footer="true"
         />
       </v-col>

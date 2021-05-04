@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4>{{ group }}</h4>
+    <h4 class="text-center">{{ group }}</h4>
 
     <v-simple-table
       dense

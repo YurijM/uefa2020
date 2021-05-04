@@ -1,10 +1,12 @@
 export const state = () => ({
   games: [],
-  game: null
+  game: null,
+  playoffGames: []
 })
 
 export const getters = {
   getGames: state => state.games,
+  getPlayoffGames: state => state.playoffGames,
   getGame: state => state.game,
   getTeamGames: state => id => state.games.filter(g => g.team1_id === id || g.team2_id === id)
   .sort((a, b) => a.game_no > b.game_no),
@@ -127,6 +129,9 @@ export const mutations = {
   CLEAR_GAMES(state) {
     state.games = []
   },
+  LOAD_PLAYOFF_GAMES(state, payload) {
+    state.playoffGames = payload
+  },
   LOAD_GAME(state, payload) {
     state.game = payload
   },
@@ -155,6 +160,33 @@ export const actions = {
       await commit('common/SET_MESSAGE', {
         status: 'error',
         text: 'Ошибка при выполнении loadGames (см. в консоли ошибку "Error loadGames")'
+      }, {root: true});
+    }
+  },
+
+  async loadPlayoffGames({commit, rootGetters}) {
+    try {
+      await commit('common/CLEAR_MESSAGE', null, {root: true});
+
+      const data = await this.$axios.$get('/api/game/loadPlayoffGames', {
+        params: {
+          countGroups: rootGetters['group/getCountGroups']
+        }
+      });
+
+      if (data.error) {
+        await commit('common/SET_MESSAGE', {
+          status: 'error',
+          text: data.error
+        }, {root: true});
+      } else {
+        await commit('LOAD_PLAYOFF_GAMES', data)
+      }
+    } catch (e) {
+      console.log('Error loadPlayoffGames:', e);
+      await commit('common/SET_MESSAGE', {
+        status: 'error',
+        text: 'Ошибка при выполнении loadPlayoffGames (см. в консоли ошибку "Error loadPlayoffGames")'
       }, {root: true});
     }
   },

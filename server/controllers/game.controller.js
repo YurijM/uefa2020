@@ -74,6 +74,33 @@ module.exports.loadGame = async (req, res) => {
   })
 }
 
+module.exports.loadPlayoffGames = async (req, res) => {
+  const query = 'SELECT g.`start`, gr.id AS groupId, gr.`group`,\n' +
+    'CONCAT(t1.team, \':\', t2.team) AS game,\n' +
+    't1.flag AS flag1, t2.flag AS flag2,\n' +
+    'CONCAT(g.goal1, \':\', g.goal2, IFNULL(CONCAT(\', доп.время \', `at`.goal1, \':\', `at`.goal2), \'\'), IFNULL(CONCAT(\', по пенальти \',' +
+    ' t3.team), \'\')) AS result\n' +
+    'FROM games g\n' +
+    'INNER JOIN `groups` gr ON gr.id = group_id\n' +
+    'INNER JOIN teams t1 ON t1.id = g.team1_id\n' +
+    'INNER JOIN teams t2 ON t2.id = g.team2_id\n' +
+    'LEFT JOIN addtime `at` ON `at`.game_id = g.id\n' +
+    'LEFT JOIN penalty p ON p.game_id = g.id\n' +
+    'LEFT JOIN teams t3 ON t3.id = p.team_id\n' +
+    'WHERE gr.`order` > ? AND (g.goal1 IS NOT NULL)\n' +
+    'ORDER BY g.game_no DESC'
+
+  await pool.promise().execute(query, [
+    req.query.countGroups
+  ])
+  .then(([rows, fields]) => {
+    res.json(rows)
+  })
+  .catch((e) => {
+    res.json({error: e.message})
+  })
+}
+
 module.exports.addGame = async (req, res) => {
   const query = 'INSERT INTO `games` ' +
     '(`start`, `game_no`, `stadium_id`, `group_id`, `team1_id`, `team2_id`, `goal1`, `goal2`) ' +

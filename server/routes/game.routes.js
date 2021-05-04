@@ -5,6 +5,7 @@ const router = Router();
 // /api/game
 router.get('/loadGames', game.loadGames);
 router.get('/loadGame', game.loadGame);
+router.get('/loadPlayoffGames', game.loadPlayoffGames);
 router.get('/loadGamesForTeam', game.loadGamesForTeam);
 router.get('/addGame', game.addGame);
 router.get('/updateGame', game.updateGame);

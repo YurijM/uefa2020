@@ -3,6 +3,7 @@
     <v-dialog persistent v-model="viewResult" max-width="500">
       <v-sheet class="pb-2 px-3 purple lighten-4">
         <mu-playoff-result :teams="teams"/>
+
         <div class="text-right">
           <v-btn
             class="py-0" color="red"
@@ -195,15 +196,14 @@ export default {
       return `${day}.${month}.${year}`
     },
     getPlayoffResult(item) {
-
       this.teams = [
         {
           team: item.team1,
-          games: this.getTeamGames(item.team1_id)
+          games: this.getTeamGames(item.team1_id).slice(0, -1) // без последней игры, где команды встречаются между собой
         },
         {
           team: item.team2,
-          games: this.getTeamGames(item.team2_id)
+          games: this.getTeamGames(item.team2_id).slice(0, -1) // без последней игры, где команды встречаются между собой
         },
       ]
       this.viewResult = true
