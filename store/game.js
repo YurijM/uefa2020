@@ -445,14 +445,7 @@ export const actions = {
 
     // Если это игра плей-офф, то проверяем результат в дополнительное время и по пенальти
     if (order > rootGetters['group/getCountGroups']) {
-      /*if (payload.goal1 && payload.goal2 && payload.goal1 === payload.goal2) {
-        await dispatch('addResultByAddTime', payload);
-
-        if (payload.addGoal1 && payload.addGoal2 && payload.addGoal1 === payload.addGoal2) {
-          await dispatch('addPenaltyTeam', payload);
-        }
-      }*/
-      if (payload.addGoal1 && payload.addGoal2) {
+      if ((payload.addGoal1 != '') && (payload.addGoal2 != '')) {
         await dispatch('addResultByAddTime', payload);
 
         if (payload.addGoal1 === payload.addGoal2 && payload.penaltyId) {

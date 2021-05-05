@@ -624,21 +624,19 @@ export default {
       if (this.editedIndex === -1) {
         await this.addGame(this.editedItem);
       } else {
-        await this.updateGame(this.editedItem);
-
         if (this.editedItem.goal1 != this.editedItem.goal2) {
-          this.editedItem.addGoal1 = this.editedItem.addGoal2 = this.editedItem.penaltyTeam = ''
-        } else if (this.editedItem.addGoal1 != this.editedItem.addGoal2) {
+          this.editedItem.addGoal1 = ''
+          this.editedItem.addGoal2 = ''
+          this.editedItem.penaltyId = 0
           this.editedItem.penaltyTeam = ''
-        } else {
+        } else if ((this.editedItem.addGoal1 == '') || (this.editedItem.addGoal1 != this.editedItem.addGoal2)) {
+          this.editedItem.penaltyId = 0
+          this.editedItem.penaltyTeam = ''
+        } else if (this.editedItem.penaltyId) {
           this.editedItem.penaltyTeam = this.getTeams.find(t => t.id === this.editedItem.penaltyId).team
         }
 
-        console.log('this.editedItem.addGoal1, this.editedItem.addGoal2, this.editedItem.penaltyTeam:', this.editedItem.addGoal1, this.editedItem.addGoal2, this.editedItem.penaltyTeam)
-
-        /*this.editedItem.penaltyTeam = ((this.editedItem.addGoal1 == this.editedItem.addGoal2 && this.editedItem.penaltyId)
-          ? this.getTeams.find(t => t.id === this.editedItem.penaltyId).team
-          : '')*/
+        await this.updateGame(this.editedItem);
 
         if (this.editedItem.curResult.goal1 !== this.editedItem.goal1 ||
           this.editedItem.curResult.goal2 !== this.editedItem.goal2 ||
@@ -649,11 +647,6 @@ export default {
           await this.changeResult(this.editedItem)
 
           this.$socket.emit('changeResult', {
-            /*groupId: (
-              this.getGroups.find(g => g.id === this.editedItem.group_id).order <= this.countGroups
-                ? this.editedItem.group_id
-                : 0
-            ),*/
             team1: this.editedItem.team1,
             team2: this.editedItem.team2,
             goal1: this.editedItem.goal1,
