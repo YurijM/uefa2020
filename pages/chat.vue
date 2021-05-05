@@ -12,6 +12,11 @@
           Сообщение
         </v-card-title>
 
+        <div v-if="answer" class="text-caption text-right">
+          <div>{{ answer.from }} {{ answer.date }}</div>
+          <div class="mt-n2">{{ answer.message }}</div>
+        </div>
+
         <v-card-text
           class="pb-0 blue-grey lighten-4"
           :style="{
@@ -191,6 +196,7 @@
               <v-list-item-title
                 class="deep-purple--text text--darken-4 text-caption text-md-body-2"
                 v-html="message.message"
+                @click.stop="answerTo(message)"
               />
             </v-list-item-content>
           </v-list-item>
@@ -236,7 +242,8 @@ export default {
       ],
       emptyMessage: false,
       range: 1,
-      maxHeight: 0
+      maxHeight: 0,
+      answer: null
     }
   },
   components: {
@@ -363,12 +370,22 @@ export default {
       this.message = null;
       this.text = ''
       this.isMessage = false
+      this.answer = null
     },
     async changeParams() {
       await this.loadMessages({
         range: this.range,
         system: this.getShowSystem
       })
+    },
+    answerTo(message) {
+      const lenMessage = 50
+      this.answer = {
+        from: message.fromNick,
+        date: this.$moment(message.date).format('DD.MM.YYYY HH:mm:ss'),
+        message: message.message.slice(0, lenMessage) + (message.message.length > lenMessage ? '...' : '')
+      }
+      this.isMessage = true
     },
     async sendMessage() {
       if (!this.text.trim()) {
@@ -408,6 +425,7 @@ export default {
 
       this.loading = false
       this.isMessage = false
+      this.answer = null
       //event.target.blur()
     }
   }
@@ -426,6 +444,7 @@ export default {
 .v-icon.v-icon--dense {
   font-size: 18px;
 }
+
 /*.range .v-label,
 .systemMessages .v-label {
   color: purple !important
