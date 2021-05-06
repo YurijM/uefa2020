@@ -303,7 +303,6 @@ export const actions = {
           await dispatch('loadGamblers');
           await dispatch('point/loadResult', null, {root: true});
 
-          console.log('breakpoint:', breakpoint)
           if (!!file) {
             try {
               data = await this.$axios.$get('/api/gambler/resizePhoto', {

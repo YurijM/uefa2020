@@ -202,7 +202,10 @@ export const actions = {
           date: this.$moment(payload.date).format('YYYY-MM-DD HH:mm:ss'),
           from: payload.fromId,
           to: payload.to,
-          message: payload.message
+          message: payload.message,
+          quoteNick: payload.quoteNick,
+          quoteDate: payload.quoteDate,
+          quoteText: payload.quoteText
         }
       });
 

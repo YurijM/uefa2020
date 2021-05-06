@@ -12,11 +12,6 @@
           Сообщение
         </v-card-title>
 
-        <div v-if="answer" class="text-caption text-right">
-          <div>{{ answer.from }} {{ answer.date }}</div>
-          <div class="mt-n2">{{ answer.message }}</div>
-        </div>
-
         <v-card-text
           class="pb-0 blue-grey lighten-4"
           :style="{
@@ -24,8 +19,25 @@
               borderBottom: '1px #eee solid !important',
             }"
         >
+          <v-row
+            v-if="answer.nick"
+            justify="end"
+            dense
+            class="caption font-italic"
+            :style="{borderBottom: '1px #777 solid !important'}"
+          >
+            <v-col cols="auto">
+              <v-icon>far fa-comment-dots</v-icon>
+            </v-col>
+
+            <v-col cols="auto">
+              <div>{{ answer.nick }} {{ answer.date }}</div>
+              <div class="mt-n1">{{ answer.text }}</div>
+            </v-col>
+          </v-row>
+
           <v-textarea
-            class="message mb-3"
+            class="message mb-3 pt-0"
             v-model="text"
             hide-details
             :rows="rows"
@@ -159,6 +171,15 @@
                 <b>{{ message.fromNick }}</b>
               </v-list-item-subtitle>
 
+              <v-list-item-subtitle
+                v-if="message.quoteNick"
+                class="caption font-italic"
+                :style="{whiteSpace: 'normal !important'}"
+              >
+                <v-icon class="mt-n1" x-small>far fa-comment-dots</v-icon>
+                {{ message.quoteNick }} {{ message.quoteDate }} {{ message.quoteText }}
+              </v-list-item-subtitle>
+
               <div v-if="message.fromId === getGambler.id" class="d-flex"
                    :class="message.layout.editButtons.class">
                 <v-tooltip bottom>
@@ -193,11 +214,18 @@
                 </v-tooltip>
               </div>
 
-              <v-list-item-title
-                class="deep-purple--text text--darken-4 text-caption text-md-body-2"
-                v-html="message.message"
-                @click.stop="answerTo(message)"
-              />
+              <v-tooltip bottom>
+                <template v-slot:activator="{on}">
+                  <v-list-item-title
+                    class="deep-purple--text text--darken-4 text-caption text-md-body-2"
+                    v-html="message.message"
+                    v-on="message.fromId !== getGambler.id ? on : ''"
+                    @click.stop="message.fromId !== getGambler.id ? answerTo(message) : null"
+                    :style="message.fromId !== getGambler.id ? {cursor: 'pointer'} : ''"
+                  />
+                </template>
+                <span>Цитировать</span>
+              </v-tooltip>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -243,7 +271,11 @@ export default {
       emptyMessage: false,
       range: 1,
       maxHeight: 0,
-      answer: null
+      answer: {
+        nick: '',
+        date: '',
+        text: ''
+      }
     }
   },
   components: {
@@ -361,6 +393,13 @@ export default {
       this.emptyMessage = false;
 
       this.message = {...message};
+
+      this.answer = {
+        nick: message.quoteNick,
+        date: message.quoteDate,
+        text: message.quoteText
+      }
+
       this.text = message.message.replace(/<br\/>/g, '\n')
 
       this.isMessage = true
@@ -370,7 +409,11 @@ export default {
       this.message = null;
       this.text = ''
       this.isMessage = false
-      this.answer = null
+      this.answer = {
+        nick: '',
+        date: '',
+        text: ''
+      }
     },
     async changeParams() {
       await this.loadMessages({
@@ -379,11 +422,11 @@ export default {
       })
     },
     answerTo(message) {
-      const lenMessage = 50
+      const lenMessage = 25
       this.answer = {
-        from: message.fromNick,
+        nick: message.fromNick,
         date: this.$moment(message.date).format('DD.MM.YYYY HH:mm:ss'),
-        message: message.message.slice(0, lenMessage) + (message.message.length > lenMessage ? '...' : '')
+        text: message.message.replace('<br/>', ' ').slice(0, lenMessage) + (message.message.length > lenMessage ? '...' : '')
       }
       this.isMessage = true
     },
@@ -414,6 +457,9 @@ export default {
           photo: gambler.photo,
           to: 'uefa2020',
           message: this.text.replace(/([^>])\n/g, '$1<br/>'),
+          quoteNick: this.answer.nick,
+          quoteDate: this.answer.date,
+          quoteText: this.answer.text,
           screenMessage: `${gambler.nickname} ${gambler.sex === 'м' ? 'прислал' : 'прислала'} сообщение`
         };
 
@@ -425,7 +471,11 @@ export default {
 
       this.loading = false
       this.isMessage = false
-      this.answer = null
+      this.answer = {
+        nick: '',
+        date: '',
+        text: ''
+      }
       //event.target.blur()
     }
   }

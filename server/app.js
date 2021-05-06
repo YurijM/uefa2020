@@ -59,6 +59,9 @@ io.on('connection', (socket) => {
       photo: '',
       to: room,
       date: Date.now(),
+      quoteNick: '',
+      quoteDate: '',
+      quoteText: '',
       message: `${data.nickname} ${data.sex === 'м' ? 'вошёл' : 'вошла'} в приложение`
     };
 
@@ -153,6 +156,9 @@ io.on('connection', (socket) => {
       photo: '',
       to: room,
       date: Date.now(),
+      quoteNick: '',
+      quoteDate: '',
+      quoteText: '',
       message: data.isSign
         ? `${data.gambler.nickname} ${data.gambler.sex === 'м' ? 'зарегистрировался' : 'зарегистрировалась'} в системе`
         : `${data.gambler.nickname} ${data.gambler.sex === 'м' ? ' обновил' : 'обновила'} свой профиль`
@@ -186,6 +192,9 @@ io.on('connection', (socket) => {
           fromNick: 'администратор',
           to: room,
           date: Date.now(),
+          quoteNick: '',
+          quoteDate: '',
+          quoteText: '',
           message: `${data.gambler.nickname} ${data.gambler.sex === 'м' ? 'вышёл' : 'вышла'} из приложения`
         };
 

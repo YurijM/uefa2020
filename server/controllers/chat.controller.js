@@ -25,7 +25,8 @@ module.exports.loadMessages = async (req, res) => {
 
   const query = 'SELECT IFNULL(g.id, 0) AS `fromId`, ' +
     'IFNULL(g.nickname, \'администратор\') AS `fromNick`, ' +
-    'IFNULL(g.photo, \'\') AS `photo`, m.message, m.date ' +
+    'IFNULL(g.photo, \'\') AS `photo`, m.message, m.date, ' +
+    'm.quoteNick, m.quoteDate, m.quoteText ' +
     'FROM messages m ' +
     'LEFT JOIN gamblers g ON m.`from` = g.id ' +
     where +
@@ -41,13 +42,18 @@ module.exports.loadMessages = async (req, res) => {
 };
 
 module.exports.saveMessage = async (req, res) => {
-  const query = 'INSERT INTO messages (`from`, `to`, `message`, `date`) VALUES (?, ?, ?, ?)';
+  const query = 'INSERT INTO messages\n' +
+    '(`from`, `to`, `message`, `date`, `quoteNick`, `quoteDate`, `quoteText`)\n' +
+    'VALUES (?, ?, ?, ?, ?, ?, ?)';
 
   await pool.promise().execute(query, [
     req.query.from,
     req.query.to,
     req.query.message,
-    req.query.date
+    req.query.date,
+    req.query.quoteNick,
+    req.query.quoteDate,
+    req.query.quoteText
   ])
   .then((result) => {
     if (result) {

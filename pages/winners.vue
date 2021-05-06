@@ -1,7 +1,10 @@
 <template>
   <div :style="{width: '100%'}">
     <h2 class="text-center mt-2 purple--text">Победители</h2>
-    <h3 class="text-center mb-2 purple--text">(на текущий момент)</h3>
+
+    <h3 v-if="!ending.finish" class="text-center mb-2 purple--text">
+      (на текущий момент)
+    </h3>
 
     <div class="d-flex flex-wrap flex-row justify-center px-1">
       <v-card
@@ -54,6 +57,7 @@ export default {
     ...mapGetters({
       getResult: 'point/getResult',
       gamblers: 'gambler/getGamblers',
+      ending: 'ending/getEnding'
     }),
     allStakes() {
       return this.gamblers.reduce((sum, e) => sum + e.stake, 0)
