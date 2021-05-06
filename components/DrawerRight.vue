@@ -125,6 +125,20 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
+
+    <hr>
+
+    <h5 class="text-center brown--text">Гендерный турнир</h5>
+
+    <v-row dense>
+      <v-col cols="6" class="sex indigo--text">М</v-col>
+      <v-col cols="6" class="sex pink--text">Ж</v-col>
+
+      <v-col cols="6" class="sex" :class="getColor('m')">{{ resultMen }}</v-col>
+      <v-col cols="6" class="sex" :class="getColor('w')">{{ resultWomen }}</v-col>
+    </v-row>
+
+    <hr>
   </v-navigation-drawer>
 </template>
 
@@ -162,6 +176,28 @@ export default {
     }),
     result() {
       return this.getResult
+    },
+    resultMen() {
+      const sex = this.getResult.filter(r => r.sex == 'м')
+
+      if (sex.length === 0)
+      {
+        return 0
+      } else {
+        let s = 0
+        return (sex.map(e => s += parseFloat(e.points)).reverse()[0] / sex.length).toFixed(2)
+      }
+    },
+    resultWomen() {
+      const sex = this.getResult.filter(r => r.sex == 'ж')
+
+      if (sex.length === 0)
+      {
+        return 0
+      } else {
+        let s = 0
+        return (sex.map(e => s += parseFloat(e.points)).reverse()[0] / sex.length).toFixed(2)
+      }
     },
     isStarted() {
       return this.getPlaces.length > 0
@@ -211,6 +247,12 @@ export default {
       const item = this.placeColors.find(c => c.place === parseInt(place))
       return (place > 3 || item == undefined ? 'blue-grey darken-1' : item.color)
     },
+    getColor(sex) {
+      return (sex === 'm'
+          ? ((this.resultMen > this.resultWomen) ? 'red--text text--accent-4' : '')
+          : ((this.resultWomen > this.resultMen) ? 'red--text text--accent-4' : '')
+      )
+    },
     async loadChart(id) {
       this.dialog = true
 
@@ -242,6 +284,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.sex {
+  text-align: center;
+  font-weight: bold;
+}
 </style>
