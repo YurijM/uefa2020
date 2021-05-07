@@ -131,8 +131,12 @@
     <h5 class="text-center brown--text">Гендерный турнир</h5>
 
     <v-row dense>
-      <v-col cols="6" class="sex indigo--text">М</v-col>
-      <v-col cols="6" class="sex pink--text">Ж</v-col>
+      <v-col cols="6" class="sex">
+        <v-icon color="indigo">fas fa-male</v-icon>
+      </v-col>
+      <v-col cols="6" class="sex">
+        <v-icon color="pink">fas fa-female</v-icon>
+      </v-col>
 
       <v-col cols="6" class="sex" :class="getColor('m')">{{ resultMen }}</v-col>
       <v-col cols="6" class="sex" :class="getColor('w')">{{ resultWomen }}</v-col>
