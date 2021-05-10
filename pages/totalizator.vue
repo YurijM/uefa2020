@@ -23,7 +23,7 @@
       </div>
 
       <h5 class="text-center">
-        {{ dateToLocale(game.start) }}
+        {{ $moment(game.start).format('DD.MM.YYYY HH:mm') }}
       </h5>
 
       <div class="text-body-2 font-weight-black">
@@ -103,10 +103,6 @@ export default {
     }),
   },
   methods: {
-    dateToLocale(date) {
-      const dateLocale = new Date(date)
-      return `${dateLocale.toLocaleDateString()} ${dateLocale.toLocaleTimeString().substr(0, 5)}`
-    },
     loadCoefs() {
       const gameIds = this.games.map(g => g.id)
 

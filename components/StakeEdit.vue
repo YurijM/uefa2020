@@ -173,12 +173,12 @@ export default {
     }),
     dateGame() {
       if (this.item.start) {
-        return this.formatDate((new Date(this.item.start)).toISOString().substr(0, 10))
+        return $moment(this.item.start).format('DD.MM.YYYY')
       }
     },
     timeGame() {
       if (this.item.start) {
-        return (new Date(this.item.start)).toLocaleTimeString().substr(0, 5)
+        return $moment(this.item.start).format('HH:mm')
       }
     },
     gameTeams() {
@@ -197,12 +197,6 @@ export default {
       addStake: 'stake/addStake',
       updateStake: 'stake/updateStake',
     }),
-    formatDate(date) {
-      if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}.${month}.${year}`;
-    },
     async save() {
       if (!this.$refs.form.validate()) return;
 

@@ -62,8 +62,7 @@
       </template>
 
       <template v-slot:item.start="{ item }">
-<!--        {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}-->
-        {{ new Date(item.start).toLocaleTimeString().substr(0, 5) }}
+        {{ $moment(item.start).format('HH:mm') }}
       </template>
 
       <template v-slot:item.team1="{ item }">

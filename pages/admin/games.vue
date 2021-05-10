@@ -292,8 +292,7 @@
       </template>-->
 
       <template v-slot:item.start="{item}">
-        {{ formatDate(new Date(item.start).toISOString().substr(0, 10)) }}
-        {{ new Date(item.start).toLocaleTimeString().substr(0, 5) }}
+        {{ $moment(item.start).format('DD.MM.YYYY HH:mm') }}
       </template>
 
       <template v-slot:item.team1="{item}">
@@ -380,8 +379,8 @@ export default {
       editedIndex: -1,
       editedItem: {
         game_no: '',
-        date: this.formatDate(new Date().toISOString().substr(0, 10)),
-        time: new Date().toLocaleTimeString().substr(0, 5),
+        date: this.$moment(new Date()).format('DD.MM.YYYY'),
+        time: this.$moment(new Date()).format('HH:mm'),
         stadium: '',
         group: '',
         team1: '',
@@ -394,8 +393,8 @@ export default {
       },
       defaultItem: {
         game_no: '',
-        date: this.formatDate(new Date().toISOString().substr(0, 10)),
-        time: new Date().toLocaleTimeString().substr(0, 5),
+        date: this.$moment(new Date()).format('DD.MM.YYYY'),
+        time: this.$moment(new Date()).format('HH:mm'),
         stadium: '',
         group: '',
         team1: '',
@@ -417,7 +416,8 @@ export default {
   },
   created() {
     // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
-    this.dateCurrent = this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10)
+    //this.dateCurrent = this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10)
+    this.dateCurrent = this.$moment(this.randomDate(this.startDate, this.endDate)).format('DD.MM.YYYY')
 
     this.countGroups = this.getCountGroups
 
@@ -493,12 +493,6 @@ export default {
       deleteGame: 'game/deleteGame',
       changeResult: 'game/changeResult'
     }),
-    formatDate(date) {
-      if (!date) return null
-
-      const [year, month, day] = date.split('-')
-      return `${day}.${month}.${year}`
-    },
     loadGroupTeams() {
       this.groupTeams = []
 
@@ -575,9 +569,11 @@ export default {
         this.loadGroupTeams()
 
         if (this.editedIndex > -1) {
-          const date = new Date(item.start)
+          /*const date = new Date(item.start)
           this.dateCurrent = date.toISOString().substr(0, 10)
-          this.editedItem.time = date.toLocaleTimeString().substr(0, 5)
+          this.editedItem.time = date.toLocaleTimeString().substr(0, 5)*/
+          this.dateCurrent = this.$moment(item.start).format('DD.MM.YYYY')
+          this.editedItem.time = this.$moment(item.start).format('HH:mm')
         }
       })
     },
@@ -605,8 +601,9 @@ export default {
         this.editedIndex = -1
 
         // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
-        const date = this.randomDate(this.startDate, this.endDate)
-        this.dateCurrent = date.toISOString().substr(0, 10)
+        /*const date = this.randomDate(this.startDate, this.endDate)
+        this.dateCurrent = date.toISOString().substr(0, 10)*/
+        this.dateCurrent = this.$moment(this.randomDate(this.startDate, this.endDate)).format('DD.MM.YYYY')
       })
     },
     async save() {

@@ -29,8 +29,7 @@
             <tbody>
             <tr v-for="game in playoff.filter(g => g.groupId === group.id)" :key="game.id">
               <td class="text-center">
-                {{ formatDate(new Date(game.start).toISOString().substr(0, 10)) }}
-                {{ new Date(game.start).toLocaleTimeString().substr(0, 5) }}
+                {{ $moment(game.start).format('DD.MM.YYYY HH:mm') }}
               </td>
               <td class="text-right">
                   <v-img class="mr-1" max-width="25" :src="`/flags/${game.flag1}`"/>
@@ -102,14 +101,6 @@ export default {
       })
     }
   },
-  methods: {
-    formatDate(date) {
-      if (!date) return null
-
-      const [year, month, day] = date.split('-')
-      return `${day}.${month}.${year}`
-    },
-  }
 }
 </script>
 
