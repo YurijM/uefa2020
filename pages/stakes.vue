@@ -27,8 +27,8 @@
       color="red"
       dark
       elevation="2"
-      class="mb-1 mx-auto text-center"
-      :style="{ fontSize: '1.25em', maxWidth: widthTable }"
+      class="mt-3 pa-5 mx-auto text-center"
+      :style="{ fontSize: '1.25em', maxWidth: widthEnding }"
     >
       {{ ending.message }}
     </v-alert>
@@ -89,7 +89,22 @@ export default {
           return "95%";
       }
     },
-  },
+    widthEnding() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xl":
+          return "40%";
+        case "lg":
+          return "50%";
+        case "md":
+          return "60%";
+        case "sm":
+          return "70%";
+        case "xs":
+          return "80%";
+        default:
+          return "95%";
+      }
+    }, },
   methods: {
     ...mapMutations({
       clearMessage: "common/CLEAR_MESSAGE",

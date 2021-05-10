@@ -417,7 +417,7 @@ export default {
   created() {
     // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
     //this.dateCurrent = this.randomDate(this.startDate, this.endDate).toISOString().substr(0, 10)
-    this.dateCurrent = this.$moment(this.randomDate(this.startDate, this.endDate)).format('DD.MM.YYYY')
+    this.dateCurrent = this.$moment(this.randomDate(this.startDate, this.endDate)).format('YYYY-MM-DD')
 
     this.countGroups = this.getCountGroups
 
@@ -482,7 +482,8 @@ export default {
   },
   watch: {
     dateCurrent() {
-      this.editedItem.date = this.formatDate(this.dateCurrent)
+      //this.editedItem.date = this.formatDate(this.dateCurrent)
+      this.editedItem.date = this.$moment(this.dateCurrent).format('DD.MM.YYYY')
     },
   },
   methods: {
@@ -529,6 +530,8 @@ export default {
       this.editedIndex = -1
       this.editedItem = Object.assign({}, this.defaultItem);
 
+      this.dateCurrent = this.$moment().format('YYYY-MM-DD')
+
       this.dialog = true
     },
     editItem(item) {
@@ -572,7 +575,7 @@ export default {
           /*const date = new Date(item.start)
           this.dateCurrent = date.toISOString().substr(0, 10)
           this.editedItem.time = date.toLocaleTimeString().substr(0, 5)*/
-          this.dateCurrent = this.$moment(item.start).format('DD.MM.YYYY')
+          this.dateCurrent = this.$moment(item.start).format('YYYY-MM-DD')
           this.editedItem.time = this.$moment(item.start).format('HH:mm')
         }
       })
@@ -603,7 +606,7 @@ export default {
         // Случайная дата нужна для того, чтобы при редактировании и добавлении игры ВСЕГДА срабатывал watch dateCurrent
         /*const date = this.randomDate(this.startDate, this.endDate)
         this.dateCurrent = date.toISOString().substr(0, 10)*/
-        this.dateCurrent = this.$moment(this.randomDate(this.startDate, this.endDate)).format('DD.MM.YYYY')
+        this.dateCurrent = this.$moment(this.randomDate(this.startDate, this.endDate)).format('YYYY-MM-DD')
       })
     },
     async save() {
