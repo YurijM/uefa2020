@@ -33,14 +33,12 @@
             />
 
             <v-select
-              :disabled="editedItem.id === gambler.id"
               v-model="editedItem.status"
               :items="statuses"
               label="Статус"
             />
 
             <v-switch
-              :disabled="editedItem.id === gambler.id"
               v-model="editedItem.admin"
               flat
               :label="`Администратор: ${editedItem.admin ? 'Да' : 'Нет'}`"

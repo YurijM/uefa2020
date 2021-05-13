@@ -63,7 +63,7 @@ module.exports.lastGameIds = async (req, res) => {
 }
 
 module.exports.loadResult = async (req, res) => {
-  const query = 'SELECT gambler_id, nickname, sex, photo, SUM(p.points) points\n' +
+  const query = 'SELECT g.id AS gambler_id, nickname, sex, photo, SUM(IFNULL(p.points, 0)) points\n' +
     'FROM gamblers g\n' +
     'LEFT JOIN points p ON p.gambler_id = g.id\n' +
     /*'FROM points p\n' +

@@ -1,5 +1,13 @@
 <template>
-  <div :style="{width: '100%'}">
+  <v-alert
+    v-if="winners.length === 0"
+    outlined color="blue accent-4" text
+    class="mt-5 mx-auto"
+  >
+    Турнир ещё не начался
+  </v-alert>
+
+  <div v-else :style="{width: '100%'}">
     <h2 class="text-center mt-2 purple--text">Победители</h2>
 
     <h3 v-if="!ending.finish" class="text-center mb-2 purple--text">
@@ -10,7 +18,7 @@
       <v-card
         v-for="(winner, i) in winners"
         :key="winner.gambler.id"
-        width="200"
+        width="175"
         outlined
         class="mb-1 dark blue-grey lighten-4"
         :class="(i > 0) ? 'ml-1' : ''"
@@ -40,7 +48,6 @@
         >
           <div>{{ winner.gambler.family }} {{ winner.gambler.name }}</div>
           <div>({{ winner.gambler.nickname }})</div>
-          <div>ставка - {{ winner.gambler.stake }}</div>
           <div>выигрыш - {{ winner.summa }} руб.</div>
         </v-card-title>
       </v-card>
@@ -67,6 +74,7 @@ export default {
     },
     winners() {
       const result = this.getResult.filter(r => r.lastPlace <= 3)
+      if (!!result) return []
 
       const win1 = result.filter(r => r.lastPlace == 1)
       const win2 = result.filter(r => r.lastPlace == 2)

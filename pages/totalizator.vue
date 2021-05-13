@@ -4,7 +4,15 @@
       <h2 class="text-center mt-1 purple--text">Тотализатор</h2>
     </v-col>
 
-    <v-col cols="12" class="text-body-1 text-center">
+    <v-alert
+      v-if="games.length === 0"
+      outlined color="blue accent-4" text
+      class="mt-5 mx-auto"
+    >
+      Турнир ещё не начался
+    </v-alert>
+
+    <v-col v-else cols="12" class="text-body-1 text-center">
       Коэффициенты:
       <span class="red--text text--accent-4">на победу</span>,
       <span class="green--text text--darken-2">на ничью</span>,

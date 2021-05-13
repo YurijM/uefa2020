@@ -186,7 +186,7 @@ export default {
 
       if (sex.length === 0)
       {
-        return 0
+        return '0.00'
       } else {
         let s = 0
         return (sex.map(e => s += parseFloat(e.points)).reverse()[0] / sex.length).toFixed(2)
@@ -197,7 +197,7 @@ export default {
 
       if (sex.length === 0)
       {
-        return 0
+        return '0.00'
       } else {
         let s = 0
         return (sex.map(e => s += parseFloat(e.points)).reverse()[0] / sex.length).toFixed(2)
