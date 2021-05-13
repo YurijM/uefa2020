@@ -3,9 +3,9 @@
     cols="8" sm="6" md="4" lg="3"
     :style="{position: 'absolute', width: '100%', opacity: '.7'}"
   >
-    <v-card class="elevation-12" color="purple lighten-5">
+    <v-card class="elevation-12" color="teal lighten-5">
       <v-toolbar
-        color="purple lighten-1"
+        color="teal lighten-1"
         dark
         flat
         height="35"
@@ -27,7 +27,7 @@
             prepend-icon="fas fa-user"
             type="text"
             light
-            color="purple lighten-2"
+            color="teal lighten-2"
             v-model="login"
             autofocus
             :rules="[rules.required]"
@@ -41,7 +41,7 @@
             :type="showPassword ? 'text' : 'password'"
             @click:append="showPassword = !showPassword"
             light
-            color="purple lighten-2"
+            color="teal lighten-2"
             v-model="password"
             :rules="[rules.required]"
           />
@@ -52,7 +52,7 @@
               :loading="loading"
               :disabled="loading"
               class="white--text"
-              color="purple lighten-1"
+              color="teal lighten-1"
             >
               Войти
               <v-icon right dark small>fas fa-door-open</v-icon>

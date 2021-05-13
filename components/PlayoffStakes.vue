@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog persistent v-model="viewResult" max-width="500">
-      <v-sheet class="pb-2 px-3 purple lighten-4">
+      <v-sheet class="pb-2 px-3 teal lighten-4">
         <mu-playoff-result :teams="teams"/>
 
         <div class="text-right">
@@ -22,7 +22,7 @@
 
     <v-data-table
       dense
-      class="mb-2 mx-auto purple lighten-5"
+      class="mb-2 mx-auto teal lighten-5"
       :style="{ maxWidth: maxWidth }"
       :headers="headerPlayoff"
       :items="playoffStakes"

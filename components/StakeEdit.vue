@@ -173,12 +173,12 @@ export default {
     }),
     dateGame() {
       if (this.item.start) {
-        return $moment(this.item.start).format('DD.MM.YYYY')
+        return this.$moment(this.item.start).format('DD.MM.YYYY')
       }
     },
     timeGame() {
       if (this.item.start) {
-        return $moment(this.item.start).format('HH:mm')
+        return this.$moment(this.item.start).format('HH:mm')
       }
     },
     gameTeams() {

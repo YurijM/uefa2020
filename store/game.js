@@ -12,9 +12,8 @@ export const getters = {
   .sort((a, b) => a.game_no > b.game_no),
   getGroupGames: (state, getters, rootState, rootGetters) => (id) => {
     const games = state.games.filter(g => g.group_id === id)
-    console.log('group_id, games:', id, games)
     const teams = rootGetters['team/getTeams'].filter(t => t.group_id === id)
-    console.log('group_id, teams:', id, teams)
+
     teams.sort((a, b) => {
       return (a.order > b.order ? 1 : -1)
     })

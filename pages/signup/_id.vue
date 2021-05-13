@@ -7,9 +7,9 @@
       {{error}}
     </v-alert>
 
-    <v-card v-else class="elevation-12" color="purple lighten-5">
+    <v-card v-else class="elevation-12" color="teal lighten-5">
       <v-toolbar
-        color="purple lighten-1"
+        color="teal lighten-1"
         dark
         flat
       >
@@ -29,7 +29,7 @@
             name="nickname"
             prepend-icon="fas fa-user"
             type="text"
-            color="purple lighten-2"
+            color="teal lighten-2"
             v-model="nickname"
             :rules="[rules.required]"
           />
@@ -41,7 +41,7 @@
             :append-icon="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"
             :type="showPassword ? 'text' : 'password'"
             @click:append="showPassword = !showPassword"
-            color="purple lighten-2"
+            color="teal lighten-2"
             v-model="password"
             :rules="[rules.required]"
           />
@@ -53,7 +53,7 @@
             :append-icon="showPasswordConfirm ? 'fas fa-eye' : 'fas fa-eye-slash'"
             :type="showPasswordConfirm ? 'text' : 'password'"
             @click:append="showPasswordConfirm = !showPasswordConfirm"
-            color="purple lighten-2"
+            color="teal lighten-2"
             v-model="passwordConfirm"
             :rules="[rules.confirm]"
           />
@@ -65,7 +65,7 @@
           :loading="loading"
           :disabled="loading"
           class="white--text"
-          color="purple lighten-1"
+          color="teal lighten-1"
           @click="signup"
         >
           Зарегистрироваться

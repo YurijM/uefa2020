@@ -1,13 +1,15 @@
 <template>
   <v-row justify="center" dense>
     <v-col cols="12" class="text-center">
-      <h2 class="text-center mt-1 purple--text">Тотализатор</h2>
+      <h2 class="text-center mt-1 teal--text">Тотализатор</h2>
     </v-col>
 
     <v-alert
       v-if="games.length === 0"
-      outlined color="blue accent-4" text
-      class="mt-5 mx-auto"
+      border="top"
+      color="teal"
+      dark
+      class="pa-5 mt-5 mx-auto"
     >
       Турнир ещё не начался
     </v-alert>
@@ -54,7 +56,7 @@
       <v-simple-table
         dense
         class="text-body-1"
-        :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
+        :style="{backgroundColor: '#e3ccea', border: '1px solid teal'}"
       >
         <template v-slot:default>
           <thead>

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="text-body-2">
-    <h2 class="text-center purple--text">Игры</h2>
+    <h2 class="text-center teal--text">Игры</h2>
 
     <div
       v-for="group of playoffGroups" :key="group.id"
@@ -13,7 +13,7 @@
         <v-simple-table
           dense
           class="pb-1 mt-1"
-          :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
+          :style="{backgroundColor: '#e3ccea', border: '1px solid teal'}"
         >
           <template v-slot:default>
             <thead>

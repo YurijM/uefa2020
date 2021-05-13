@@ -21,7 +21,7 @@
       app
       clipped-right
       clipped-left
-      color="purple lighten-1"
+      color="teal lighten-1"
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer">
@@ -73,7 +73,7 @@
     <!-- КОНТЕНТ -->
     <v-main>
       <v-container
-        class="fill-height align-start purple lighten-4 pa-0"
+        class="fill-height align-start teal lighten-4 pa-0"
         fluid
       >
         <nuxt/>
@@ -86,7 +86,7 @@
 
     <!---------------------------------------------------------------------------------->
     <!-- ПОДВАЛ -->
-    <mu-footer color="purple lighten-1" :year="currentYear !== 2020 ? `-${currentYear}` : ''"/>
+    <mu-footer color="teal lighten-1" :year="currentYear !== 2020 ? `-${currentYear}` : ''"/>
   </v-app>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div :style="{width: '100%'}">
-    <h2 class="text-center my-2 purple--text">Участники</h2>
+    <h2 class="text-center my-2 teal--text">Участники</h2>
     <div class="d-flex flex-wrap flex-row justify-center px-1">
       <v-card
         v-if="getGambler.status === 1"

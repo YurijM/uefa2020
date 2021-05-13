@@ -6,7 +6,7 @@
       app
       clipped-right
       clipped-left
-      color="purple lighten-1"
+      color="teal lighten-1"
       dark
     >
       <v-toolbar-title>Тотализатор</v-toolbar-title>
@@ -23,7 +23,7 @@
     </v-main>
 
     <!-- ПОДВАЛ -->
-    <!--<mu-footer color="purple lighten-1"/>-->
+    <!--<mu-footer color="teal lighten-1"/>-->
   </v-app>
 </template>
 

@@ -60,7 +60,7 @@
       </v-card>
     </v-dialog>
 
-    <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid purple'}">
+    <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid teal'}">
       <v-col class="pa-1" cols="9" sm="10">
         <h3 class="ml-5">
           {{ gamblers.length > 1 ? 'Возможно, сейчас в чате:' : 'Сейчас в чате только Вы' }}
@@ -80,7 +80,7 @@
       <v-col class="pa-1 text-center" cols="3" sm="2">
         <v-tooltip bottom>
           <template v-slot:activator="{on}">
-            <v-btn dark color="purple" v-on="on" @click.stop="isMessage = true">
+            <v-btn dark color="teal" v-on="on" @click.stop="isMessage = true">
               <v-icon>far fa-comment-dots</v-icon>
             </v-btn>
           </template>
@@ -89,19 +89,19 @@
       </v-col>
     </div>
 
-    <div ref="params" :style="{borderBottom: '2px solid purple !important'}">
-      <v-card flat color="purple lighten-5">
+    <div ref="params" :style="{borderBottom: '2px solid teal !important'}">
+      <v-card flat color="teal lighten-5">
         <v-card-actions class="pt-0">
           <v-radio-group dense class="mt-0" row hide-details v-model="range">
             <v-radio
-              color="purple"
+              color="teal"
               v-for="item in rangeMessages"
               :key="item.value"
               :value="item.value"
               @change="range = item.value; changeParams()"
             >
               <template v-slot:label>
-                <div class="purple--text text-body-2">
+                <div class="teal--text text-body-2">
                   {{ item.label }}
                 </div>
               </template>
@@ -113,13 +113,13 @@
           <v-checkbox
             dense
             class="mt-0"
-            color="purple"
+            color="teal"
             hide-details
             v-model="systemMessages"
             @change="changeParams()"
           >
             <template v-slot:label>
-              <div class="purple--text text-body-2">
+              <div class="teal--text text-body-2">
                 Показывать системные сообщения
               </div>
             </template>
@@ -132,14 +132,14 @@
       <v-card
         flat
         :width="widthMessages"
-        color="purple lighten-4"
+        color="teal lighten-4"
         class="my-1 mx-auto py-2"
       >
         <v-list
           v-for="message in messages"
           :key="message.id"
           :width="message.layout.list.width"
-          color="purple lighten-4"
+          color="teal lighten-4"
           class="px-2 py-0"
           :class="message.layout.list.class"
         >
@@ -217,7 +217,7 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{on}">
                   <v-list-item-title
-                    class="deep-purple--text text--darken-4 text-caption text-md-body-2"
+                    class="deep-teal--text text--darken-4 text-caption text-md-body-2"
                     v-html="message.message"
                     v-on="message.fromId !== getGambler.id ? on : ''"
                     @click.stop="message.fromId !== getGambler.id ? answerTo(message) : null"
@@ -497,7 +497,7 @@ export default {
 
 /*.range .v-label,
 .systemMessages .v-label {
-  color: purple !important
+  color: teal !important
 }*/
 </style>
 

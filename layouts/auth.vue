@@ -11,7 +11,7 @@
 
     <v-main>
       <v-container
-        class="fill-height purple lighten-4"
+        class="fill-height teal lighten-4"
         fluid
       >
         <nuxt/>

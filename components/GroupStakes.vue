@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog persistent v-model="viewResult" max-width="500">
-      <v-sheet class="px-3 py-1 purple lighten-4">
+      <v-sheet class="px-3 py-1 teal lighten-4">
         <mu-group-result :group="group" :result="result"/>
         <div class="text-right mt-1">
           <v-btn
@@ -21,7 +21,7 @@
 
     <v-data-table
       dense
-      class="mb-5 mx-auto purple lighten-5"
+      class="mb-5 mx-auto teal lighten-5"
       :style="{ maxWidth: maxWidth }"
       :headers="header"
       group-by="startDate"

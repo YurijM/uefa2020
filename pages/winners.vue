@@ -1,16 +1,18 @@
 <template>
   <v-alert
     v-if="winners.length === 0"
-    outlined color="blue accent-4" text
-    class="mt-5 mx-auto"
+    border="top"
+    color="teal"
+    dark
+    class="pa-5 mt-5 mx-auto"
   >
-    Турнир ещё не начался
+    Победители ещё не определились
   </v-alert>
 
   <div v-else :style="{width: '100%'}">
-    <h2 class="text-center mt-2 purple--text">Победители</h2>
+    <h2 class="text-center mt-2 teal--text">Победители</h2>
 
-    <h3 v-if="!ending.finish" class="text-center mb-2 purple--text">
+    <h3 v-if="!ending.finish" class="text-center mb-2 teal--text">
       (на текущий момент)
     </h3>
 
@@ -73,8 +75,9 @@ export default {
       return (this.gamblers.reduce((sum, e) => sum + e.stake, 0)) / this.gamblers.length
     },
     winners() {
-      const result = this.getResult.filter(r => r.lastPlace <= 3)
-      if (!!result) return []
+      const result = this.getResult.filter(r => r.lastPlace > 0 && r.lastPlace <= 3)
+
+      if (!result) return []
 
       const win1 = result.filter(r => r.lastPlace == 1)
       const win2 = result.filter(r => r.lastPlace == 2)
@@ -85,7 +88,7 @@ export default {
       const countWin3 = win3.length
 
       //const pointsWin1 = win1.reduce((points, e) => points + e.stake, 0)
-      //const pointsWin2 = win2.reduce((points, e) => points + e.points, 0)
+      const pointsWin2 = win2.reduce((points, e) => points + e.points, 0)
       const pointsWin3 = win3.reduce((points, e) => points + e.points, 0)
 
       const countGamblers = this.gamblers.length

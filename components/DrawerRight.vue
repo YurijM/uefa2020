@@ -7,7 +7,7 @@
     right
     width="230"
     mobile-breakpoint="700"
-    color="purple lighten-5"
+    color="teal lighten-5"
   >
     <v-dialog v-model="dialog" max-width="750">
       <v-card
@@ -77,7 +77,7 @@
 
         <v-list-item-content>
           <v-list-item-title
-            class="purple--text text--darken-4"
+            class="teal--text text--darken-4"
             :style="{whiteSpace: 'normal', cursor: (!isFirstGame ? 'pointer' : 'default')}"
             @click="!isFirstGame ? loadChart(item.gambler_id) : ''"
           >

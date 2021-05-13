@@ -6,14 +6,14 @@
     clipped
     width="150"
     mobile-breakpoint="800"
-    color="purple lighten-5"
+    color="teal lighten-5"
   >
     <v-list dense>
       <v-list-item
         v-for="(item, i) in menu"
         :key="i"
         link
-        class="px-2 purple--text text--darken-3"
+        class="px-2 teal--text text--darken-3"
         :to="item.to"
         v-if="(item.hasOwnProperty('show') ? item.show : item.status <= (!!gambler ? gambler.status : 0))"
       >

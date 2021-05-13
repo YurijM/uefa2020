@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="text-body-2">
-    <h2 class="text-center purple--text">Правила</h2>
+    <h2 class="text-center teal--text">Правила</h2>
 
     <div v-if="gambler.status === 1">
       <h3 class="text-center">Денежный взнос</h3>

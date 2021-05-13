@@ -3,9 +3,9 @@
     class="mx-auto"
     cols="9" :sm="sm" :md="md" :lg="lg"
   >
-    <v-card class="elevation-12" color="purple lighten-5">
+    <v-card class="elevation-12" color="teal lighten-5">
       <v-toolbar
-        color="purple lighten-1"
+        color="teal lighten-1"
         dark
         flat
       >
@@ -31,7 +31,7 @@
               <v-text-field
                 name="nickname"
                 type="text"
-                color="purple lighten-2"
+                color="teal lighten-2"
                 v-model="gambler.nickname"
                 :rules="[rules.required]"
               >
@@ -43,7 +43,7 @@
               <v-text-field
                 label="Фамилия"
                 name="family"
-                color="purple lighten-2"
+                color="teal lighten-2"
                 type="text"
                 v-model="gambler.family"
                 :rules="[rules.required]"
@@ -53,7 +53,7 @@
                 label="Имя"
                 name="name"
                 type="text"
-                color="purple lighten-2"
+                color="teal lighten-2"
                 v-model="gambler.name"
                 :rules="[rules.required]"
               />
@@ -125,7 +125,7 @@
           :loading="loading"
           :disabled="loading"
           class="white--text"
-          color="purple lighten-1"
+          color="teal lighten-1"
           @click="save"
         >
           Сохранить

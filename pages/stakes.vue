@@ -1,23 +1,23 @@
 <template>
   <div class="mx-auto" :style="{ width: '100%' }">
-    <h2 class="text-center mt-1 purple--text">Ставки</h2>
+    <h2 class="text-center mt-1 teal--text">Ставки</h2>
 
     <v-alert
       v-if="groupStakes.length || playoffStakes.length"
       dense
       border="top"
       colored-border
-      type="info"
+      color="teal"
       elevation="2"
       class="mb-1 mx-auto"
       :style="{ fontSize: '.9em', maxWidth: widthTable }"
     >
       На данной странице отображаются
-      <span class="primary--text"><strong>только</strong></span> игры, которые
-      <span class="primary--text"><strong>ещё не начались</strong></span>.<br/>
+      <span class="teal--text text--darken-3"><strong>только</strong></span> игры, которые
+      <span class="teal--text text--darken-3"><strong>ещё не начались</strong></span>.<br/>
       На игры, которые
-      <span class="primary--text"><strong>уже начались или закончились</strong></span>,
-      ставки сделать <span class="primary--text"><strong>нельзя</strong></span>.
+      <span class="teal--text text--darken-3"><strong>уже начались или закончились</strong></span>,
+      ставки сделать <span class="teal--text text--darken-3"><strong>нельзя</strong></span>.
     </v-alert>
 
     <v-alert

@@ -17,7 +17,7 @@
       </div>
     </template>
 
-    <v-list class="py-1" color="purple lighten-3">
+    <v-list class="py-1" color="teal lighten-3">
       <v-list-item
         v-if="!!gambler ? gambler.admin : 0"
         class="px-3 mb-1"

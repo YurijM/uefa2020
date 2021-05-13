@@ -17,7 +17,7 @@
       <v-simple-table
         v-if="isCalced"
         dense
-        :style="{backgroundColor: '#e3ccea', border: '1px solid purple'}"
+        :style="{backgroundColor: '#e0f0f1', border: '1px solid teal'}"
       >
         <template v-slot:default>
           <thead>

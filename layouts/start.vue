@@ -9,14 +9,14 @@
       <div class="text-center" :style="{width: '100%'}">{{message}}</div>
     </v-snackbar>
 
-    <div class="d-flex px-1 py-2 d-sm-none flex-column purple lighten-3 yellow--text text--lighten-3">
+    <div class="d-flex px-1 py-2 d-sm-none flex-column teal lighten-3 yellow--text text--lighten-3">
       <span class="display-1 text-center">Закрытый Клуб</span>
       <span class="title text-center">любителей футбола и острых ощущений</span>
     </div>
 
     <v-main>
       <v-container
-        class="fill-height purple lighten-4 pa-0"
+        class="fill-height teal lighten-4 pa-0"
         fluid
       >
         <v-row justify="center" align="center">
@@ -25,7 +25,7 @@
               class="mx-auto"
             >
               <v-img
-                class="white--text hidden-xs-only purple lighten-4"
+                class="white--text hidden-xs-only teal lighten-4"
                 src="/main.jpg"
                 contain
               >
