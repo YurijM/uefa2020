@@ -219,9 +219,10 @@
                   <v-list-item-title
                     class="deep-teal--text text--darken-4 text-caption text-md-body-2"
                     v-html="message.message"
-                    v-on="message.fromId !== getGambler.id ? on : ''"
-                    @click.stop="message.fromId !== getGambler.id ? answerTo(message) : null"
-                    :style="message.fromId !== getGambler.id ? {cursor: 'pointer'} : ''"
+                    v-on="(message.fromId !== getGambler.id && message.fromId !== 0) ? on : ''"
+                    @click.stop="(message.fromId !== getGambler.id && message.fromId !== 0) ? answerTo(message)
+                    : null"
+                    :style="(message.fromId !== getGambler.id && message.fromId !== 0) ? {cursor: 'pointer'} : ''"
                   />
                 </template>
                 <span>Цитировать</span>
