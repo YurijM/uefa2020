@@ -13,7 +13,7 @@
         <v-simple-table
           dense
           class="pb-1 mt-1"
-          :style="{backgroundColor: '#e3ccea', border: '1px solid teal'}"
+          :style="{backgroundColor: '#c5e2df', border: '1px solid teal'}"
         >
           <template v-slot:default>
             <thead>

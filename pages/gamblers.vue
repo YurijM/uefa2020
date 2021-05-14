@@ -4,7 +4,7 @@
     <div class="d-flex flex-wrap flex-row justify-center px-1">
       <v-card
         v-if="getGambler.status === 1"
-        max-width="125"
+        width="175"
         outlined
         class="mb-1 dark blue-grey lighten-4"
         :style="{border: '1px solid ' + (getGambler.sex === 'ж' ? 'red' : 'blue') + ' !important'}"
@@ -37,7 +37,7 @@
       <v-card
         v-for="(gambler, i) in gamblers"
         :key="gambler.id"
-        max-width="125"
+        width="175"
         outlined
         class="mb-1 dark blue-grey lighten-4"
         :class="(i > 0 || getGambler.status === 1) ? 'ml-1' : ''"

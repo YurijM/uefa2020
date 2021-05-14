@@ -7,7 +7,7 @@
     <v-col v-for="(team, i) in teams" :key="i" cols="12">
       <v-simple-table
         dense
-        :style="{backgroundColor: '#e0f0f1', border: '1px solid grey'}"
+        :style="{backgroundColor: '#c5e2df', border: '1px solid grey'}"
       >
         <template v-slot:default>
           <thead>
