@@ -72,24 +72,22 @@
                 </v-radio>
               </v-radio-group>
             </v-col>
+
             <v-col v-if="gambler.photo" cols="5" md="6" lg="5" class="py-0">
               <v-img :src="`/photo/${gambler.photo}`"/>
             </v-col>
+
+            <v-col cols="12" class="py-0">
+              <v-text-field
+                label="Телефон (для экстренной связи)"
+                name="phone"
+                type="text"
+                color="teal lighten-2"
+                class="mt-0 pt-0"
+                v-model="gambler.phone"
+              />
+            </v-col>
           </v-row>
-
-          <!--<v-row class="justify-space-between">
-            <v-col cols="auto" class="py-0">
-              <v-label>Пол</v-label>
-              <v-radio-group class="mt-0" v-model="gambler.sex" row :rules="[rules.required]">
-                <v-radio label="м" color="primary" value="м"></v-radio>
-                <v-radio label="ж" color="pink" value="ж"></v-radio>
-              </v-radio-group>
-            </v-col>
-
-            <v-col v-if="gambler.photo" cols="auto" class="py-0">
-              <v-img width="54" height="72" :src="`/photo/${gambler.photo}`"/>
-            </v-col>
-          </v-row>-->
 
           <div>
             <v-file-input
@@ -160,6 +158,7 @@
           family: '',
           name: '',
           sex: '',
+          phone: '',
           photo: ''
         },
         file: null,
@@ -176,6 +175,7 @@
       this.gambler.family = this.user.family;
       this.gambler.name = this.user.name;
       this.gambler.sex = this.user.sex;
+      this.gambler.phone = this.user.phone;
       this.gambler.photo = this.user.photo;
     },
     computed: {

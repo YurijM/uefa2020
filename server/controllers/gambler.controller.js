@@ -277,6 +277,7 @@ module.exports.profile = async (req, res) => {
     '`family` = ?,\n' +
     '`name` = ?,\n' +
     '`sex` = ?,\n' +
+    '`phone` = ?,\n' +
     '`photo` = ?,\n' +
     '`status` = ' + (status ? status : 1) + '\n' +
     'WHERE `id` = ?';
@@ -286,6 +287,7 @@ module.exports.profile = async (req, res) => {
     req.query.family,
     req.query.name,
     req.query.sex,
+    req.query.phone,
     req.query.fileName,
     req.query.id
   ])

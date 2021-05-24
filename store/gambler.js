@@ -288,6 +288,7 @@ export const actions = {
             family: gambler.family,
             name: gambler.name,
             sex: gambler.sex,
+            phone: gambler.phone,
             socket_id: gambler.socket_id,
             fileName: fileName,
           }
