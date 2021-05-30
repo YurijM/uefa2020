@@ -51,6 +51,12 @@ export default {
     return {
       menu: [
         {
+          title: 'Главная',
+          to: '/main',
+          icon: 'fas fa-home',
+          status: 1
+        },
+        {
           title: 'Правила',
           to: '/rules',
           icon: 'fas fa-file-alt',
