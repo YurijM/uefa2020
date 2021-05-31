@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-dialog v-model="viewHistory2016" :width="width">
       <v-sheet class="px-3 py-1 teal lighten-4">
         <mu-history2016/>
@@ -77,7 +77,7 @@
         <h3 class="text-center">Всем приятного просмотра и удачных ставок!</h3>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
