@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <v-dialog v-model="viewHistory2016" :width="width">
       <v-sheet class="px-3 py-1 teal lighten-4">
         <mu-history2016/>
@@ -74,12 +74,10 @@
           аналогии с популярными messengers, вставляется (цитируется) в ваше сообщение.
         </p>
 
-        <p>
-          <h3 class="text-center">Всем приятного просмотра и удачных ставок!</h3>
-        </p>
+        <h3 class="text-center">Всем приятного просмотра и удачных ставок!</h3>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -100,7 +98,7 @@ export default {
   },
   computed: {
     width() {
-      let width = 0;
+      let width = '';
       switch (this.$vuetify.breakpoint.name) {
         case 'lg':
           width = '70%';
