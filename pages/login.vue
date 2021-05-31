@@ -86,7 +86,8 @@
         getIsSign: 'gambler/isSign',
         getIsAuth: 'gambler/isAuth',
         getGambler: 'gambler/getGambler',
-        isMessage: 'common/isMessage'
+        isMessage: 'common/isMessage',
+        games: 'game/getGames'
       })
     },
     methods: {
@@ -111,7 +112,13 @@
           await this.$socket.emit('login', this.getGambler);
 
           if (! this.isMessage) {
-            await this.$router.push('/chat')
+            const start = this.games[0].start
+            const now = new Date()
+            if (this.$moment(now).isBefore(start)) {
+              await this.$router.push('/main')
+            } else {
+              await this.$router.push('/chat')
+            }
           }
         }
       }
