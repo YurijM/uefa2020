@@ -10,13 +10,13 @@
           Минимальная ставка для участия в тотализаторе <b>{{ minStake }} рублей</b>, максимальная - <b>{{ maxStake }} рублей</b>.
         </p>
         <p>
-          Перечислить деньги Вы можете клиенту Сбербанка по телефону <b>XXX-XXX-XX-XX</b>
+          Перечислить деньги Вы можете клиенту Сбербанка по телефону <b>928-264-52-40</b>
         </p>
         <p>
           После поступления денег на счёт Вы получите доступ к остальным страницам сайта.
         </p>
 
-        <v-alert outlined color="red accent-4" text>
+        <v-alert outlined color="red accent-4" dense :style="{backgroundColor: '#c5e2df !important'}">
           <v-row>
             <v-col
               align-self="center"
