@@ -181,7 +181,8 @@
     computed: {
       ...mapGetters({
         isAuth: 'gambler/isAuth',
-        getGambler: 'gambler/getGambler'
+        getGambler: 'gambler/getGambler',
+        games: 'game/getGames'
       }),
       sm() {
         return (this.isAuth ? '8' : '6')
@@ -213,8 +214,9 @@
       ...mapActions({
         profile: 'gambler/profile'
       }),
-      cancel() {
-        this.$router.push('/chat');
+      async cancel() {
+        //this.$router.push('/chat');
+        await this.checkStart()
       },
       async save() {
         if (!this.$refs.form.validate()) return;
@@ -236,6 +238,18 @@
             isSign: this.isSign // "состояние" игрока при ВХОДЕ в режим редактирования профиля: если isSign, то это первоначальная запись
                                 // данных, иначе - это редактирование уже имеющихся данных
           });
+
+          //await this.$router.push('/chat')
+          await this.checkStart()
+
+        }
+      },
+      async checkStart() {
+        const start = this.games[0].start
+        const now = new Date()
+        if (this.$moment(now).isBefore(start)) {
+          await this.$router.push('/main')
+        } else {
           await this.$router.push('/chat')
         }
       }

@@ -41,13 +41,15 @@
       <hr>
     </div>
 
-    <mu-example-game-coefficient :isCalced="isCalced" @calculate="calculate"/>
+    <template v-else>
+      <mu-example-game-coefficient :isCalced="isCalced" @calculate="calculate"/>
 
-    <mu-example-games :isCalced="isCalced" @calculate="calculate"/>
+      <mu-example-games :isCalced="isCalced" @calculate="calculate"/>
 
-    <mu-example-stakes :isCalced="isCalced" @calculate="calculate"/>
+      <mu-example-stakes :isCalced="isCalced" @calculate="calculate"/>
 
-    <mu-example-result :isCalced="isCalced" @calculate="calculate"/>
+      <mu-example-result :isCalced="isCalced" @calculate="calculate"/>
+    </template>
   </v-container>
 </template>
 

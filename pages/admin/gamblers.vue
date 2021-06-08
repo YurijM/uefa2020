@@ -84,12 +84,12 @@
         </v-avatar>
       </template>
 
-      <template v-slot:item.status="{item}">
-        {{ statuses.find(s => s.value === item.status).text }}
+      <template v-slot:item.status="{value}">
+        {{ statuses.find(s => s.value === value).text }}
       </template>
 
-      <template v-slot:item.admin="{item}">
-        {{ item.admin === 1 ? 'Да' : 'Нет' }}
+      <template v-slot:item.admin="{value}">
+        {{ value === 1 ? 'Да' : 'Нет' }}
       </template>
 
       <template v-slot:item.actions="{item}">
@@ -116,6 +116,7 @@ export default {
       headers: [
         {text: '', value: 'photo', width: '1%'},
         {text: 'Участник', value: 'fullName'},
+        {text: 'Телефон', align: 'center', value: 'phone', sortable: false},
         {text: 'Ставка', align: 'center', value: 'stake', sortable: false},
         {text: 'Статус', align: 'center', value: 'status', sortable: false},
         {text: 'Администратор', align: 'center', value: 'admin', sortable: false},

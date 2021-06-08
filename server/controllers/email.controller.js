@@ -79,7 +79,7 @@ module.exports.sendMail = async (req, res) => {
 
   //const host = `http://185.119.57.155/signup/${authkey}`
   const host = `http://tote-uefa-2020.ru/signup/${authkey}`
-  let msg = `Для регистрации участия в тотализаторе перейдите по ссылке <a href="${host}"><i>Регистрация</i></a>`;
+  let msg = `Для регистрации участия в тотализаторе перейдите по ссылке <a href="${host}"><i>Регистрация</i></a>.<br> В дальнейшем заходить на сайт можно по адресу <a href="http://tote-uefa-2020.ru"><i>http://tote-uefa-2020.ru</i></a>`;
 
   let mailOptions = {
     //from: 'myagkovhyurij@gmail.com', // sender address
