@@ -63,7 +63,7 @@
     <div ref="top" class="d-flex flex-row mt-2 pb-1 pr-1" :style="{borderBottom: '2px solid teal'}">
       <v-col class="pa-1" cols="9" sm="10">
         <h3 class="ml-5">
-          {{ gamblers.length >= 1 ? 'Возможно, сейчас в чате:' : 'Сейчас в чате только Вы' }}
+          {{ gamblers.length > 1 ? 'Возможно, сейчас в чате:' : 'Сейчас в чате только Вы' }}
         </h3>
         <v-chip
           v-for="gambler in gamblers"

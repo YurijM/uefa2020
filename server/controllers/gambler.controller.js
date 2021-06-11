@@ -40,7 +40,7 @@ module.exports.signup = async (req, res) => {
               id: gambler.id
             },
             'uefa-2020',
-            {expiresIn: 60 * 60 * 24} // 24 часа будет "жить" токен
+            {expiresIn: 60 * 60 * 12} // 12 часов будет "жить" токен
           );
 
           await res.json({gambler, token})
