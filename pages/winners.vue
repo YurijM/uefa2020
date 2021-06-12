@@ -88,8 +88,8 @@ export default {
       const countWin3 = win3.length
 
       //const pointsWin1 = win1.reduce((points, e) => points + e.stake, 0)
-      const pointsWin2 = win2.reduce((points, e) => points + e.points, 0)
-      const pointsWin3 = win3.reduce((points, e) => points + e.points, 0)
+      const pointsWin2 = win2.reduce((points, e) => points + parseFloat(e.points), 0)
+      const pointsWin3 = win3.reduce((points, e) => points + parseFloat(e.points), 0)
 
       const countGamblers = this.gamblers.length
 
@@ -122,6 +122,7 @@ export default {
             break
         }
 
+        //console.log('игрок:', gambler.nickname, summa, coef, summa)
         winners.push({
           gambler,
           coef,
