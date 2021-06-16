@@ -81,7 +81,7 @@
                 </template>
               </template>
             </td>
-            <td class="font-weight-bold">{{ stake.points }}</td>
+            <td class="font-weight-bold" :class="getColor(game.result, stake.result)">{{ stake.points }}</td>
           </tr>
           </tbody>
         </template>
@@ -113,6 +113,24 @@ export default {
     }),
   },
   methods: {
+    getColor(game, stake) {
+      let color = ''
+
+      if (game === stake) {
+        color = 'red--text'
+      } else {
+        let arrGame = game.split(':').map(Number)
+        let arrStake = stake.split(':').map(Number)
+
+        if ((arrGame[0] > arrGame[1] && arrStake[0] > arrStake[1]) ||
+          (arrGame[0] === arrGame[1] && arrStake[0] === arrStake[1]) ||
+          (arrGame[0] < arrGame[1] && arrStake[0] < arrStake[1])) {
+          color = 'light-blue--text text--darken-4'
+        }
+      }
+      //
+      return color
+    },
     loadCoefs() {
       const gameIds = this.games.map(g => g.id)
 
