@@ -23,9 +23,27 @@
           </thead>
           <tbody>
           <tr v-for="(game, j) in team.games" :key="j">
-            <td class="text-right" width="35%">{{ game.team1 }}-{{ game.team2 }}</td>
+            <td class="text-right" width="35%">
+              <span :class="team.team === game.team1 ? 'font-weight-bold' : ''">{{ game.team1 }}</span>
+              -
+              <span :class="team.team === game.team2 ? 'font-weight-bold' : ''">{{ game.team2 }}</span>
+            </td>
             <td class="font-weight-bold" width="65%">
-              {{ game.goal1 }}:{{ game.goal2 }}<span v-if="game.addGoal1">, доп.время {{ game.addGoal1 }}:{{ game.addGoal2 }}</span><span v-if="game.penaltyId">, по пенальти {{ game.penaltyTeam }}</span>
+              <span :class="getColor(game, team.team)">
+                {{ game.goal1 }}:{{ game.goal2 }}
+              </span>
+              <template v-if="game.addGoal1">
+                , доп.время
+                <span :class="getColor(game, team.team, 'add')">
+                  {{ game.addGoal1 }}:{{ game.addGoal2 }}
+                </span>
+              </template>
+              <template v-if="game.penaltyId">
+                , по пенальти
+                <span :class="(game.penaltyId === team.id ? 'red--text' : '')">
+                  {{ game.penaltyTeam }}
+                </span>
+              </template>
             </td>
           </tr>
           </tbody>
@@ -43,6 +61,29 @@ export default {
       type: Array,
       default: []
     }
+  },
+  methods: {
+    getColor(game, team, type = '') {
+      let color = ''
+      let goal1 = 0
+      let goal2 = 0
+
+      if (game.team1 === team) {
+        goal1 = (type === '' ? game.goal1 : game.addGoal1)
+        goal2 = (type === '' ? game.goal2 : game.addGoal2)
+      } else {
+        goal1 = (type === '' ? game.goal2 : game.addGoal2)
+        goal2 = (type === '' ? game.goal1 : game.addGoal1)
+      }
+
+      if (goal1 > goal2) {
+        color = 'red--text'
+      } else if (goal1 === goal2) {
+        color = 'green--text'
+      }
+
+      return color
+    },
   }
 }
 </script>
