@@ -123,7 +123,7 @@ export const mutations = {
           points += 0.1
         }
 
-        if (payload.game.addGoal1 == payload.game.addGoal2 && stake.penaltyId == payload.game.penaltyId) {
+        if (payload.game.addGoal1 == payload.game.addGoal2 && payload.game.penaltyId != 0 && stake.penaltyId == payload.game.penaltyId) {
           points += 1
         }
       }
