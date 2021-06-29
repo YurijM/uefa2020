@@ -28,19 +28,19 @@
               -
               <span :class="team.team === game.team2 ? 'font-weight-bold' : ''">{{ game.team2 }}</span>
             </td>
-            <td class="font-weight-bold" width="65%">
-              <span :class="getColor(game, team.team)">
+            <td width="65%">
+              <span class="font-weight-bold" :class="getColor(game, team.team)">
                 {{ game.goal1 }}:{{ game.goal2 }}
               </span>
               <template v-if="game.addGoal1">
                 , доп.время
-                <span :class="getColor(game, team.team, 'add')">
+                <span class="font-weight-bold" :class="getColor(game, team.team, 'add')">
                   {{ game.addGoal1 }}:{{ game.addGoal2 }}
                 </span>
               </template>
               <template v-if="game.penaltyId">
                 , по пенальти
-                <span :class="(game.penaltyId === team.id ? 'red--text' : '')">
+                <span class="font-weight-bold" :class="(game.penaltyId === team.id ? 'red--text' : '')">
                   {{ game.penaltyTeam }}
                 </span>
               </template>
